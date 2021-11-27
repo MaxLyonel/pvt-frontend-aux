@@ -38,12 +38,45 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    /**
+      When issuing a request to baseURL that needs to pass authentication headers to
+      the backend, 'credentials' should be set to 'true'
+    */
+    credentials: true, // default value of withCredentials is fale
+    
+    // This is where to hit the server
+    baseUrl: 'http://localhost:8989'
+  },
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/login',
+      home: '/'
+    },
+    strategies: {
+      laravelSanctum: {
+            provider: 'laravel/sanctum',
+            url: 'http://localhost:8989',
+            endpoints: {
+              login: { url: '/api/auth/login', method: 'post' }
+            },
+            tokenRequired: false,
+            tokenType: false
+          }
+      },
+      localStorage: false,
+      router: {
+        middleware: ['auth']
+      },
+    },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
