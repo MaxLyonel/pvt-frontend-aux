@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app >
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -7,7 +7,7 @@
       fixed
       app
     >
-      <v-list>
+      <v-list >
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -28,31 +28,36 @@
       :clipped-left="clipped"
       fixed
       app
+      :style="{background: $vuetify.theme.themes['light'].primary}"
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
       <v-btn
         icon
         @click.stop="miniVariant = !miniVariant"
+        color="success"
       >
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
       <v-btn
         icon
         @click.stop="clipped = !clipped"
+        color="success"
       >
         <v-icon>mdi-application</v-icon>
       </v-btn>
       <v-btn
         icon
         @click.stop="fixed = !fixed"
+        color="success"
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title class="text-red" v-text="title" />
       <v-spacer />
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
+        color="success"
       >
         <v-icon>mdi-menu</v-icon>
       </v-btn>
@@ -98,19 +103,19 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Inicio',
+          title: 'Administración',
           to: '/'
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Usuarios',
+          title: 'Aportes',
           to: '/inspire'
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'PVT'
     }
   }
 }

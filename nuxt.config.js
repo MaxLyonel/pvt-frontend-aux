@@ -38,13 +38,51 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
+
+  // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  axios: {
+    /**
+      When issuing a request to baseURL that needs to pass authentication headers to
+      the backend, 'credentials' should be set to 'true'
+    */
+    credentials: true, // default value of withCredentials is fale
+
+    // This is where to hit the server
+    baseUrl: 'http://localhost:8989'
+  },
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/login',
+      home: '/'
+    },
+    strategies: {
+      laravelSanctum: {
+            provider: 'laravel/sanctum',
+            url: 'http://localhost:8989',
+            endpoints: {
+              login: { url: '/api/auth/login', method: 'post' }
+            },
+            tokenRequired: false,
+            tokenType: false
+          }
+      },
+      localStorage: false,
+      router: {
+        middleware: ['auth']
+      },
+    },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -54,6 +92,20 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3
+        },
+        light: {
+          primary: '#263238',
+          secondary: '#455A64',
+          tertiary: '#CFD8DC',
+          accent: '#8D6E63',
+          error: '#DD2C00',
+          warning: '#FFAB00',
+          info: '#0288D1',
+          success: '#43A047',
+          danger: '#ff6d00',
+          normal: '#757575',
+          teal:'#29617b',
+          background: '#EDF2F4'
         }
       }
     }
