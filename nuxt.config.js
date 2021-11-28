@@ -3,8 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - pvt-front',
-    title: 'pvt-front',
+    titleTemplate: '%s - PVT-FRONT',
+    title: 'PVT-FRONT',
     htmlAttrs: {
       lang: 'en'
     },
@@ -49,7 +49,7 @@ export default {
       the backend, 'credentials' should be set to 'true'
     */
     credentials: true, // default value of withCredentials is fale
-    
+
     // This is where to hit the server
     baseUrl: 'http://localhost:8989'
   },
