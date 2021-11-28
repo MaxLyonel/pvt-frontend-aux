@@ -1,35 +1,12 @@
 <template>
-<div>
-
-    <div>
-        <AlbumCard :album="album" v-for="album in albums" :key="album.id"> </AlbumCard>
-    </div>
-</div>
+  <login />
 </template>
-
 <script>
-import axios from 'axios'
-import env from '../config/env'
-import AlbumCard from '../components/AlbumCard'
-
+import Login from '~/components/Login.vue'
 export default {
-    name: 'index',
-    components: { AlbumCard },
-    data() {
-        return {
-            albums: [],
-        }
-    },
-    created: async function() {
-        let response = await axios.get(`${env.endpoint}/albums`)
-        this.albums = response.data
-    }
+  //auth: false,
+  components: {
+    Login
+  }
 }
 </script>
-
-<style scoped>
-header { 
-    margin-top: 100px; 
-    margin-bottom: 100px;
-}
-</style>
