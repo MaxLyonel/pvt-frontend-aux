@@ -11,8 +11,9 @@
             required
           >
             <v-icon slot="prepend" color="grey">
-              email
+              mdi-account
             </v-icon>
+             <v-icon>mdi-account</v-icon>
           </v-text-field>
 
           <v-text-field
