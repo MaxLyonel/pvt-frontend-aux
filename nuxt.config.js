@@ -21,25 +21,31 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@mdi/font/css/materialdesignicons.min.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/vuex-persist.js', ssr: false }
   ],
-
+  //para vee-validate
+  build: {
+    transpile: ['vee-validate']
+  },
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
+    '@nuxtjs/vuetify'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    '@nuxtjs/moment'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -66,21 +72,25 @@ export default {
             provider: 'laravel/sanctum',
             url: 'http://localhost:8989',
             endpoints: {
-              login: { url: '/api/auth/login', method: 'post' }
+              login: { url: '/api/auth/login', method: 'post' },
+              logout: { url: '/api/auth/logout', method: 'post' },
+              //user: false,
             },
             tokenRequired: false,
-            tokenType: false
+            tokenType: false,
+            //user: false
           }
       },
       localStorage: false,
       router: {
         middleware: ['auth']
       },
-    },
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
+    customVariables: ['~/assets/css/variables.scss'],
+    //defaultAssets: false,
     theme: {
       dark: false,
       themes: {
@@ -94,7 +104,7 @@ export default {
           success: colors.green.accent3
         },
         light: {
-          primary: '#263238',
+          primary: '#0AADB3',
           secondary: '#455A64',
           tertiary: '#CFD8DC',
           accent: '#8D6E63',
