@@ -1,10 +1,11 @@
 import colors from 'vuetify/es5/util/colors'
+require('dotenv').config()
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - PVT-FRONT',
-    title: 'PVT-FRONT',
+    titleTemplate: process.env.APP_TITLE || '',
+    title: process.env.APP_TITLE || '',
     htmlAttrs: {
       lang: 'en'
     },
@@ -26,7 +27,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '~/plugins/vuex-persist.js', ssr: false }
+    { src: '~/plugins/axios.js', mode: 'client' },
+    { src: '~/plugins/auth.js' },
   ],
   //para vee-validate
   build: {
@@ -38,54 +40,23 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxtjs/dotenv'
   ],
 
-  // Modules: https://go.nuxtjs.dev/config-modules
+  // Modules: https://go.nuxtjs.dev/config-modules 
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next',
     '@nuxtjs/moment'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    /**
-      When issuing a request to baseURL that needs to pass authentication headers to
-      the backend, 'credentials' should be set to 'true'
-    */
-    credentials: true, // default value of withCredentials is fale
-
     // This is where to hit the server
-    baseUrl: 'http://localhost:8989'
+    baseUrl: process.env.BASE_URL,
+    //credentials: true
   },
 
-  auth: {
-    redirect: {
-      login: '/login',
-      logout: '/',
-      callback: '/login',
-      home: '/'
-    },
-    strategies: {
-      laravelSanctum: {
-            provider: 'laravel/sanctum',
-            url: 'http://localhost:8989',
-            endpoints: {
-              login: { url: '/api/auth/login', method: 'post' },
-              logout: { url: '/api/auth/logout', method: 'post' },
-              //user: false,
-            },
-            tokenRequired: false,
-            tokenType: false,
-            //user: false
-          }
-      },
-      localStorage: false,
-      router: {
-        middleware: ['auth']
-      },
-  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -114,7 +85,7 @@ export default {
           success: '#43A047',
           danger: '#ff6d00',
           normal: '#757575',
-          teal:'#29617b',
+          teal: '#29617b',
           background: '#EDF2F4'
         }
       }

@@ -2,17 +2,18 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="6">
-        autenticado: 
-        {{$auth.loggedIn}}
+        <!-- autenticado: 
+        {{$auth}}
         usuario
-       <pre> {{ $auth.user}}</pre>
-        <!--vuex
+
+       vuex
         {{isAuthenticated}}
         usuario
         <pre>{{ loggedInUser }}</pre>-->
+        {{authentication}}
 
 
-        <span v-if="user"> {{ user.username }}</span>
+        <span></span>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
@@ -36,27 +37,31 @@ export default {
     }
   },
   created () {
-    this.getAuthenticatedUser()
+    //this.getAuthenticatedUser()
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'loggedInUser'])
+    //...mapGetters(['isAuthenticated', 'loggedInUser'])
+    authentication(){
+      return this.$store.getters['getAuth']
+    }
+
   },
   methods: {
-    async getAuthenticatedUser () {
+    /*async getAuthenticatedUser () {
       console.log('loggedIn : ' + this.$auth.loggedIn)
       try {
-        let response = await this.$axios.$get('/api/user')
+        let response = await this.$axios.$get('/api/auth/auth_user')
         this.user = response
-        console.log(response.name)
+        console.log(response.username)
       } catch (err) {
         console.log(err)
       }
     },
-    /*async logout () {
+    async logout () {
       console.log('logout')
       await this.$axios.$delete('/api/auth/logout')
       this.$router.push('/')
-    },*/
+    },
     async logout () {
       console.log('logout')
       await this.$auth.logout()
@@ -65,7 +70,7 @@ export default {
  
     
     
-    /*async login() {
+    async login() {
       try {
 
 
