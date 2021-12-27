@@ -24,11 +24,15 @@ export default {
   css: [
     '@mdi/font/css/materialdesignicons.min.css'
   ],
+  router: {
+    middleware: ['rutas']
+  },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/axios.js', mode: 'client' },
     { src: '~/plugins/auth.js' },
+    { src: '~/plugins/utils.js' },
   ],
   //para vee-validate
   build: {

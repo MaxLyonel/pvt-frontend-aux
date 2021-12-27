@@ -55,13 +55,8 @@
             </v-form>
           </v-card-text>
 
-          <v-btn @click="focusPassword()" primary large block color="primary"
+          <v-btn @click="authenticate()" primary large block color="primary"
             >Ingresar</v-btn
-          >
-            {{getAuth}}
-
-          <v-btn @click="getUser()" primary large block color="primary"
-            >usuario</v-btn
           >
         </v-container>
       </v-col>
@@ -80,38 +75,29 @@ export default {
       },
     };
   },
-  created(){
-  },
-  computed: {
-    getAuth(){
-      return this.$store.getters['authentication/getAuth']
-    }
-
-  },
+  computed: {},
   methods: {
-    focusPassword() {
-      this.authenticate();
-    },
-
     async authenticate() {
       try {
-        //await this.$axios2.get('/sanctum/csrf-cookie')
-        //await this.$store.dispatch('authentication/loadUser', this.form)
-        console.log(this.$axios2)
-        let response = await this.$axios2.post('/api/auth/login', this.form)
-        console.log(response)
+        let response = await this.$axios.post("/api/auth/login", this.form);
+        this.$auth.startSession(
+          response.payload.user,
+          response.payload.access_token
+        );
+        console.log(response);
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
-    async getUser(){
+
+    async getUser() {
       try {
-        let res = await this.$axios.get('/api/auth/auth_user')
-        console.log(res)
+        let res = await this.$axios.get("/api/auth/auth_user");
+        console.log(res);
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
-    }
+    },
   },
 };
 </script>

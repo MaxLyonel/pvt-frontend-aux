@@ -9,23 +9,17 @@ export default (context, inject) => {
         token: token
       }
       Cookies.set('token', JSON.stringify(cookieData))
+
       /* Los datos de sesion generales se almacenan
       en el store de vuex */
-      //context.store.commit('START_SESSION', session)
-      //this.timerSession()
-      //context.store.$router.push("/sistemas")
+      context.store.commit('START_SESSION', {session: user, token: token})
+      context.store.$router.push("/dashboard")
     },
-    /*updateSessionToken(nuevoToken) {
-      // actualizando cookie
-      let session = JSON.parse(Cookies.get('session'))
-      session.token = nuevoToken
-      Cookies.set('session', JSON.stringify(session))
-      // actualizando vuex
-      context.store.commit('UPDATE_SESSION_TOKEN', nuevoToken)
-    },*/
     endSession() {
       // eliminando cookie
       Cookies.remove('token')
+      context.store.commit('DESTROY_SESSION')
+      context.store.$router.push('/')
     },
   }
   inject('auth', Auth)
