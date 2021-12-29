@@ -1,20 +1,29 @@
 <template>
   <v-app>
-    <v-main>
-      <v-container fluid>
- 
-        <Nuxt />
-        <Footer />
-      </v-container>
-    </v-main>
+    <header class="container"  v-if="isAuthenticated">
+      <Appbar></Appbar>
+    </header>
+
+    <menu class="container" v-if="isAuthenticated">
+    <Navbar></Navbar>
+    </menu>
+
+      <main>
+        <nuxt />
+      </main>
+
+    <footer class="container">
+      <Footer></Footer>
+    </footer>
+
   </v-app>
 </template>
 
 <script>
-import Appbar from '@/layouts/Appbar.vue'
-import LoggedUser from '@/layouts/LoggedUser.vue'
-import Navbar from '@/layouts/Navbar.vue'
-import Footer from '@/layouts/Footer.vue'
+import Appbar from '@/components/layout/Appbar.vue'
+import LoggedUser from '@/components/layout/LoggedUser.vue'
+import Navbar from '@/components/layout/Navbar.vue'
+import Footer from '@/components/layout/Footer.vue'
 
 export default {
   components: {
@@ -22,13 +31,19 @@ export default {
     LoggedUser,
     Navbar,
     Footer
-    
+
   },
   data () {
     return {
       title: 'PVT'
     }
-  }
+  },
+
+  computed: {
+    isAuthenticated() {
+      return this.$store.state.isAuthenticated || false
+    }
+  },
 }
 </script>
 

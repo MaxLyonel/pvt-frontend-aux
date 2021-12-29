@@ -89,7 +89,7 @@ export default {
           success: '#43A047',
           danger: '#ff6d00',
           normal: '#757575',
-          teal: '#29617b',
+          teal: '#29617B',
           background: '#EDF2F4'
         }
       }

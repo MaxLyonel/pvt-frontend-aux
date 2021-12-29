@@ -1,19 +1,38 @@
 export const state = () => ({
   isAuthenticated: false,
-  session: null,
+  user: null,
   token: null,
+  modules: null,
+  roles: null,
+  permissions: null
 })
 
+export const getters= {
+  session(state){
+    return {
+      isAuthenticated: state.isAuthenticated,
+      token: state.token
+    }
+  },
+  user(state){
+    return state.user
+  },
+  modules(){
+    return state.user.modules
+  },
+}
+
 export const mutations = {
-  START_SESSION(state, {session, token}) {
+  START_SESSION(state, {user, token}) {
     state.isAuthenticated = true
-    state.session = session
     state.token = token
+    state.user = user
+    state.modules = user.modules
   },
   DESTROY_SESSION(state) {
     state.isAuthenticated = false
-    state.session = null
     state.token = null
+    state.user = null
   },
 }
 
@@ -21,9 +40,9 @@ export const actions = {
   async loadUser({commit}, {url, token}){
     let response = null
     try {
-      response = await fetch(url, { method: 'GET', headers: { 'Authorization': `Bearer ${token}`, 'accept': 'application/json' } })  
-      let session = (await response.json())
-      return session.payload.user
+      response = await fetch(url, { method: 'GET', headers: { 'Authorization': `Bearer ${token}`, 'accept': 'application/json' } })
+      let user = (await response.json())
+      return user.payload.user
     } catch(error) {
       console.error(error)
       return null
@@ -43,7 +62,7 @@ export const actions = {
           let cookieDecoded = JSON.parse(decodeURIComponent(cookieEncoded))
           let sessionEncontrada = await dispatch('loadUser', {url: process.env.BASE_URL+'/api/auth/auth_user', token: cookieDecoded.token });
           if(sessionEncontrada) {
-            commit('START_SESSION', {session: sessionEncontrada, token: cookieDecoded.token})
+            commit('START_SESSION', {user: sessionEncontrada, token: cookieDecoded.token})
           }
         }
       } catch(error) {
