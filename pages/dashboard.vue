@@ -1,90 +1,63 @@
 <template>
   <v-container fill-height>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="6">
-        <!-- autenticado: 
-        {{$auth}}
-        usuario
-
-       vuex
-        {{isAuthenticated}}
-        usuario
-        <pre>{{ loggedInUser }}</pre>-->
-        {{authentication}}
-
-
-        <span></span>
+      <v-col cols="12" sm="12" md="12"
+        v-for="(modulo, index) in $store.state.modules"
+        :key="index"
+      >
+        <div class="font-weight-medium text-uppercase">{{ modulo.display_name }}</div>
+          <v-progress-linear></v-progress-linear>
+        <v-row>
+          <v-col cols="12" sm="4" md="3" v-for="(rol, index) in modulo.roles" :key="index">
+            <v-card
+              class="rounded-pill"
+              outlined
+              @click="clickRole(item)"
+              style="cursor: pointer; border: thin solid rgba(0, 0, 0, 0.5)"
+              elevation="2"
+            >
+              <v-card-text>
+                <span class="teal--text font-weight-bold text-center">{{
+                  rol.display_name
+                }}</span
+                ><br />
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="6">
-        <v-btn @click="logout">
-          Logout
-        </v-btn>
+        <v-btn @click="logout()"> Logout </v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
-  name: 'Welcome',
-  data () {
+  name: "dashboard",
+  data() {
     return {
-      user: ''
-    }
-  },
-  created () {
-    //this.getAuthenticatedUser()
+      //user: "",
+    };
   },
   computed: {
-    //...mapGetters(['isAuthenticated', 'loggedInUser'])
-    authentication(){
-      return this.$store.getters['getAuth']
-    }
-
+    user() {
+      return this.$store.state.user;
+    },
   },
+
   methods: {
-    /*async getAuthenticatedUser () {
-      console.log('loggedIn : ' + this.$auth.loggedIn)
+    async logout() {
+      console.log("logout");
+      // FIXME: hasta corregir el error del backend quitar el try/catch
       try {
-        let response = await this.$axios.$get('/api/auth/auth_user')
-        this.user = response
-        console.log(response.username)
-      } catch (err) {
-        console.log(err)
-      }
+        await this.$axios.post("/api/auth/logout");
+      } catch (error) {}
+      this.$auth.endSession();
     },
-    async logout () {
-      console.log('logout')
-      await this.$axios.$delete('/api/auth/logout')
-      this.$router.push('/')
-    },
-    async logout () {
-      console.log('logout')
-      await this.$auth.logout()
-      this.$router.push('/')
-    },
- 
-    
-    
-    async login() {
-      try {
-
-
-          await axios.get('sanctum/csrf-cookie')
-          await this.$store.dispatch('login', this.form)
-  
-          this.$router.push({
-            name: 'dashboard'
-          })
-        
-      } catch(error) {
-        console.log(error)
-      }
-    },*/
-  }
-}
+  },
+};
 </script>
