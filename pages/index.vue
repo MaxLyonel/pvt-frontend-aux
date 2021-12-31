@@ -1,5 +1,5 @@
 <template>
-<div fluid fill-height id="background-page">
+<div id="background-page">
   <login />
 </div>
 
@@ -15,7 +15,8 @@ export default {
 </script>
 <style>
 #background-page {
-  background: linear-gradient(to bottom, #0AADB3 0%, #0AADB3 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6ba872', endColorstr='#07540f', GradientType=0 );
+  background: #0AADB3;
+  width: 100%;
+	height: 100%;
 }
 </style>
