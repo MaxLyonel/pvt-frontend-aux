@@ -1,6 +1,6 @@
 <template>
 <div id="background-page">
-  <login />
+  <Login />
 </div>
 
 </template>

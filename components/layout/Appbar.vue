@@ -20,7 +20,7 @@
           fab
           dark
           x-small
-
+          @click="logout()"
           color="white"
           outlined
           class="mx-3"
@@ -61,7 +61,17 @@ export default {
         }
       }
     },
-  }
+  },
+  methods:{
+    async logout() {
+      console.log("logout");
+      // FIXME: hasta corregir el error del backend quitar el try/catch
+      try {
+        await this.$axios.post("/api/auth/logout");
+      } catch (error) {}
+      this.$auth.endSession();
+    },
+  },
   }
 
 </script>
