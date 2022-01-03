@@ -1,25 +1,26 @@
 <template>
   <v-app>
-    <header class="container" v-if="isAuthenticated">
-      <Appbar :expanded.sync="expandNavbar" />
-    </header>
-
-    <menu class="container" v-if="isAuthenticated && rolePermissionSelected">
+    <template v-if="isAuthenticated && rolePermissionSelected">
       <Navbar :expanded.sync="expandNavbar" />
-    </menu>
+    </template>
 
-    <main>
+    <template v-if="isAuthenticated">
+      <Appbar :expanded.sync="expandNavbar" />
+    </template>
+
+    <v-main>
       <Nuxt />
-    </main>
+    </v-main>
 
-    <footer class="container">
-      <Footer></Footer>
-    </footer>
+    <Footer />
   </v-app>
 </template>
 
+
+
+
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 import Appbar from "@/components/layout/Appbar.vue";
 import LoggedUser from "@/components/layout/LoggedUser.vue";
 import Navbar from "@/components/layout/Navbar.vue";
@@ -40,7 +41,7 @@ export default {
   },
 
   computed: {
-     ...mapGetters(['rolePermissionSelected']),
+    ...mapGetters(["rolePermissionSelected"]),
     isAuthenticated() {
       return this.$store.state.isAuthenticated || false;
     },
@@ -48,8 +49,8 @@ export default {
 };
 </script>
 <style scoped>
-.container{
-   padding-top: 30px;
+.container {
+  padding: 0;
 }
 </style>
 

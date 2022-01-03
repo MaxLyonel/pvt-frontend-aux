@@ -1,6 +1,6 @@
 [
   {
-    "href": "dashboardIndex",
+    "href": "dashboard",
     "title": "Inicio",
     "icon": "mdi-home",
     "params": {}
@@ -77,14 +77,14 @@
     "permission": "show-user",
     "group": [
       {
-        "href": "userIndex",
+        "href": "users",
         "title": "Usuarios",
         "icon": "mdi-account-outline",
         "permission": "show-user",
         "role": "TE-admin",
         "params": {}
       }, {
-        "href": "roleIndex",
+        "href": "roles",
         "title": "Roles",
         "icon": "mdi-shield-lock-outline",
         "permission": "show-role",
