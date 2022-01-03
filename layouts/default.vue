@@ -4,7 +4,7 @@
       <Appbar></Appbar>
     </header>
 
-    <menu class="container" v-if="isAuthenticated">
+    <menu class="container" v-if="isAuthenticated && rolePermissionSelected">
       <Navbar></Navbar>
     </menu>
 
@@ -19,12 +19,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Appbar from "@/components/layout/Appbar.vue";
 import LoggedUser from "@/components/layout/LoggedUser.vue";
 import Navbar from "@/components/layout/Navbar.vue";
 import Footer from "@/components/layout/Footer.vue";
 
 export default {
+  name: "layout",
   components: {
     Appbar,
     LoggedUser,
@@ -33,10 +35,12 @@ export default {
   },
   data() {
     return {
+      expandNavbar: false,
     };
   },
 
   computed: {
+     ...mapGetters(['rolePermissionSelected']),
     isAuthenticated() {
       return this.$store.state.isAuthenticated || false;
     },

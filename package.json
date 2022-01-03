@@ -24,7 +24,6 @@
     "nuxt": "^2.15.7",
     "sass": "^1.44.0",
     "sass-loader": "^12.4.0",
-    "vee-validate": "^3.4.14",
     "vuetify": "^2.5.5"
   },
   "devDependencies": {

@@ -38,7 +38,7 @@ export const getters= {
     } else {
       return []
     }
-  }
+  },
 }
 
 export const mutations = {

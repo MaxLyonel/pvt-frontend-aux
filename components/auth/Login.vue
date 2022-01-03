@@ -4,12 +4,12 @@
       <v-col cols="8">
         <v-row>
           <v-col cols="12">
-            <v-img
+            <!--<v-img
               src="_nuxt/assets/images/muserpol.jpg"
               aspect-ratio="4.6"
               max-height
-            ></v-img>
-            <!--<img src="~/assets/images/muserpol.jpg"/>-->
+            ></v-img>-->
+            <img src="~/assets/images/muserpol.jpg" width="700" height="300"/>
           </v-col>
           <v-col cols="12">
             <v-card-title primary-title class="justify-center text-no-wrap">
