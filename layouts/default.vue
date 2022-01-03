@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <header class="container" v-if="isAuthenticated">
-      <Appbar></Appbar>
+      <Appbar :expanded.sync="expandNavbar" />
     </header>
 
     <menu class="container" v-if="isAuthenticated && rolePermissionSelected">
-      <Navbar></Navbar>
+      <Navbar :expanded.sync="expandNavbar" />
     </menu>
 
     <main>

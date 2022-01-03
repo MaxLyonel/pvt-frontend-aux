@@ -24,12 +24,13 @@
           color="white"
           outlined
           class="mx-3"
-          @click="$router.push('/dashboard')">
+          @click="$router.push('/changeModuleRol')"
        >
           <v-icon>mdi-keyboard-return</v-icon>
         </v-btn>
     </div>
     <LoggedUser/>
+    {{$store.getters.user.username}}
   </v-app-bar>
 </template>
 

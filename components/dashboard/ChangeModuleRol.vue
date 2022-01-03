@@ -10,6 +10,7 @@
       >
         <div class="font-weight-medium text-uppercase">{{ modulo.display_name }}</div>
           <v-progress-linear></v-progress-linear>
+          <br />
         <v-row>
           <v-col cols="12" sm="4" md="3" v-for="(rol, index) in modulo.roles" :key="index">
             <v-card
@@ -45,12 +46,6 @@ export default {
 		// al entrar a esta pagina se elimina el rolePermissionSelected del store
     this.$store.commit('setRolePermissionSelected', null)
     await this.getRolePermissions()
-		// si es administrador va directo al dashboard
-		/*if(this.$store.getters.userRoles[0] == 'TE-admin') {
-			// this.$store.commit('setRolePermissionSelected', {})
-			this.$router.push("dashboard")
-		}*/
-    //this.setDefaultValues()
   },
   computed: {
     modules() {
@@ -86,7 +81,7 @@ export default {
     clickRole(item) {
 			this.$store.commit('setRolePermissionSelected', item)
       console.log(item)
-			this.$router.push("statistics")
+			this.$router.push("dashboard")
 		}
   },
 };

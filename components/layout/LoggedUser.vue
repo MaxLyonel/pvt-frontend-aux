@@ -6,7 +6,8 @@
     <template v-slot:activator="{ on }">
       <v-btn fab icon class="ma-0" v-on="on">
         <v-avatar size="35" :color="`${randomColor} darken-2`">
-          <span class="subtitle-1 font-weight-medium">{{username}}</span>
+          <!--<span class="subtitle-1 font-weight-medium">{{username}}</span>-->
+          <v-icon>mdi-account-outline</v-icon>
         </v-avatar>
       </v-btn>
     </template>

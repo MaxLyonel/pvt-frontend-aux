@@ -13,7 +13,7 @@ export default (context, inject) => {
       /* Los datos de sesion generales se almacenan
       en el store de vuex */
       context.store.commit('START_SESSION', {user: user, token: token})
-      context.store.$router.push("/dashboard")
+      context.store.$router.push("/changeModuleRol")
     },
     endSession() {
       // eliminando cookie
