@@ -9,7 +9,7 @@
               aspect-ratio="4.6"
               max-height
             ></v-img>
-            <!--<img src="~/assets/images/muserpol.jpg" />-->
+            <!--<img src="~/assets/images/muserpol.jpg"/>-->
           </v-col>
           <v-col cols="12">
             <v-card-title primary-title class="justify-center text-no-wrap">
@@ -36,7 +36,7 @@
               </div>
               <v-text-field
                 class="pl-5 pr-5"
-                @keyup.enter="validate()"
+                @keyup.enter="validateForm()"
                 v-model="form.username"
                 prepend-icon="mdi-account"
                 label="Usuario"
@@ -47,13 +47,13 @@
 
               <v-text-field
                 class="pl-5 pr-5 mb-3"
-                @keyup.enter="validate()"
+                @keyup.enter="validateForm()"
                 v-model="form.password"
                 prepend-icon="mdi-key"
                 label="Contraseña"
                 type="password"
                 autocomplete="on"
-                :rules="[$rules.obligatoria()]"
+                :rules="[$rules.obligatoria('Contraseña')]"
               ></v-text-field>
 
               <v-btn @click="validateForm()" primary large block color="primary"

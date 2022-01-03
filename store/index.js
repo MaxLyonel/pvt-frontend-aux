@@ -2,9 +2,8 @@ export const state = () => ({
   isAuthenticated: false,
   user: null,
   token: null,
-  modules: null,
-  roles: null,
-  permissions: null
+  modules: [],
+  rolePermissionSelected: null
 })
 
 export const getters= {
@@ -17,9 +16,29 @@ export const getters= {
   user(state){
     return state.user
   },
-  modules(){
-    return state.user.modules
+  modules(state){
+    return state.modules
   },
+  // devuelve todo el objeto seleccionado rol con sus permisos
+  rolePermissionSelected(state) {
+    return state.rolePermissionSelected
+  },
+  // devuelve todo el array de objetos permisos
+  permissionSelected(state) {
+    if(state.rolePermissionSelected && state.rolePermissionSelected.permissions && state.rolePermissionSelected.permissions.length > 0) {
+      return state.rolePermissionSelected.permissions
+    } else {
+      return []
+    }
+  },
+  // devuelve un array de names de los permisos
+  permissionSimpleSelected(state) {
+    if(state.rolePermissionSelected && state.rolePermissionSelected.permissions && state.rolePermissionSelected.permissions.length > 0) {
+      return state.rolePermissionSelected.permissions.map(item => item.name)
+    } else {
+      return []
+    }
+  }
 }
 
 export const mutations = {
@@ -33,6 +52,10 @@ export const mutations = {
     state.isAuthenticated = false
     state.token = null
     state.user = null
+    state.modules = null
+  },
+  setRolePermissionSelected(state, data) {
+    state.rolePermissionSelected = data
   },
 }
 

@@ -4,9 +4,9 @@
       <Appbar></Appbar>
     </header>
 
-    <!--<menu class="container" v-if="isAuthenticated">
+    <menu class="container" v-if="isAuthenticated">
       <Navbar></Navbar>
-    </menu>-->
+    </menu>
 
     <main>
       <Nuxt />
