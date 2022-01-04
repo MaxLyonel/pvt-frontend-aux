@@ -44,7 +44,7 @@ export default {
   },
   async created() {
 		// al entrar a esta pagina se elimina el rolePermissionSelected del store
-    this.$store.commit('setRolePermissionSelected', null)
+    this.$auth.setCurrentRole(null)
     await this.getRolePermissions()
   },
   computed: {
@@ -55,32 +55,12 @@ export default {
 
   methods: {
     async getRolePermissions() {
-			try {
-        let res = await this.$axios.get(`/api/auth/auth_user`)
-          let aux_rolesPermissionsItems = res.payload.user.modules
-          for(let i=0; i<aux_rolesPermissionsItems.length; i++){
-            aux_rolesPermissionsItems[i].roles.forEach(item => {
-            //delete item.id
-            delete item.module_id
-            delete item.action
-            delete item.created_at
-            delete item.updated_at
-            delete item.correlative
-            delete item.name
-            delete item.sequence_number
-            item.permissions = item.permissions.map(item => ({display_name: item.display_name, name: item.name }))
-          })
-        }
-        this.rolesPermissionsItems =  aux_rolesPermissionsItems
-        console.log(this.rolesPermissionsItems)
-
-      } catch (e) {
-        console.log(e)
-      }
+			this.rolesPermissionsItems = this.$store.getters.modules
     },
     clickRole(item) {
-			this.$store.commit('setRolePermissionSelected', item)
-      console.log(item)
+			//this.$store.commit('setRolePermissionSelected', item)
+      //console.log(item)
+      this.$auth.setCurrentRole(item.id)
 			this.$router.push("dashboard")
 		}
   },

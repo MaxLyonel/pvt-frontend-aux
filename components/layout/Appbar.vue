@@ -8,19 +8,19 @@
     dark
     :color="bar.color"
   >
-    <template v-if="rolePermissionSelected">
+    <template v-if="currentRole">
       <v-app-bar-nav-icon @click.stop="$emit('update:expanded', !expanded)"></v-app-bar-nav-icon>
     </template>
     <v-toolbar-title>{{ bar.text }}</v-toolbar-title>
     <v-spacer></v-spacer>
     <div width="300px">
 
-      <span class="text-caption font-weight-bold">{{ rolePermissionSelected ? rolePermissionSelected.display_name : '' }}</span>
+      <span class="text-caption font-weight-bold">{{ currentRole ? currentRole.display_name : '' }}</span>
         <v-btn
           fab
           dark
           x-small
-          v-if="rolePermissionSelected!=null"
+          v-if="currentRole!=null"
           color="white"
           outlined
           class="mx-3"
@@ -36,7 +36,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import LoggedUser from '@/components/layout/LoggedUser'
 export default {
   name:'appbar',
@@ -49,22 +48,26 @@ export default {
       default: false
     }
   },
-    data () {
+  data () {
     return {
       rolesPermissionsItems: [],
     }
   },
   async created() {
-    await this.getRolePermissions()
+    //this.currentRole = this.$store.getters.currentRole
+    //await this.getRolePermissions()
   },
-  watch: {
-    'rolePermissionSelected.display_name'(val) {
-      this.$store.commit('setRolePermissionSelected', this.rolePermissionSelected)
+  //TODO: se comento, intentar recuperar funcionalidad
+  /*watch: {
+    'currentRole.display_name'(val) {
+      this.$store.commit('setRolePermissionSelected', this.currentRole)
     }
-  },
+  },*/
   computed:{
-    ...mapGetters(['rolePermissionSelected']),
-        bar() {
+    currentRole(){
+      return this.$store.getters.currentRole
+    },
+    bar() {
       if (process.env.NODE_ENV != 'production') {
         return {
           color: `primary`,
@@ -75,32 +78,6 @@ export default {
           color: `primary`,
           text: `PLATAFORMA VIRTUAL DE TRÁMITES`
         }
-      }
-    },
-  },
-  methods:{
-    async getRolePermissions() {
-			try {
-        let res = await this.$axios.get(`/api/auth/auth_user`)
-          let aux_rolesPermissionsItems = res.payload.user.modules
-          for(let i=0; i<aux_rolesPermissionsItems.length; i++){
-            aux_rolesPermissionsItems[i].roles.forEach(item => {
-            //delete item.id
-            delete item.module_id
-            delete item.action
-            delete item.created_at
-            delete item.updated_at
-            delete item.correlative
-            delete item.name
-            delete item.sequence_number
-            item.permissions = item.permissions.map(item => ({display_name: item.display_name, name: item.name }))
-          })
-        }
-        this.rolesPermissionsItems =  aux_rolesPermissionsItems
-        console.log(this.rolesPermissionsItems)
-
-      } catch (e) {
-        console.log(e)
       }
     },
   },

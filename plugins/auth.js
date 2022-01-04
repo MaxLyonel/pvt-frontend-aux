@@ -21,6 +21,12 @@ export default (context, inject) => {
       context.store.commit('DESTROY_SESSION')
       context.store.$router.push('/')
     },
+    setCurrentRole(role) {
+      /* La cookie almacena el rol actual */
+      let cookieData = role
+      Cookies.set('role', JSON.stringify(cookieData))
+      context.store.commit('setRoleSelected', role)
+    },
   }
   inject('auth', Auth)
 }

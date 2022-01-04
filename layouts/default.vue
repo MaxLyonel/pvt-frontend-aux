@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <template v-if="isAuthenticated && rolePermissionSelected">
+    <template v-if="isAuthenticated && currentRole">
       <Navbar :expanded.sync="expandNavbar" />
     </template>
 
@@ -41,7 +41,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["rolePermissionSelected"]),
+    ...mapGetters(["currentRole"]),
     isAuthenticated() {
       return this.$store.state.isAuthenticated || false;
     },

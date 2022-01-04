@@ -1,7 +1,11 @@
 <template>
   <v-menu
+    v-model="showMenu"
     bottom
     offset-y
+    close-on-click
+    close-on-content-click
+    
   >
     <template v-slot:activator="{ on }">
       <v-btn fab icon class="ma-0" v-on="on">
@@ -12,13 +16,13 @@
       </v-btn>
     </template>
     <v-list dense>
-      <v-list-item link @click.stop="logout()">
+      <v-list-item link @click="logout()">
         <v-list-item-icon class="ml-0 mr-2">
           <v-icon>mdi-account-box</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Perfil</v-list-item-title>
       </v-list-item>
-      <v-list-item link @click.stop="logout()">
+      <v-list-item link @click="logout()">
         <v-list-item-icon class="ml-0 mr-2">
           <v-icon>mdi-lock</v-icon>
         </v-list-item-icon>
@@ -31,6 +35,11 @@
 <script>
 export default {
   name: 'app-logger-user',
+  data () {
+    return {
+      showMenu: false,
+    }
+  },
   computed: {
     randomColor() {
       let colors = ['red', 'pink', 'purple', 'blue', 'light-blue', 'cyan', 'teal', 'green', 'light-green',  'amber', 'orange', 'deep-orange']
