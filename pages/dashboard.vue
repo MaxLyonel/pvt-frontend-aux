@@ -1,13 +1,13 @@
 <template>
-  <Index />
+  <MainIndex />
 </template>
 
 <script>
-import Index from "@/components/dashboard/Index.vue";
+import MainIndex from "@/components/dashboard/MainIndex.vue";
 export default {
   name: "dashboard",
   components: {
-    Index,
+    MainIndex,
   },
 };
 </script>
