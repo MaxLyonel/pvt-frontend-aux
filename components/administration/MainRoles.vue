@@ -5,21 +5,26 @@
         <section-bread-crumb></section-bread-crumb>
       </v-card-title>
       <v-card-text>
+        inf roles
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import SectionBreadCrumb from '@/components/common/SectionBreadCrumb.vue';
+import SectionBreadCrumb from "@/components/common/SectionBreadCrumb.vue";
 export default {
-  name: "MainIndex",
+  name: "MainRoless",
   components: { SectionBreadCrumb },
   props: {},
-  data() {
-    return {
-      currentRole: this.$store.getters.currentRole,
-    };
+  data: () => ({
+
+  }),
+  created() {
+
+  },
+  methods: {
+
   },
 };
 </script>

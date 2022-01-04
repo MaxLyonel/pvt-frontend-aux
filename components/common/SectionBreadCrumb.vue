@@ -1,9 +1,5 @@
 <template>
-
-    <v-container fluid>
-    <v-card flat>
-      <v-card-title>
-        <v-toolbar dense color="tertiary" class="caption">
+       <v-toolbar dense color="tertiary" class="caption">
           <v-row>
             <v-col cols="12" class="pa-0">
               {{ breadCrumbs }}
@@ -14,17 +10,10 @@
             </v-col>
           </v-row>
         </v-toolbar>
-      </v-card-title>
-      <v-card-text>
-      </v-card-text>
-    </v-card>
-  </v-container>
-
 </template>
 
 <script>
 import menuItems from '@/menu.json'
-import { mapGetters } from "vuex";
 export default {
   name: "SectionBreadCrumb",
   components: {},
@@ -41,9 +30,7 @@ export default {
     this.getBreadCrumbs();
     console.log(this.$route.name)
   },
-  computed: {
-   // ...mapGetters(["rolePermissionSelected"]),
-  },
+
   methods: {
     getBreadCrumbs() {
       let routeName = this.$route.name
