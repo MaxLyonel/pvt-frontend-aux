@@ -17,7 +17,7 @@
       >
         <v-list-item
           :to="{ name: item.href, query: item.params }"
-
+          v-if="!item.group && checkPermission(item)"
         >
           <v-list-item-icon class="ml-0 mr-2">
             <v-icon color='primary'>{{ item.icon }}</v-icon>
@@ -25,7 +25,7 @@
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
         <v-list-group
- 
+          v-if="item.group && checkPermission(item)"
           :prepend-icon="item.icon"
           mandatory
         >
@@ -37,7 +37,7 @@
               class="pl-5"
               :to="{ name: subItem.href, query: subItem.params }"
               :key="subItem.title"
-
+              v-if="checkPermission(subItem)"
             >
               <v-list-item-icon class="mr-2">
                 <v-icon>{{ subItem.icon }}</v-icon>
@@ -65,10 +65,19 @@ export default {
   data: () => ({
     menuItems: menuItems
   }),
+      computed: {
+    //permisos del selector global por rol
+      permissionSimpleSelected () {
+        return this.$store.getters.permissionSimpleSelected
+      }
+    },
+      methods: {
+    checkPermission(item) {
+      let hasPermission = true
+        if (item.hasOwnProperty('permission')) 
+          hasPermission &= (item.permission == null || this.permissionSimpleSelected.includes(item.permission))
+      return hasPermission
+    }
+  }
 }
 </script>
-
-<style lang="scss">
-
-
-</style>

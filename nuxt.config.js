@@ -33,10 +33,11 @@ export default {
     { src: '~/plugins/axios.js', mode: 'client' },
     { src: '~/plugins/auth.js' },
     { src: '~/plugins/utils.js' },
+    { src: '~/plugins/rules.js' }
   ],
   //para vee-validate
   build: {
-    transpile: ['vee-validate']
+    //transpile: ['vee-validate']
   },
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -98,5 +99,12 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {      // Run ESLint on save
+
+}
   }
 }

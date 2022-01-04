@@ -13,13 +13,19 @@ export default (context, inject) => {
       /* Los datos de sesion generales se almacenan
       en el store de vuex */
       context.store.commit('START_SESSION', {user: user, token: token})
-      context.store.$router.push("/dashboard")
+      context.store.$router.push("/changeModuleRol")
     },
     endSession() {
       // eliminando cookie
       Cookies.remove('token')
       context.store.commit('DESTROY_SESSION')
       context.store.$router.push('/')
+    },
+    setCurrentRole(role) {
+      /* La cookie almacena el rol actual */
+      let cookieData = role
+      Cookies.set('role', JSON.stringify(cookieData))
+      context.store.commit('setRoleSelected', role)
     },
   }
   inject('auth', Auth)

@@ -1,49 +1,56 @@
 <template>
   <v-app>
-    <header class="container"  v-if="isAuthenticated">
-      <Appbar></Appbar>
-    </header>
+    <template v-if="isAuthenticated && currentRole">
+      <Navbar :expanded.sync="expandNavbar" />
+    </template>
 
-    <menu class="container" v-if="isAuthenticated">
-    <Navbar></Navbar>
-    </menu>
+    <template v-if="isAuthenticated">
+      <Appbar :expanded.sync="expandNavbar" />
+    </template>
 
-      <main>
-        <nuxt />
-      </main>
+    <v-main>
+      <Nuxt />
+    </v-main>
 
-    <footer class="container">
-      <Footer></Footer>
-    </footer>
-
+    <Footer />
   </v-app>
 </template>
 
+
+
+
 <script>
-import Appbar from '@/components/layout/Appbar.vue'
-import LoggedUser from '@/components/layout/LoggedUser.vue'
-import Navbar from '@/components/layout/Navbar.vue'
-import Footer from '@/components/layout/Footer.vue'
+import { mapGetters } from "vuex";
+import Appbar from "@/components/layout/Appbar.vue";
+import LoggedUser from "@/components/layout/LoggedUser.vue";
+import Navbar from "@/components/layout/Navbar.vue";
+import Footer from "@/components/layout/Footer.vue";
 
 export default {
+  name: "layout",
   components: {
     Appbar,
     LoggedUser,
     Navbar,
-    Footer
-
+    Footer,
   },
-  data () {
+  data() {
     return {
-      title: 'PVT'
-    }
+      expandNavbar: false,
+    };
   },
 
   computed: {
+    ...mapGetters(["currentRole"]),
     isAuthenticated() {
-      return this.$store.state.isAuthenticated || false
-    }
+      return this.$store.state.isAuthenticated || false;
+    },
   },
-}
+};
 </script>
+<style scoped>
+.container {
+  padding: 0;
+}
+</style>
 
