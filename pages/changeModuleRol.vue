@@ -1,20 +1,16 @@
 <template>
-  <div>
-    <ChangeModuleRol />
-  </div>
+  <ChangeModuleRol />
 </template>
 
 <script>
-
-import ChangeModuleRol from '@/components/dashboard/ChangeModuleRol.vue'
+import ChangeModuleRol from "@/components/dashboard/ChangeModuleRol.vue";
 export default {
-  name: 'changeModuleRol',
-  components:{
-    ChangeModuleRol
-  }
-}
+  name: "changeModuleRol",
+  components: {
+    ChangeModuleRol,
+  },
+};
 </script>
 
 <style>
-
 </style>
