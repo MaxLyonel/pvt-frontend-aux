@@ -52,7 +52,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules 
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/moment'
+    '@nuxtjs/moment',
+    '@nuxtjs/toast'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -100,11 +101,18 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
 
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {      // Run ESLint on save
+  },
 
+  toast: {
+    position: 'top-center',
+    register: [ // Register custom toasts
+      {
+        name: 'my-error',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'error'
+        }
+      }
+    ]
 }
-  }
 }
