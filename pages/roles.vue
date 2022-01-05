@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import MainUsers from '@/components/administration/MainRoles.vue';
+import MainUsers from '@/components/role/MainRoles.vue';
 export default {
   name: "PageRoles",
   components: { MainUsers },

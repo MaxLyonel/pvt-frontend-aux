@@ -5,7 +5,7 @@
 <script>
 import ChangeModuleRol from "@/components/dashboard/ChangeModuleRol.vue";
 export default {
-  name: "changeModuleRol",
+  name: "PageChangeModuleRol",
   components: {
     ChangeModuleRol,
   },
