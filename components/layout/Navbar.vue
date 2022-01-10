@@ -16,7 +16,7 @@
         :key="item.title"
       >
         <v-list-item
-          :to="{ name: item.href, query: item.params }"
+          :to="item.href"
           v-if="!item.group && checkPermission(item)"
         >
           <v-list-item-icon class="ml-0 mr-2">
@@ -35,7 +35,7 @@
           <template v-for="subItem in item.group">
             <v-list-item
               class="pl-5"
-              :to="{ name: subItem.href, query: subItem.params }"
+              :to="subItem.href"
               :key="subItem.title"
               v-if="checkPermission(subItem)"
             >
