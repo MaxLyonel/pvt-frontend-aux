@@ -124,6 +124,7 @@ export const actions = {
     if (process.server) {
       try {
         let cookieEncoded = null
+        let cookieDecoded = null
         // OBTIENDO DATOS DE USUARIO MEDIANTE EL TOKEN
         cookieEncoded = this.$utils.getCookieValue(req.headers.cookie, 'token')
         if (cookieEncoded) {
