@@ -11,10 +11,10 @@
   >
     <template v-slot:item="props">
       <tr :class="props.isExpanded ? 'secondary white--text' : ''">
-        <td @click.stop="expand(props)">{{ props.item.last_name | uppercase }}</td>
-        <td @click.stop="expand(props)">{{ props.item.first_name | uppercase }}</td>
-        <td @click.stop="expand(props)">{{ props.item.position | uppercase }}</td>
-        <td @click.stop="expand(props)">{{ props.item.username | lowercase }}</td>
+        <td @click.stop="expand(props)">{{ props.item.last_name }}</td>
+        <td @click.stop="expand(props)">{{ props.item.first_name }}</td>
+        <td @click.stop="expand(props)">{{ props.item.position  }}</td>
+        <td @click.stop="expand(props)">{{ props.item.username  }}</td>
         <td v-if="active">
           <v-tooltip top >
             <template v-slot:activator="{ on }">
@@ -24,7 +24,7 @@
                 x-small
                 color="warning"
                 v-on="on"
-                
+
               >
                 <v-icon>mdi-cancel</v-icon>
               </v-btn>
@@ -70,7 +70,7 @@
     <template v-slot:expanded-item="{ headers }">
       <tr>
         <td :colspan="headers.length" class="px-0">
-          dfgdfg
+          <Role :user.sync="selectedUser"/>
         </td>
       </tr>
     </template>
@@ -79,11 +79,11 @@
 
 <script>
 
-
+import Role from '@/components/user/Role'
 export default {
   name: 'user-list',
   components: {
-
+    Role
   },
   props: {
 

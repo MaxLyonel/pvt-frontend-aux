@@ -9,6 +9,19 @@ export default (context, inject) => {
       }
       return null
     },
+    /*async getModules() {
+      console.log('context', context)
+      console.log('inject', inject)
+      try {
+        let res = await context.$axios.get2('api/admin/module')
+        let modules = res.payload.modules
+        console.log(this.modules)
+        return modules
+      } catch (e) {
+        console.log(e)
+        return []
+      }
+    },*/
   }
   inject('utils', utils)
 }
