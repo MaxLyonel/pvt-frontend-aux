@@ -104,7 +104,9 @@ export default {
   },
 
   toast: {
-    position: 'top-center',
+    position: 'bottom-right',
+    autoHideDelay: 1000,
+    noAutoHide: true, // in order to stay it open forever
     register: [ // Register custom toasts
       {
         name: 'my-error',
