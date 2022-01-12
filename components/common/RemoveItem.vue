@@ -37,9 +37,9 @@ export default {
         this.loading = true
         let res = await this.$axios.delete(this.path)
         if(!res.data.message){
-          this.$toastr.success('Eliminado correctamente')
+          this.$toast.success('Eliminado correctamente')
         }else{
-          this.$toastr.error(res.data.message)
+          this.$toast.error(res.data.message)
         }
         this.close()
         this.$nuxt.$emit('removed', Number(this.path.split('/').pop()))
