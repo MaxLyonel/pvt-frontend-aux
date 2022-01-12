@@ -18,26 +18,33 @@
               </span>
             </v-subheader>
             <v-row no-gutters>
-              <template v-for="rolesColumn in roles">
-                <v-col :key="rolesColumn.id" cols="12" sm="4" md="3">
+              <template v-for="rol in roles">
+                <v-col :key="rol.id" cols="12" sm="6" md="4" class="pa-1">
                     <v-hover v-slot:default="{ hover }">
                       <v-chip
                         :class="hover ? 'elevation-4' : 'elevation-0'"
-                        :color="rolesColumn.active ? 'info' : 'secondary'"
+                        :color="rol.active ? 'info' : 'secondary'"
                         dark
                         style="width: 230px;"
-                        :outlined="!rolesColumn.active"
-                        @click.stop="switchRole(rolesColumn.id)"
+                        :outlined="!rol.active"
+                        @click="switchRole(rol.id)"
                       >
-                      {{rolesColumn.id}}
-                        <v-avatar left v-if="rolesColumn.active">
+                        <v-avatar left v-if="rol.active">
                           <v-icon>mdi-checkbox-marked-circle</v-icon>
                         </v-avatar>
-                        {{ rolesColumn.display_name }}
+                        {{ rol.display_name }}
                       </v-chip>
                     </v-hover>
                 </v-col>
               </template>
+            </v-row>
+            <v-row>
+              <v-pagination
+                v-model="options.page"
+                :length="options.lastPage"
+                :total-visible="8"
+                color="secondary"
+              ></v-pagination>
             </v-row>
           </v-list>
         </v-tab-item>
@@ -69,17 +76,9 @@ export default {
     filteredRoles: [],
     options: {
       page: 1,
-      lastPage: 1,
-      itemsPerPage: 18,
+      itemsPerPage: 8,
     },
   }),
-  watch: {
-    selectedModule(newVal, oldVal) {
-      if (newVal != oldVal) {
-        this.getRolesModuleUser(this.user);
-      }
-    },
-  },
   created() {
     this.getModules();
   },
@@ -88,13 +87,25 @@ export default {
   },
   computed: {
     slicedRoles() {
-      console.log(this.options.page)
+      console.log(this.roles.slice(parseInt(this.options.page - 1) * 1))
       console.log(parseInt(this.options.page - 1) * 18)
       return this.roles.slice(parseInt(this.options.page - 1) * 18,  parseInt(this.options.page) * 18)
     }
   },
+  watch: {
+    selectedModule(newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.options.page = 1;
+        this.getRolesModuleUser(this.user);
+      }
+    },
+    options: function (newVal, oldVal) {
+      if (newVal.page != oldVal.page || newVal.itemsPerPage != oldVal.itemsPerPage){
+        this.getRolesModuleUser(this.user);
+      }
+    },
+  },
   methods: {
-
     async getModules() {
       try {
         this.loading = true;
@@ -108,17 +119,19 @@ export default {
     async getRolesModuleUser(id) {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`api/admin/user/${id}/module_role_state_user`,
-          {
+        let res = await this.$axios.get(`api/admin/user/${id}/module_role_state_user`,{
             params: {
-              module_id: this.modules[this.selectedModule].id
+              module_id: this.modules[this.selectedModule].id,
+              page: this.options.page,
+              per_page: 18
             },
           }
         );
         this.roles = res.payload.role.data
         this.options = res.payload.role
-        this.options.page= 1,
-        this.options.lastPage= 1,
+        this.options.page= res.payload.role.current_page,
+        this.options.lastPage= res.payload.role.last_page,
+        this.options.total= res.payload.role.total,
         this.options.itemsPerPage= 18,
         console.log(this.options)
       } catch (e) {
@@ -127,7 +140,6 @@ export default {
     },
     async switchRole(rolesColumn_id) {
       try {
-        
         let res = await this.$axios.patch(`api/admin/user/${this.user}/role`, {
           role_id: rolesColumn_id
         })
