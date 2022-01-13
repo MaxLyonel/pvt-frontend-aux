@@ -56,7 +56,16 @@
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-divider class="mx-2" inset vertical></v-divider>
-                <v-flex xs3> Buscador </v-flex>
+                <v-flex xs3> 
+                  <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Buscar"
+                    single-line
+                    hide-details
+                    clearable
+                  ></v-text-field>
+                </v-flex>
               </v-toolbar>
             </v-card-title>
             <v-card-text>
@@ -100,16 +109,19 @@
 
 <script>
 import SectionBreadCrumb from "@/components/common/SectionBreadCrumb.vue";
+import Search from "@/components/common/Search.vue";
 import Loading from "@/components/common/Loading";
 export default {
   name: "role-MainRoles",
   components: {
     SectionBreadCrumb,
     Loading,
+    Search
   },
 
   data: () => ({
     loading: true,
+    search: '',
     options: {
       page: 1,
       itemsPerPage: 32,
@@ -137,17 +149,15 @@ export default {
         this.getPermissions();
       }
     },
-    /*options: function (newVal, oldVal) {
-      if (newVal.page != oldVal.page || newVal.itemsPerPage != oldVal.itemsPerPage){
-        console.log('hola')
-        this.getPermissions()
-      }
-    }*/
     "options.page": function (newVal, oldVal) {
       if (newVal != oldVal) {
         console.log("cambio");
         this.getPermissions();
       }
+    },
+    search() {
+      this.options.page = 1
+      this.getPermissions()
     },
   },
   methods: {
@@ -182,6 +192,7 @@ export default {
           `api/admin/role/${this.selectedRole}/role_permissions`,
           {
             params: {
+              display_name: this.search,
               page: this.options.page,
               per_page: 32,
             },
