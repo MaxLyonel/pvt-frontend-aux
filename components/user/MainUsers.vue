@@ -8,15 +8,27 @@
         <v-card flat>
           <v-card-title>
             <v-switch v-model="active" color="success" inset></v-switch>
-            <v-btn color="info" fab dark x-small class="mr-2">
+            <!--<v-btn color="info" fab dark x-small class="mr-2">
               <v-icon>mdi-account</v-icon>
-            </v-btn>
-            <v-btn color="warning" fab dark x-small class="mr-2">
-              <v-icon>mdi-sync</v-icon>
-            </v-btn>
+            </v-btn>-->
+          <v-tooltip top >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                fab
+                dark
+                x-small
+                color="info"
+                v-on="on"
+                @click="$refs.ListComponent.synchronizeUsers()"
+              >
+                <v-icon>mdi-sync</v-icon>
+              </v-btn>
+            </template>
+            <span class="caption">Sincronizar usuarios</span>
+          </v-tooltip>
           </v-card-title>
           <v-card-text>
-            <List />
+            <List ref="ListComponent"/>
           </v-card-text>
           <RemoveItem />
         </v-card>
@@ -30,7 +42,7 @@ import SectionBreadCrumb from "@/components/common/SectionBreadCrumb.vue";
 import RemoveItem from "@/components/common/RemoveItem.vue";
 import List from "@/components/user/List";
 export default {
-  name: "MainUsers",
+  name: "user-MainUsers",
   components: {
     SectionBreadCrumb,
     List,

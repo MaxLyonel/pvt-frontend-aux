@@ -15,7 +15,7 @@
         <td @click.stop="expand(props)">{{ props.item.first_name }}</td>
         <td @click.stop="expand(props)">{{ props.item.position  }}</td>
         <td @click.stop="expand(props)">{{ props.item.username  }}</td>
-        <td v-if="active">
+        <!--<td v-if="active">
           <v-tooltip top >
             <template v-slot:activator="{ on }">
               <v-btn
@@ -24,7 +24,7 @@
                 x-small
                 color="warning"
                 v-on="on"
-
+                @click.stop="switchActiveUser(props.item.id)"
               >
                 <v-icon>mdi-cancel</v-icon>
               </v-btn>
@@ -42,7 +42,7 @@
                 color="success"
                 class="mr-2"
                 v-on="on"
-            
+                @click.stop="switchActiveUser(props.item.id)"
               >
                 <v-icon>mdi-sync</v-icon>
               </v-btn>
@@ -64,7 +64,7 @@
             </template>
             <span class="caption">Eliminar</span>
           </v-tooltip>
-        </td>
+        </td>-->
       </tr>
     </template>
     <template v-slot:expanded-item="{ headers }">
@@ -81,7 +81,7 @@
 
 import Role from '@/components/user/Role'
 export default {
-  name: 'user-list',
+  name: 'user-List',
   components: {
     Role
   },
@@ -207,6 +207,34 @@ export default {
 
       } catch (e) {
         console.log(e)
+      } finally {
+        this.loading = false
+      }
+    },
+    /*async switchActiveUser(id) {
+      try {
+        this.loading = true
+        let res = await axios.patch(`user/${id}`, {
+          active: !this.active
+        })
+        this.bus.$emit('removed', id)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
+    },*/
+    async synchronizeUsers(){
+      try {
+        this.loading = true
+        let res = await this.$axios.get(`api/admin/sync_employees`)
+        this.$toast.info('Nuevos usuarios: ' + res.payload.new_users +
+                            '<br> Usuarios actualizados: '+ res.payload.update_users+
+                            '<br>Usuarios duplicados: '+res.payload.duplicate_users)
+        this.getUsers()
+      } catch (e) {
+        console.log(e)
+        this.toast.error('Ocurrio un error durante la sincronización.')
       } finally {
         this.loading = false
       }

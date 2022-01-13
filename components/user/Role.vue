@@ -56,7 +56,7 @@
 import Loading from "@/components/common/Loading";
 
 export default {
-  name: "user-role",
+  name: "user-Role",
   components: {
     Loading,
   },

@@ -1,6 +1,6 @@
 [
   {
-    "href": "dashboard",
+    "href": "/dashboard",
     "title": "Inicio",
     "icon": "mdi-home"
   }, {
