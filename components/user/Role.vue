@@ -42,7 +42,6 @@
               <v-pagination
                 v-model="options.page"
                 :length="options.lastPage"
-                :total-visible="8"
                 color="secondary"
               ></v-pagination>
             </v-row>
@@ -72,11 +71,9 @@ export default {
     modules: [],
     roles: [],
     selectedModule: null,
-    selectedRoles: [],
-    filteredRoles: [],
     options: {
       page: 1,
-      itemsPerPage: 8,
+      itemsPerPage: 18,
     },
   }),
   created() {
@@ -84,13 +81,6 @@ export default {
   },
   mounted() {
     this.getRolesModuleUser(this.user);
-  },
-  computed: {
-    slicedRoles() {
-      console.log(this.roles.slice(parseInt(this.options.page - 1) * 1))
-      console.log(parseInt(this.options.page - 1) * 18)
-      return this.roles.slice(parseInt(this.options.page - 1) * 18,  parseInt(this.options.page) * 18)
-    }
   },
   watch: {
     selectedModule(newVal, oldVal) {
@@ -128,7 +118,6 @@ export default {
           }
         );
         this.roles = res.payload.role.data
-        this.options = res.payload.role
         this.options.page= res.payload.role.current_page,
         this.options.lastPage= res.payload.role.last_page,
         this.options.total= res.payload.role.total,
@@ -138,15 +127,15 @@ export default {
         console.log(e);
       }
     },
-    async switchRole(rolesColumn_id) {
+    async switchRole(role_id) {
       try {
         let res = await this.$axios.patch(`api/admin/user/${this.user}/role`, {
-          role_id: rolesColumn_id
+          role_id: role_id
         })
-        this.selectedRoles = res.payload.modules
         this.$toast.success("Actualizado correctamente");
       } catch (e) {
         console.log(e);
+        this.$toast.error("Se produjo un error");
       } finally {
         this.loading = false;
       }
