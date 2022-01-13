@@ -138,15 +138,22 @@ export default {
     selectedRole(newVal, oldVal) {
       if (newVal != oldVal) {
         this.permissions = null
+        this.options.page = 1
         this.getPermissions()
       }
     },
-    options: function (newVal, oldVal) {
+    /*options: function (newVal, oldVal) {
       if (newVal.page != oldVal.page || newVal.itemsPerPage != oldVal.itemsPerPage){
         console.log('hola')
         this.getPermissions()
       }
-    }
+    }*/
+    'options.page': function (newVal, oldVal) {
+      if (newVal != oldVal) {
+       console.log('cambio')
+       this.getPermissions()
+      }
+    },
   },
   methods: {
     async getModules() {
