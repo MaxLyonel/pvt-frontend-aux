@@ -34,16 +34,18 @@ export default {
   methods: {
     getBreadCrumbs() {
       let routeName = this.$route.name
+                  let mask='/'+routeName.replace('-','/')
+
       for(let menu of this.menuItems) {
         if(menu.group) {
           for(let submenu of menu.group) {
-            if(submenu.href == routeName) {
+            if(submenu.href == mask) {
               this.breadCrumbs = menu.title + ' / ' + submenu.title
               break
             }
           }
         } else {
-          if(menu.href == routeName) {
+          if(menu.href == mask) {
             this.breadCrumbs = menu.title
             break
           }
@@ -52,13 +54,13 @@ export default {
       for(let menu of this.menuItems) {
         if(menu.group) {
           for(let submenu of menu.group) {
-            if(submenu.href == routeName) {
+            if(submenu.href == mask) {
               this.currentRoute = submenu.title
               break
             }
           }
         } else {
-          if(menu.href == routeName) {
+          if(menu.href == mask) {
             this.currentRoute = menu.title
             break
           }
