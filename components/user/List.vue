@@ -9,7 +9,15 @@
     multi-sort
     single-expand
   >
-    <template v-slot:item="props">
+    <template slot="body.prepend" >
+      <tr>
+        <td><v-text-field placeholder="Apellido." spellcheck="false" class="filter-text" v-model="searching.last_name" @keydown.enter="getUsers()"></v-text-field></td>
+        <td><v-text-field placeholder="Nombre." spellcheck="false" class="filter-text" v-model="searching.first_name" @keydown.enter="getUsers()"></v-text-field></td>
+        <td><v-text-field placeholder="Cargo." spellcheck="false" class="filter-text" v-model="searching.position" @keydown.enter="getUsers()"></v-text-field></td>
+        <td><v-text-field placeholder="Usuario." spellcheck="false" class="filter-text" v-model="searching.username" @keydown.enter="getUsers()"></v-text-field></td>
+      </tr>
+      </template>
+      <template v-slot:item="props" >
       <tr :class="props.isExpanded ? 'secondary white--text' : ''">
         <td @click.stop="expand(props)">{{ props.item.last_name }}</td>
         <td @click.stop="expand(props)">{{ props.item.first_name }}</td>
@@ -66,6 +74,7 @@
           </v-tooltip>
         </td>-->
       </tr>
+
     </template>
     <template v-slot:expanded-item="{ headers }">
       <tr>
@@ -132,7 +141,14 @@ export default {
         width: '10%',
         sortable: false
       }
-    ]
+    ],
+    searching: {
+      last_name:"",
+      first_name:"",
+      position:"",
+      username:""
+
+    },
   }),
   watch: {
     options: function(newVal, oldVal) {
@@ -195,7 +211,10 @@ export default {
             sortBy: this.options.sortBy,
             sortDesc: this.options.sortDesc,
             active: this.active,
-            search: this.search
+            last_name: this.searching.last_name,
+            first_name: this.searching.first_name,
+            position: this.searching.position,
+            username: this.searching.username
           }
         })
         this.users = res.payload.users.data
@@ -238,7 +257,24 @@ export default {
       } finally {
         this.loading = false
       }
-    }
+    },
+      clearAll() {
+      this.searching.last_name = "",
+      this.searching.first_name = "",
+      this.searching.position = "",
+      this.searching.username = "",
+      this.getUsers()
+    },
   }
 }
 </script>
+<style scoped>
+.filter-text{
+  font-size: 12px;
+  height: 2px;
+  margin: 0 0 40px 0;
+  padding: 0;
+  width: 100%
+
+}
+</style>

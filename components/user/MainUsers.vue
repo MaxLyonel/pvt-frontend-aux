@@ -26,6 +26,24 @@
             </template>
             <span class="caption">Sincronizar usuarios</span>
           </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                fab
+                @click="$refs.ListComponent.clearAll()"
+                color="info"
+                v-on="on"
+                x-small
+                absolute
+                left
+                style="margin-top: -53px; margin-left:300px"
+              >
+                <v-icon> mdi-broom </v-icon>
+              </v-btn>
+            </template>
+            <span class="caption">Limpiar todos los filtros</span>
+          </v-tooltip>
+
           </v-card-title>
           <v-card-text>
             <List ref="ListComponent"/>
