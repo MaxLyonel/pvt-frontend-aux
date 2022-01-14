@@ -34,7 +34,7 @@ export default {
   methods: {
     getBreadCrumbs() {
       let routeName = this.$route.name
-                  let mask='/'+routeName.replace('-','/')
+      let mask='/'+routeName.replace('-','/')
 
       for(let menu of this.menuItems) {
         if(menu.group) {

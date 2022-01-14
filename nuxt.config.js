@@ -35,10 +35,8 @@ export default {
     { src: '~/plugins/utils.js' },
     { src: '~/plugins/rules.js' }
   ],
-  //para vee-validate
-  build: {
-    //transpile: ['vee-validate']
-  },
+
+  build: {},
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 

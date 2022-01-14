@@ -1,7 +1,7 @@
 <template>
   <v-container  >
     <v-row class="justify-center my-4">
-			<strong class="grey--text text-h5">Plataforma Virtual de Trámites</strong><br>
+			<strong class="grey--text text-h5">Seleccionar Rol</strong><br>
 		</v-row>
     <v-row justify="center">
       <v-col cols="12" sm="12" md="12"
