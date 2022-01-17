@@ -35,10 +35,8 @@ export default {
     { src: '~/plugins/utils.js' },
     { src: '~/plugins/rules.js' }
   ],
-  //para vee-validate
-  build: {
-    //transpile: ['vee-validate']
-  },
+
+  build: {},
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -52,7 +50,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules 
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/moment'
+    '@nuxtjs/moment',
+    '@nuxtjs/toast'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -100,11 +99,20 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
 
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {      // Run ESLint on save
+  },
 
+  toast: {
+    position: 'bottom-right',
+    autoHideDelay: 1000,
+    noAutoHide: true, // in order to stay it open forever
+    register: [ // Register custom toasts
+      {
+        name: 'my-error',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'error'
+        }
+      }
+    ]
 }
-  }
 }

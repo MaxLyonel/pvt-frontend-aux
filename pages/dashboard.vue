@@ -5,7 +5,7 @@
 <script>
 import MainIndex from "@/components/dashboard/MainIndex.vue";
 export default {
-  name: "dashboard",
+  name: "PageDashboard",
   components: {
     MainIndex,
   },

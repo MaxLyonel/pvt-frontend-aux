@@ -30,7 +30,7 @@ export const getters= {
   },*/
   // devuelve un array de names de los permisos
   permissionSimpleSelected(state, getters) {
-    console.log(getters)
+    //console.log(getters)
     if(getters.currentRole && getters.currentRole.permissions && getters.currentRole.permissions.length > 0) {
       return getters.currentRole.permissions.map(item => item.name)
     } else {
@@ -124,6 +124,7 @@ export const actions = {
     if (process.server) {
       try {
         let cookieEncoded = null
+        let cookieDecoded = null
         // OBTIENDO DATOS DE USUARIO MEDIANTE EL TOKEN
         cookieEncoded = this.$utils.getCookieValue(req.headers.cookie, 'token')
         if (cookieEncoded) {
