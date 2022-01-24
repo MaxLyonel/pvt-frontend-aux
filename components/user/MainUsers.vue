@@ -6,58 +6,36 @@
       </v-card-title>
       <v-card-text>
         <v-card flat>
-          <v-card-title>
-            <v-switch 
-              v-model="active" 
-              color="success" 
-              inset
-              style="margin-top: -90px; margin-left:1110px;position: absolute; top: 35px; right: 85px;"
-            ></v-switch>
-
+          <v-card-title class="pa-0 ma-0">
+            <template>
+            <v-btn
+              x-small
+              :color="!active ? 'error' : 'success'" 
+              dark
+              @click="active = !active"
+              style="margin-top: -80px; position: absolute; top: 35px; right: 315px;"
+            >
+              {{!active ? 'Usuarios Inactivos' : 'Usuarios Activos'}}
+            </v-btn>
             <v-btn
               x-small
               color="secondary"
               dark
               @click="$router.push('addUser')"
+               style="margin-top: -80px; position: absolute; top: 35px; right: 165px;"
             >
               Adicionar usuario
             </v-btn>
-            <v-tooltip top >
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  fab
-                  dark
-                  x-small
-                  color="success"
-                  v-on="on"
-                  absolute
-                  right
-                  @click="$refs.ListComponent.synchronizeUsers()"
-                  style="margin-top: -110px; margin-right:40px"
-                >
-                  <v-icon>mdi-sync</v-icon>
-                </v-btn>
-              </template>
-              <span class="caption">Sincronizar usuarios</span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  fab
-                  color="info"
-                  v-on="on"
-                  x-small
-                  absolute
-                  right
-                  @click="$refs.ListComponent.clearAll()"
-                  style="margin-top: -110px; margin-right:0px"
-                >
-                  <v-icon> mdi-broom </v-icon>
-                </v-btn>
-              </template>
-              <span class="caption">Limpiar todos los filtros</span>
-            </v-tooltip>
-
+            <v-btn
+              x-small
+              color="info"
+              dark
+               @click="$refs.ListComponent.clearAll()"
+              style="margin-top: -80px; position: absolute; top: 35px; right: 15px;"
+            >
+              Limpiar filtros
+            </v-btn>
+            </template>
           </v-card-title>
           <v-card-text>
             <List ref="ListComponent"/>
