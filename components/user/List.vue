@@ -147,8 +147,8 @@ export default {
       first_name:"",
       position:"",
       username:""
-
     },
+    new_users_ldap: []
   }),
   watch: {
     options: function(newVal, oldVal) {
@@ -201,7 +201,7 @@ export default {
         this.loading = false
       }
     },
-    async getUsers(params) {
+    async getUsers() {
       try {
         this.loading = true
         let res = await this.$axios.get(`api/admin/user`, {
@@ -247,10 +247,8 @@ export default {
       try {
         this.loading = true
         let res = await this.$axios.get(`api/admin/sync_employees`)
-        this.$toast.info('Nuevos usuarios: ' + res.payload.new_users +
-                            '<br> Usuarios actualizados: '+ res.payload.update_users+
-                            '<br>Usuarios duplicados: '+res.payload.duplicate_users)
-        this.getUsers()
+        this.new_users_ldap = res.payload.new_users_ldap
+        this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevo usuarios')
       } catch (e) {
         console.log(e)
         this.toast.error('Ocurrio un error durante la sincronización.')
