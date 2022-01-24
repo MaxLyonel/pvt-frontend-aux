@@ -14,9 +14,14 @@
               style="margin-top: -90px; margin-left:1110px;position: absolute; top: 35px; right: 85px;"
             ></v-switch>
 
-            <!--<v-btn color="info" fab dark x-small class="mr-2">
-              <v-icon>mdi-account</v-icon>
-            </v-btn>-->
+            <v-btn
+              x-small
+              color="secondary"
+              dark
+              @click="$router.push('addUser')"
+            >
+              Adicionar usuario
+            </v-btn>
             <v-tooltip top >
               <template v-slot:activator="{ on }">
                 <v-btn
@@ -80,6 +85,10 @@ export default {
     search: "",
     active: true,
   }),
+
+    mounted(){
+    console.log(this.$route.params.id)
+  },
   watch: {
     search() {
       this.$nuxt.$emit("search", this.search);
