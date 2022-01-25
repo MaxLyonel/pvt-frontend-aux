@@ -23,7 +23,7 @@
         <td @click.stop="expand(props)">{{ props.item.first_name }}</td>
         <td @click.stop="expand(props)">{{ props.item.position  }}</td>
         <td @click.stop="expand(props)">{{ props.item.username  }}</td>
-        <!--<td v-if="active">
+        <td v-if="active">
           <v-tooltip top >
             <template v-slot:activator="{ on }">
               <v-btn
@@ -57,7 +57,7 @@
             </template>
             <span class="caption">Habilitar</span>
           </v-tooltip>
-          <v-tooltip top >
+          <!--<v-tooltip top >
             <template v-slot:activator="{ on }">
               <v-btn
                 fab
@@ -71,8 +71,8 @@
               </v-btn>
             </template>
             <span class="caption">Eliminar</span>
-          </v-tooltip>
-        </td>-->
+          </v-tooltip>-->
+        </td>
       </tr>
 
     </template>
@@ -191,7 +191,7 @@ export default {
     async switchActiveUser(id) {
       try {
         this.loading = true
-        let res = await this.$axios.patch(`user/${id}`, {
+        let res = await this.$axios.patch(`api/admin/user/${id}`, {
           active: !this.active
         })
         this.$nuxt.$emit('removed', id)
@@ -230,19 +230,6 @@ export default {
         this.loading = false
       }
     },
-    /*async switchActiveUser(id) {
-      try {
-        this.loading = true
-        let res = await axios.patch(`user/${id}`, {
-          active: !this.active
-        })
-        this.bus.$emit('removed', id)
-      } catch (e) {
-        console.log(e)
-      } finally {
-        this.loading = false
-      }
-    },*/
     async synchronizeUsers(){
       try {
         this.loading = true

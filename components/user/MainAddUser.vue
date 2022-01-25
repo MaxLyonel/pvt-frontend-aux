@@ -20,7 +20,6 @@
             <v-tooltip top >
               <template v-slot:activator="{ on }">
                 <v-btn
-                  fab
                   dark
                   x-small
                   color="success"
@@ -30,7 +29,7 @@
                   @click="synchronizeUsers()"
                   style="margin-top: -110px; margin-right:40px"
                 >
-                  <v-icon>mdi-sync</v-icon>
+                  <v-icon>mdi-sync</v-icon> Sincronizar
                 </v-btn>
               </template>
               <span class="caption">Sincronizar usuarios</span>
@@ -103,7 +102,9 @@ export default {
   }),
   mounted(){
     this.getCities()
+    this.synchronizeUsers()
   },
+
   computed: {
     fullname() {
       return (user) => {
@@ -122,7 +123,7 @@ export default {
         this.loading = true
         let res = await this.$axios.get(`api/admin/sync_employees`)
         this.new_users_ldap = res.payload.new_users_ldap
-        this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevo usuarios')
+        this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevos usuarios')
       } catch (e) {
         console.log(e)
         this.toast.error('Ocurrio un error durante la sincronización.')
@@ -153,7 +154,9 @@ export default {
         })
         this.user = res.payload.user
         this.selectedUser = this.user.id
-        this.toast.success('Se guardo el usuario correctamente.')
+        this.$toast.success('Se guardo el usuario correctamente.')
+        this.synchronizeUsers()
+        this.city_id = 0
       } catch (e) {
         console.log(e)
         this.$toast.error(e.errors.city_id || e.errors.first_name || e.errors.last_name || e.errors.username  )
