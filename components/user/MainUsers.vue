@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card flat>
       <v-card-title>
-        <section-bread-crumb></section-bread-crumb>
+        <global-bread-crumb></global-bread-crumb>
       </v-card-title>
       <v-card-text>
         <v-card flat>
