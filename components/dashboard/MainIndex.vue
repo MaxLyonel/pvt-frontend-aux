@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import SectionBreadCrumb from '@/components/common/SectionBreadCrumb.vue';
+import GlobalBreadCrumb from '@/components/common/GlobalBreadCrumb.vue';
 export default {
   name: "MainIndex",
-  components: { SectionBreadCrumb },
+  components: { GlobalBreadCrumb },
   props: {},
   data() {
     return {

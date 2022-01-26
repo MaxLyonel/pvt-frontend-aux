@@ -40,7 +40,7 @@
           <v-card-text>
             <List ref="ListComponent"/>
           </v-card-text>
-          <RemoveItem />
+          <GlobalRemoveItem />
         </v-card>
       </v-card-text>
     </v-card>
@@ -48,15 +48,15 @@
 </template>
 
 <script>
-import SectionBreadCrumb from "@/components/common/SectionBreadCrumb.vue";
-import RemoveItem from "@/components/common/RemoveItem.vue";
+import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
+import GlobalRemoveItem from "@/components/common/GlobalRemoveItem.vue";
 import List from "@/components/user/List";
 export default {
   name: "user-MainUsers",
   components: {
-    SectionBreadCrumb,
+    GlobalBreadCrumb,
     List,
-    RemoveItem,
+    GlobalRemoveItem,
   },
   props: {},
   data: () => ({

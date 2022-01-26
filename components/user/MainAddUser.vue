@@ -83,12 +83,12 @@
 </template>
 
 <script>
-import SectionBreadCrumb from "@/components/common/SectionBreadCrumb.vue";
+import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
 import Role from '@/components/user/Role'
 export default {
   name: "user-MainUsers",
   components: {
-    SectionBreadCrumb,
+    GlobalBreadCrumb,
     Role
   },
   props: {},

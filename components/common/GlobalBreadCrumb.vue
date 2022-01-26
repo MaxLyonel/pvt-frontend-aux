@@ -15,7 +15,7 @@
 <script>
 import menuItems from '@/menu.json'
 export default {
-  name: "SectionBreadCrumb",
+  name: "GlobalBreadCrumb",
   components: {},
   props: {},
   data() {

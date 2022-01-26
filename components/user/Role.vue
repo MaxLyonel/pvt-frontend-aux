@@ -53,12 +53,12 @@
 </template>
 
 <script>
-import Loading from "@/components/common/Loading";
+import GlobalLoading from "@/components/common/GlobalLoading";
 
 export default {
   name: "user-Role",
   components: {
-    Loading,
+    GlobalLoading,
   },
   props: {
     user: {
