@@ -14,9 +14,6 @@
           <v-btn-toggle color="teal" group mandatory>
             <v-btn value="COMANDO"> Comando </v-btn>
             <v-btn value="SENASIR"> Senasir </v-btn>
-            <v-btn value="TRANSCRIPCION"> Transcripción </v-btn>
-            <v-btn value="REGIONALES"> Regionales </v-btn>
-            <v-btn value="Sismu"> Sismu </v-btn>
           </v-btn-toggle>
           {{ year_selected }}
           <v-select
@@ -39,6 +36,7 @@
                 right
                 v-on="on"
                 class="mx-2"
+                @click.stop="openDialog(year_selected)"
               >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -91,7 +89,107 @@
     </v-row>
     <!--fin contenido-->
     <!--steps-->
+    <v-dialog
+      v-model="dialog"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="dialog = close()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>IMPORTACION SENASIR</v-toolbar-title>
+        </v-toolbar>
+        <v-row justify="center"
+          ><v-col cols="8">
+            <v-stepper v-model="e1">
+              <v-stepper-header>
+                <v-stepper-step :complete="e1 > 1" step="1" editable>
+                  Subir archivo
+                </v-stepper-step>
 
+                <v-divider></v-divider>
+
+                <v-stepper-step :complete="e1 > 2" step="2" editable>
+                  Validar Datos
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step step="3"> Realizar importación </v-stepper-step>
+              </v-stepper-header>
+
+              <v-stepper-items>
+                <v-stepper-content step="1">
+                  <v-card class="mb-12" color="grey lighten-1">
+                    <v-card-text>
+                      <v-card color="white" class="pa-2">
+                        <v-row>
+                          <v-col cols="6" md="6">
+                            <v-select
+                              dense
+                              :items="list_months_not_import"
+                              item-text="period_month_name"
+                              item-value="period_month"
+                              :label="'Periódos para importar ' + year_selected"
+                              v-model="month_selected"
+                            ></v-select>
+                            {{ this.import_export.file }}
+                          </v-col>
+
+                          <v-col cols="6" md="6">
+                            <v-file-input
+                              counter
+                              show-size
+                              truncate-length="30"
+                              outlined
+                              small-chips
+                              dense
+                              label="Cargar Archivo"
+                              v-model="import_export.file"
+                            ></v-file-input>
+                          </v-col>
+                        </v-row>
+                      </v-card>
+                    </v-card-text>
+                  </v-card>
+                  <v-btn color="secondary" @click="e1 = 2"> Continue </v-btn>
+                  <v-btn color="primary" @click="uploadFile()">
+                    subir archivo
+                  </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="2">
+                  <v-card
+                    class="mb-12"
+                    color="grey lighten-1"
+                    height="200px"
+                  ></v-card>
+
+                  <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
+
+                  <v-btn text> Cancel </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="3">
+                  <v-card
+                    class="mb-12"
+                    color="grey lighten-1"
+                    height="200px"
+                  ></v-card>
+
+                  <v-btn color="primary" @click="e1 = 1"> Continue </v-btn>
+
+                  <v-btn text> Cancel </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-dialog>
     <!--fin steps-->
   </v-container>
 </template>
@@ -109,10 +207,21 @@ export default {
     year_selected: "",
     period_type: "SENASIR",
     list_senasir_months: [],
+    list_months_not_import: [],
+    dialog: false,
+    e1: 1,
+    import_export: {},
+    month_selected: "",
   }),
   created() {
     this.getYears();
-    this.getMonths();
+  },
+  watch: {
+    year_selected(newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.getMonths();
+      }
+    },
   },
   methods: {
     async getYears() {
@@ -121,6 +230,8 @@ export default {
         let res = await this.$axios.get("api/contribution/list_senasir_years");
         this.years = res.payload.list_senasir_years;
         this.year_selected = this.years[this.years.length - 1];
+
+        this.getMonths();
         this.loading = false;
       } catch (e) {
         comsole.log(e);
@@ -128,16 +239,51 @@ export default {
     },
     async getMonths() {
       try {
-        this.loading = true;
-        let res = await this.$axios.post("api/contribution/list_senasir_months",{
-            period_year: 2021,
+        this.list_months_not_import = [];
+        let res = await this.$axios.post(
+          "api/contribution/list_senasir_months",
+          {
+            period_year: this.year_selected,
           }
         );
         this.list_senasir_months = res.payload.list_senasir_months;
+        for (let i = 0; i < res.payload.list_senasir_months.length; i++) {
+          if (res.payload.list_senasir_months[i].state_importation == false) {
+            this.list_months_not_import.push(
+              res.payload.list_senasir_months[i]
+            );
+            console.log(this.list_months_not_import);
+          }
+        }
         console.log(this.year_selected);
-        this.loading = false;
       } catch (e) {
         comsole.log(e);
+      }
+    },
+    openDialog(year_selected) {
+      this.dialog = true;
+      console.log(year_selected);
+    },
+    close() {
+      this.dialog = false;
+    },
+    //PASO1 METODOS
+    //Metodo para subir el archivo
+    async uploadFile() {
+      let date = this.year_selected+ '-'+ this.month_selected +'-'+'01';
+      console.log(date)
+      let formData = new FormData();
+      formData.append("file", this.import_export.file);
+      formData.append("date_payroll", date);
+      try {
+        let res = await this.$axios.post("api/contribution/upload_copy_payroll_senasir", formData);
+        if(res.payload.successfully){
+          this.$toast.success('Se ha realizado el copiado de '+ res.payload.copied_record)
+        }else{
+          this.$toast.error(res.payload.error)
+        }
+      } catch (e) {
+        console.log(e);
       }
     },
   },
