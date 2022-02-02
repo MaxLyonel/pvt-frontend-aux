@@ -222,9 +222,9 @@ export default {
     this.getYears();
   },
   computed: {
-    dateFormat(){
-      return this.year_selected+ '-'+ this.month_selected +'-'+'01'
-    }
+    dateFormat() {
+      return this.year_selected + "-" + this.month_selected + "-" + "01";
+    },
   },
   watch: {
     year_selected(newVal, oldVal) {
@@ -250,9 +250,7 @@ export default {
     async getMonths() {
       try {
         this.list_months_not_import = [];
-        let res = await this.$axios.post(
-          "api/contribution/list_senasir_months",
-          {
+        let res = await this.$axios.post("api/contribution/list_senasir_months",{
             period_year: this.year_selected,
           }
         );
@@ -283,76 +281,84 @@ export default {
       formData.append("file", this.import_export.file);
       formData.append("date_payroll", this.dateFormat);
       try {
-        let res = await this.$axios.post("api/contribution/upload_copy_payroll_senasir", formData);
-        if(res.payload.successfully){
-          this.$toast.success('Se ha realizado el copiado de '+ res.payload.copied_record)
-        }else{
-          this.$toast.error(res.payload.error)
+        let res = await this.$axios.post("api/contribution/upload_copy_payroll_senasir",
+          formData
+        );
+        if (res.payload.successfully) {
+          this.$toast.success("Se ha realizado el copiado de " + res.payload.copied_record
+          );
+        } else {
+          this.$toast.error(res.payload.error);
         }
       } catch (e) {
         console.log(e);
       }
     },
 
-    async validateData(){
+    async validateData() {
       try {
-        let res = await this.$axios.post('api/contribution/validation_aid_contribution_affiliate_payroll_senasir',{
-          date_payroll: this.dateFormat
-        })
-        if(res.payload.successfully){
-          this.$toast.success('Se ha realizado la validación')
-      } else {
-        this.downloadFailValidate()
-      }
+        let res = await this.$axios.post(
+          "api/contribution/validation_aid_contribution_affiliate_payroll_senasir",{
+            date_payroll: this.dateFormat,
+          }
+        );
+        if (res.payload.successfully) {
+          this.$toast.success("Se ha realizado la validación");
+        } else {
+          this.downloadFailValidate();
+        }
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
-    async ImportContributions(){
+    async ImportContributions() {
       try {
-        let res = await this.$axios.post('api/contribution/import_create_or_update_contribution_payroll_period_senasir',{
-          period_contribution_senasir: this.dateFormat
-        })
-        if(res.payload.successfully){
-          this.$toast.success(res.message)
-      } else {
-        this.$toast.error(res.message)
-      }
+        let res = await this.$axios.post("api/contribution/import_create_or_update_contribution_payroll_period_senasir",{
+            period_contribution_senasir: this.dateFormat,
+          }
+        );
+        if (res.payload.successfully) {
+          this.$toast.success(res.message);
+        } else {
+          this.$toast.error(res.message);
+        }
       } catch (e) {
-        comsole.log(e)
+        comsole.log(e);
       }
     },
-    async rollbackContribution(){
+    async rollbackContribution() {
       try {
-        let res = await this.$axios.post('api/contribution/rollback_copy_validate_senasir',{
-          date_payroll: this.dateFormat
-        })
-        if(res.payload.validated_rollback){
-          this.$toast.success(res.message + " Se ha realizado el borrado de datos")
-      } else {
-        this.$toast.error(res.message)
-      }
+        let res = await this.$axios.post("api/contribution/rollback_copy_validate_senasir",{
+            date_payroll: this.dateFormat,
+          }
+        );
+        if (res.payload.validated_rollback) {
+          this.$toast.success(
+            res.message + " Se ha realizado el borrado de datos"
+          );
+        } else {
+          this.$toast.error(res.message);
+        }
       } catch (e) {
-        comsole.log(e)
+        comsole.log(e);
       }
     },
-    async downloadFailValidate(){
+    async downloadFailValidate() {
       try {
-        let res = await this.$axios.post('api/contribution/download_fail_validated_senasir',{
-          date_payroll: this.dateFormat
-        })
-          const url = window.URL.createObjectURL(new Blob([res]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "ReporteAfiliadosNoValidados.xls");
-          document.body.appendChild(link);
-          link.click();
-
+        let res = await this.$axios.post("api/contribution/download_fail_validated_senasir",{
+            date_payroll: this.dateFormat,
+          }
+        );
+        const url = window.URL.createObjectURL(new Blob([res]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "ReporteAfiliadosNoValidados.xls");
+        document.body.appendChild(link);
+        link.click();
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
-
   },
 };
 </script>
