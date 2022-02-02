@@ -15,7 +15,6 @@
             <v-btn value="COMANDO"> Comando </v-btn>
             <v-btn value="SENASIR"> Senasir </v-btn>
           </v-btn-toggle>
-          {{ year_selected }}
           <v-select
             :items="years"
             :loading="loading"
@@ -136,7 +135,6 @@
                               :label="'Periódos para importar ' + year_selected"
                               v-model="month_selected"
                             ></v-select>
-                            {{ this.import_export.file }}
                           </v-col>
 
                           <v-col cols="6" md="6">
@@ -155,10 +153,10 @@
                       </v-card>
                     </v-card-text>
                   </v-card>
-                  <v-btn color="secondary" @click="e1 = 2"> Continue </v-btn>
                   <v-btn color="primary" @click="uploadFile()">
-                    subir archivo
+                    Subir archivo
                   </v-btn>
+                  <v-btn color="secondary" @click="e1 = 2"> Siguiente </v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
@@ -167,10 +165,13 @@
                     color="grey lighten-1"
                     height="200px"
                   ></v-card>
-
-                  <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
-
-                  <v-btn text> Cancel </v-btn>
+                  <v-btn color="primary" @click="validateData()">
+                    Importar archivo
+                  </v-btn>
+                  <v-btn color="error" @click="rollbackContribution()">
+                    Rehacer
+                  </v-btn>
+                  <v-btn color="secondary" @click="e1 = 3"> Siguiente </v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
@@ -180,9 +181,13 @@
                     height="200px"
                   ></v-card>
 
-                  <v-btn color="primary" @click="e1 = 1"> Continue </v-btn>
-
-                  <v-btn text> Cancel </v-btn>
+                  <v-btn color="primary" @click="ImportContributions()">
+                    Subir archivo
+                  </v-btn>
+                  <v-btn color="error" @click="rollbackContribution()">
+                    Rehacer
+                  </v-btn>
+                  <v-btn color="secondary" @click="e1 = 1"> Siguiente </v-btn>
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
@@ -215,6 +220,11 @@ export default {
   }),
   created() {
     this.getYears();
+  },
+  computed: {
+    dateFormat(){
+      return this.year_selected+ '-'+ this.month_selected +'-'+'01'
+    }
   },
   watch: {
     year_selected(newVal, oldVal) {
@@ -252,7 +262,6 @@ export default {
             this.list_months_not_import.push(
               res.payload.list_senasir_months[i]
             );
-            console.log(this.list_months_not_import);
           }
         }
         console.log(this.year_selected);
@@ -270,11 +279,9 @@ export default {
     //PASO1 METODOS
     //Metodo para subir el archivo
     async uploadFile() {
-      let date = this.year_selected+ '-'+ this.month_selected +'-'+'01';
-      console.log(date)
       let formData = new FormData();
       formData.append("file", this.import_export.file);
-      formData.append("date_payroll", date);
+      formData.append("date_payroll", this.dateFormat);
       try {
         let res = await this.$axios.post("api/contribution/upload_copy_payroll_senasir", formData);
         if(res.payload.successfully){
@@ -286,6 +293,66 @@ export default {
         console.log(e);
       }
     },
+
+    async validateData(){
+      try {
+        let res = await this.$axios.post('api/contribution/validation_aid_contribution_affiliate_payroll_senasir',{
+          date_payroll: this.dateFormat
+        })
+        if(res.payload.successfully){
+          this.$toast.success('Se ha realizado la validación')
+      } else {
+        this.downloadFailValidate()
+      }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async ImportContributions(){
+      try {
+        let res = await this.$axios.post('api/contribution/import_create_or_update_contribution_payroll_period_senasir',{
+          period_contribution_senasir: this.dateFormat
+        })
+        if(res.payload.successfully){
+          this.$toast.success(res.message)
+      } else {
+        this.$toast.error(res.message)
+      }
+      } catch (e) {
+        comsole.log(e)
+      }
+    },
+    async rollbackContribution(){
+      try {
+        let res = await this.$axios.post('api/contribution/rollback_copy_validate_senasir',{
+          date_payroll: this.dateFormat
+        })
+        if(res.payload.validated_rollback){
+          this.$toast.success(res.message + " Se ha realizado el borrado de datos")
+      } else {
+        this.$toast.error(res.message)
+      }
+      } catch (e) {
+        comsole.log(e)
+      }
+    },
+    async downloadFailValidate(){
+      try {
+        let res = await this.$axios.post('api/contribution/download_fail_validated_senasir',{
+          date_payroll: this.dateFormat
+        })
+          const url = window.URL.createObjectURL(new Blob([res]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "ReporteAfiliadosNoValidados.xls");
+          document.body.appendChild(link);
+          link.click();
+
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
   },
 };
 </script>
