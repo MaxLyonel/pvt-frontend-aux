@@ -7,18 +7,18 @@
         <v-btn color="success" small @click.stop="close()"><v-icon small>mdi-check</v-icon> Cancelar</v-btn>
         <v-btn color="error" small @click.stop="remove()"><v-icon small>mdi-close</v-icon> Eliminar</v-btn>
       </v-card-actions>
-      <Loading v-else/>
+      <GlobalLoading v-else/>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import Loading from '@/components/common/Loading'
+import GlobalLoading from '@/components/common/GlobalLoading'
 
 export default {
   name: 'remove-item',
   components: {
-    Loading
+    GlobalLoading
   },
 
   data: () => ({

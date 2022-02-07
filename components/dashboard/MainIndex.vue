@@ -2,7 +2,9 @@
   <v-container fluid>
     <v-card flat>
       <v-card-title>
-        <section-bread-crumb></section-bread-crumb>
+        <v-toolbar dense color="tertiary" class="caption">
+          <global-bread-crumb></global-bread-crumb>
+        </v-toolbar>
       </v-card-title>
       <v-card-text>
       </v-card-text>
@@ -11,10 +13,10 @@
 </template>
 
 <script>
-import SectionBreadCrumb from '@/components/common/SectionBreadCrumb.vue';
+import GlobalBreadCrumb from '@/components/common/GlobalBreadCrumb.vue';
 export default {
   name: "MainIndex",
-  components: { SectionBreadCrumb },
+  components: { GlobalBreadCrumb },
   props: {},
   data() {
     return {

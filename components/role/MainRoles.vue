@@ -2,7 +2,9 @@
   <v-container fluid>
     <v-card flat>
       <v-card-title>
-        <section-bread-crumb></section-bread-crumb>
+        <v-toolbar dense color="tertiary" class="caption">
+          <GlobalBreadCrumb />
+        </v-toolbar>
       </v-card-title>
       <v-card-text>
         <v-card>
@@ -108,15 +110,14 @@
 </template>
 
 <script>
-import SectionBreadCrumb from "@/components/common/SectionBreadCrumb.vue";
-import Search from "@/components/common/Search.vue";
-import Loading from "@/components/common/Loading";
+import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
+import GlobalSearch from "@/components/common/GlobalSearch.vue";
+
 export default {
   name: "role-MainRoles",
   components: {
-    SectionBreadCrumb,
-    Loading,
-    Search
+    GlobalBreadCrumb,
+    GlobalSearch
   },
 
   data: () => ({

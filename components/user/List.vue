@@ -238,7 +238,7 @@ export default {
         this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevo usuarios')
       } catch (e) {
         console.log(e)
-        this.toast.error('Ocurrio un error durante la sincronización.')
+        this.$toast.error('Ocurrio un error durante la sincronización.')
       } finally {
         this.loading = false
       }
