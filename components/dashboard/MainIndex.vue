@@ -2,7 +2,9 @@
   <v-container fluid>
     <v-card flat>
       <v-card-title>
-        <global-bread-crumb></global-bread-crumb>
+        <v-toolbar dense color="tertiary" class="caption">
+          <global-bread-crumb></global-bread-crumb>
+        </v-toolbar>
       </v-card-title>
       <v-card-text>
       </v-card-text>
