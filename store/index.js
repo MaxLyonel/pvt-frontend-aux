@@ -106,7 +106,9 @@ export const actions = {
   async loadUser({commit}, {url, token}){
     let response = null
     try {
-      response = await fetch(url, { method: 'GET', headers: { 'Authorization': `Bearer ${token}`, 'accept': 'application/json' } })
+      response = await fetch(url, { method: 'GET', headers: { 'Authorization': `Bearer ${token}`,
+                                                              'Accept': 'application/json, application/vnd.ms-excel',
+                                                              'Content-Type': 'multipart/form-data'} })
       let user = (await response.json())
       return user.payload.user
     } catch(error) {
