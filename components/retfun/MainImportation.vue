@@ -93,6 +93,7 @@
       fullscreen
       hide-overlay
       transition="dialog-bottom-transition"
+      persistent
     >
       <v-card>
         <v-toolbar dark color="primary">
@@ -244,7 +245,7 @@ export default {
         this.getMonths();
         this.loading = false;
       } catch (e) {
-        comsole.log(e);
+        console.log(e);
       }
     },
     async getMonths() {
@@ -264,7 +265,7 @@ export default {
         }
         console.log(this.year_selected);
       } catch (e) {
-        comsole.log(e);
+        console.log(e);
       }
     },
     openDialog(year_selected) {
@@ -285,8 +286,7 @@ export default {
           formData
         );
         if (res.payload.successfully) {
-          this.$toast.success("Se ha realizado el copiado de " + res.payload.copied_record
-          );
+          this.$toast.success("Se ha realizado el copiado de " + res.payload.copied_record+ ' registros');
         } else {
           this.$toast.error(res.payload.error);
         }
@@ -297,14 +297,15 @@ export default {
 
     async validateData() {
       try {
-        let res = await this.$axios.post(
-          "api/contribution/validation_aid_contribution_affiliate_payroll_senasir",{
+        let res = await this.$axios.post("api/contribution/validation_aid_contribution_affiliate_payroll_senasir",{
             date_payroll: this.dateFormat,
           }
         );
         if (res.payload.successfully) {
           this.$toast.success("Se ha realizado la validación");
         } else {
+          this.$toast.error(res.message);
+          this.e1 = 1
           this.downloadFailValidate();
         }
       } catch (e) {
@@ -323,7 +324,7 @@ export default {
           this.$toast.error(res.message);
         }
       } catch (e) {
-        comsole.log(e);
+        console.log(e);
       }
     },
     async rollbackContribution() {
@@ -333,14 +334,15 @@ export default {
           }
         );
         if (res.payload.validated_rollback) {
-          this.$toast.success(
+          this.$toast.info(
             res.message + " Se ha realizado el borrado de datos"
           );
+          this.e1 = 1
         } else {
           this.$toast.error(res.message);
         }
       } catch (e) {
-        comsole.log(e);
+        console.log(e);
       }
     },
     async downloadFailValidate() {
