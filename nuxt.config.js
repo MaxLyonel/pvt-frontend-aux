@@ -51,7 +51,7 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/moment',
-    '@nuxtjs/toast'
+    "vue-toastification/nuxt",
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -80,7 +80,7 @@ export default {
         },
         light: {
           primary: '#0AADB3',
-          secondary: '#455A64',
+          secondary: '#385F73',
           tertiary: '#CFD8DC',
           accent: '#8D6E63',
           error: '#DD2C00',
@@ -102,17 +102,18 @@ export default {
   },
 
   toast: {
-    position: 'bottom-right',
-    autoHideDelay: 1000,
-    noAutoHide: true, // in order to stay it open forever
-    register: [ // Register custom toasts
-      {
-        name: 'my-error',
-        message: 'Oops...Something went wrong',
-        options: {
-          type: 'error'
-        }
-      }
-    ]
-}
+    position: "bottom-right",
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+
+  }
 }
