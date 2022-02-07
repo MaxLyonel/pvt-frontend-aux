@@ -2,43 +2,31 @@
   <v-container fluid>
     <v-card flat>
       <v-card-title>
-        <global-bread-crumb></global-bread-crumb>
+        <v-toolbar dense color="tertiary" class="caption">
+          <GlobalBreadCrumb />
+          <v-spacer></v-spacer>
+          <v-btn-toggle
+            v-model="active"
+            active-class="primary white--text"
+            mandatory
+          >
+            <v-btn text :value="true"> ACTIVOS </v-btn>
+            <v-btn text :value="false"> INACTIVOS </v-btn>
+          </v-btn-toggle>
+          <v-divider class="mx-2" inset vertical></v-divider>
+          <v-flex xs1> </v-flex>
+          <v-btn color="secondary" dark @click="$router.push('addUser')">
+            Adicionar usuario
+          </v-btn>
+          <v-btn color="info" dark @click="$refs.ListComponent.clearAll()">
+            Limpiar filtros
+          </v-btn>
+        </v-toolbar>
       </v-card-title>
-      <v-card-text>
+      <v-card-text class="ma-0 pa-0">
         <v-card flat>
-          <v-card-title class="pa-0 ma-0">
-            <template>
-            <v-btn
-              x-small
-              :color="!active ? 'error' : 'success'" 
-              dark
-              @click="active = !active"
-              style="margin-top: -80px; position: absolute; top: 35px; right: 315px;"
-            >
-              {{!active ? 'Usuarios Inactivos' : 'Usuarios Activos'}}
-            </v-btn>
-            <v-btn
-              x-small
-              color="secondary"
-              dark
-              @click="$router.push('addUser')"
-               style="margin-top: -80px; position: absolute; top: 35px; right: 165px;"
-            >
-              Adicionar usuario
-            </v-btn>
-            <v-btn
-              x-small
-              color="info"
-              dark
-               @click="$refs.ListComponent.clearAll()"
-              style="margin-top: -80px; position: absolute; top: 35px; right: 15px;"
-            >
-              Limpiar filtros
-            </v-btn>
-            </template>
-          </v-card-title>
           <v-card-text>
-            <List ref="ListComponent"/>
+            <List ref="ListComponent" />
           </v-card-text>
           <GlobalRemoveItem />
         </v-card>
@@ -64,8 +52,8 @@ export default {
     active: true,
   }),
 
-    mounted(){
-    console.log(this.$route.params.id)
+  mounted() {
+    console.log(this.$route.params.id);
   },
   watch: {
     search() {
