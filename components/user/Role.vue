@@ -1,5 +1,9 @@
 <template>
   <div>
+    <v-progress-linear v-if="modules.length == 0"
+      indeterminate
+      color="secondary"
+    ></v-progress-linear>
     <v-tabs v-model="selectedModule" vertical>
       <v-tab v-for="modulo in modules" :key="modulo.id" class="grey lighten-5">
         {{ modulo.display_name }}
