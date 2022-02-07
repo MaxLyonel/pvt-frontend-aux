@@ -13,19 +13,34 @@
           <br />
         <v-row>
           <v-col cols="12" sm="4" md="3" v-for="(rol, index) in modulo.roles" :key="index">
-            <v-card
+            <v-hover v-slot:default="{ hover }">
+              <v-chip
+                :class="hover ? 'elevation-4' : 'elevation-2'"
+                color="secondary"
+                dark
+                style="width: 250px;"
+                outlined
+                @click="clickRole(rol)"
+              >
+                <v-avatar left>
+                  <v-icon>mdi-account-circle</v-icon>
+                </v-avatar>
+                <strong>{{ rol.display_name }}</strong>
+              </v-chip>
+            </v-hover>
+            <!--<v-card
               class="rounded-pill"
               outlined
               @click="clickRole(rol)"
               style="cursor: pointer; border: thin solid rgba(0, 0, 0, 0.5)"
               elevation="2"
             >
-              <v-card-text>
+              <v-card-text class="py-1">
                 <v-icon color="teal">mdi-account-circle</v-icon>&nbsp;
                 <span class="teal--text font-weight-bold text-center">{{rol.display_name}}</span
                 ><br />
               </v-card-text>
-            </v-card>
+            </v-card>-->
           </v-col>
         </v-row>
       </v-col>

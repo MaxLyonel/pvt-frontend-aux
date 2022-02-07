@@ -11,10 +11,15 @@
             </v-col>
           </v-row>
           <div class="flex-grow-1"></div>
-          <v-btn-toggle color="teal" group mandatory>
+          <v-btn-toggle
+            v-model="active"
+            active-class="secondary white--text"
+            mandatory
+          >
             <v-btn value="COMANDO"> Comando </v-btn>
             <v-btn value="SENASIR"> Senasir </v-btn>
           </v-btn-toggle>
+          <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
             :items="years"
             :loading="loading"

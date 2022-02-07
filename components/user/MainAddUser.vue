@@ -12,42 +12,28 @@
               Nuevo usuario
             </v-col>
           </v-row>
+          <v-tooltip top >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                dark
+                color="info"
+                v-on="on"
+                absolute
+                right
+                @click="synchronizeUsers()"
+              >
+                <v-icon>mdi-sync</v-icon> Sincronizar
+              </v-btn>
+            </template>
+            <span class="caption">Sincronizar usuarios</span>
+          </v-tooltip>
         </v-toolbar>
       </v-card-title>
       <v-card-text>
         <v-card flat>
-          <v-card-title>
-            <v-tooltip top >
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  dark
-                  x-small
-                  color="success"
-                  v-on="on"
-                  absolute
-                  right
-                  @click="synchronizeUsers()"
-                  style="margin-top: -110px; margin-right:40px"
-                >
-                  <v-icon>mdi-sync</v-icon> Sincronizar
-                </v-btn>
-              </template>
-              <span class="caption">Sincronizar usuarios</span>
-            </v-tooltip>
-          </v-card-title>
           <v-card-text>
             <v-row>
               <v-col>
-                <!--<v-select
-                  dense
-                  :items="new_users_ldap"
-                  :item-text="fullname"
-                  :item-value="obj_user"
-                  label="Seleccione usuario"
-                  v-model="data_user"
-                  :loading="loading"
-                >
-                </v-select>-->
                 <v-autocomplete
                   :loading="loading"
                   dense
@@ -70,9 +56,8 @@
                 >
                 </v-select>
                 <v-btn
-                  x-small
-                  color="secondary"
-                  dark
+                  color="success"
+                  :disabled="!(Object.entries(data_user).length !== 0 && city_id != 0)"
                   @click="saveUser()"
                 >
                   Adicionar usuario
@@ -83,12 +68,12 @@
               <v-card
                 elevation="2"
                 outlined
-                class="ma-2 pa-2"
+                class="my-2 pa-2 text-uppercase"
                 color="secondary"
                 dark>
-                Nombre: {{user.first_name +' '+user.last_name}} <br>
-                Cargo: {{user.position}} <br>
-                Usuario:{{user.username}}
+                <strong>Nombre:</strong> {{user.first_name +' '+user.last_name}} <br>
+                <strong>Cargo:</strong> {{user.position}} <br>
+                <strong>Usuario:</strong> {{user.username}}
               </v-card>
               <v-card
                 elevation="2"
