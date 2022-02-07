@@ -38,7 +38,7 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <v-select
+                <!--<v-select
                   dense
                   :items="new_users_ldap"
                   :item-text="fullname"
@@ -47,7 +47,19 @@
                   v-model="data_user"
                   :loading="loading"
                 >
-                </v-select>
+                </v-select>-->
+                <v-autocomplete
+                  :loading="loading"
+                  dense
+                  filled
+                  outlined
+                  shaped
+                  label="Seleccione usuario"
+                  v-model="data_user"
+                  :items="new_users_ldap"
+                  :item-text="fullname"
+                  :item-value="obj_user"
+              ></v-autocomplete>
                 <v-select
                   dense
                   :items="cities"
@@ -68,12 +80,22 @@
               </v-col>
             </v-row>
             <template v-if="selectedUser != 0">
-              <v-card>
+              <v-card
+                elevation="2"
+                outlined
+                class="ma-2 pa-2"
+                color="secondary"
+                dark>
                 Nombre: {{user.first_name +' '+user.last_name}} <br>
                 Cargo: {{user.position}} <br>
                 Usuario:{{user.username}}
               </v-card>
-              <Role :user.sync="selectedUser"/>
+              <v-card
+                elevation="2"
+                outlined
+                class="ma-2 pa-2">
+                <Role :user.sync="selectedUser"/>
+              </v-card>
             </template>
           </v-card-text>
         </v-card>
@@ -126,7 +148,7 @@ export default {
         this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevos usuarios')
       } catch (e) {
         console.log(e)
-        this.toast.error('Ocurrio un error durante la sincronización.')
+        this.$toast.error('Ocurrio un error durante la sincronización.')
       } finally {
         this.loading = false
       }
@@ -136,6 +158,15 @@ export default {
         let res = await this.$axios.get(`api/global/city`)
         this.cities = res
         console.log(this.cities)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    // FIXME ruta para actualizar ci de usuarios, BORRAR DESPUES DE PONER EM PRODUCCION
+    async ruta() {
+      try {
+        let res = await this.$axios.get(`api/admin/update_users_ci`)
+        console.log(res)
       } catch (e) {
         console.log(e)
       }
@@ -156,7 +187,7 @@ export default {
         this.selectedUser = this.user.id
         this.$toast.success('Se guardo el usuario correctamente.')
         this.synchronizeUsers()
-        this.city_id = 0
+        this.clearInputs()
       } catch (e) {
         console.log(e)
         this.$toast.error(e.errors.city_id || e.errors.first_name || e.errors.last_name || e.errors.username  )
@@ -164,6 +195,10 @@ export default {
         this.loading = false
       }
     },
+    clearInputs() {
+      this.data_user = {}
+      this.city_id = 0
+    }
   }
 
 };
