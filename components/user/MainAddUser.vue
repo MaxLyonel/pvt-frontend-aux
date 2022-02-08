@@ -20,7 +20,7 @@
                 v-on="on"
                 absolute
                 right
-                @click="synchronizeUsers()"
+                @click="synchronizeUsers(true)"
               >
                 <v-icon>mdi-sync</v-icon> Sincronizar
               </v-btn>
@@ -109,7 +109,8 @@ export default {
   }),
   mounted(){
     this.getCities()
-    this.synchronizeUsers()
+    this.hide_synchronize_users= false
+    this.synchronizeUsers(false)
   },
 
   computed: {
@@ -125,12 +126,14 @@ export default {
     },
   },
   methods: {
-    async synchronizeUsers(){
+    async synchronizeUsers(value){
       try {
         this.loading = true
         let res = await this.$axios.get(`api/admin/sync_employees`)
         this.new_users_ldap = res.payload.new_users_ldap
-        this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevos usuarios')
+        if(value){
+          this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevos usuarios')
+        }
       } catch (e) {
         console.log(e)
         this.$toast.error('Ocurrio un error durante la sincronización.')
@@ -171,7 +174,7 @@ export default {
         this.user = res.payload.user
         this.selectedUser = this.user.id
         this.$toast.success('Se guardo el usuario correctamente.')
-        this.synchronizeUsers()
+        this.synchronizeUsers(false)
         this.clearInputs()
       } catch (e) {
         console.log(e)
