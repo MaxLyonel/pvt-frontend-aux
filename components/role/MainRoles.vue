@@ -8,7 +8,7 @@
       </v-card-title>
       <v-card-text>
         <v-card>
-          <v-card-text>
+          <v-card-text class="py-0">
             <v-row align="center" no-gutters>
               <v-col cols="12" md="6">
                 <v-select

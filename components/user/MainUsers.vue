@@ -7,7 +7,7 @@
           <v-spacer></v-spacer>
           <v-btn-toggle
             v-model="active"
-            active-class="primary white--text"
+            active-class="secondary white--text"
             mandatory
           >
             <v-btn text :value="true"> ACTIVOS </v-btn>
@@ -15,17 +15,17 @@
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-flex xs1> </v-flex>
-          <v-btn color="secondary" dark @click="$router.push('addUser')">
+          <v-btn color="success mx-1" dark @click="$router.push('addUser')">
             Adicionar usuario
           </v-btn>
-          <v-btn color="info" dark @click="$refs.ListComponent.clearAll()">
+          <v-btn color="info mx-1" dark @click="$refs.ListComponent.clearAll()">
             Limpiar filtros
           </v-btn>
         </v-toolbar>
       </v-card-title>
       <v-card-text class="ma-0 pa-0">
         <v-card flat>
-          <v-card-text>
+          <v-card-text class="py-0">
             <List ref="ListComponent" />
           </v-card-text>
           <GlobalRemoveItem />

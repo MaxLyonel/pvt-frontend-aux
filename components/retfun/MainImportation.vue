@@ -3,18 +3,17 @@
     <v-card flat>
       <v-card-title>
         <v-toolbar dense color="tertiary" class="caption">
-          <v-row>
-            <v-col cols="12" class="pa-0"> Importación </v-col>
-            <v-col cols="12" class="pa-0">
-              <v-icon>mdi-arrow-right-bold-box</v-icon>
-              Importación
-            </v-col>
-          </v-row>
+          <GlobalBreadCrumb />
           <div class="flex-grow-1"></div>
-          <v-btn-toggle color="teal" group mandatory>
+          <v-btn-toggle
+            v-model="active"
+            active-class="secondary white--text"
+            mandatory
+          >
             <v-btn value="COMANDO"> Comando </v-btn>
             <v-btn value="SENASIR"> Senasir </v-btn>
           </v-btn-toggle>
+          <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
             :items="years"
             :loading="loading"
@@ -102,10 +101,24 @@
           </v-btn>
           <v-toolbar-title>IMPORTACION SENASIR</v-toolbar-title>
         </v-toolbar>
-        <v-row justify="center"
+        <v-row justify="center" class="mt-5"
           ><v-col cols="8">
+            <v-toolbar-title class="pb-5">
+              <center><b>GESTIÓN {{year_selected}}</b></center>
+            </v-toolbar-title>
+              <v-select
+                dense
+                :items="list_months_not_import"
+                item-text="period_month_name"
+                item-value="period_month"
+                :label="'Periódo para importar '"
+                v-model="month_selected"
+                outlined
+                @change ="importProgressBar()"
+              ></v-select>
             <v-stepper v-model="e1">
               <v-stepper-header>
+
                 <v-stepper-step :complete="e1 > 1" step="1" editable>
                   Subir archivo
                 </v-stepper-step>
@@ -118,24 +131,25 @@
 
                 <v-divider></v-divider>
 
-                <v-stepper-step step="3"> Realizar importación </v-stepper-step>
+                <v-stepper-step step="3" editable> Realizar importación </v-stepper-step>
               </v-stepper-header>
-
               <v-stepper-items>
+                <v-progress-linear
+                  color="info"
+                  height="15"
+                  :value="progress.percentage"
+                  striped
+                >
+                  <strong>Porcentaje de Importación: {{progress.percentage}}%</strong>
+                </v-progress-linear>
                 <v-stepper-content step="1">
                   <v-card class="mb-12" color="grey lighten-1">
                     <v-card-text>
                       <v-card color="white" class="pa-2">
+                        <v-form ref="forStep1">
                         <v-row>
                           <v-col cols="6" md="6">
-                            <v-select
-                              dense
-                              :items="list_months_not_import"
-                              item-text="period_month_name"
-                              item-value="period_month"
-                              :label="'Periódos para importar ' + year_selected"
-                              v-model="month_selected"
-                            ></v-select>
+
                           </v-col>
 
                           <v-col cols="6" md="6">
@@ -148,16 +162,20 @@
                               dense
                               label="Cargar Archivo"
                               v-model="import_export.file"
+                              :rules="[$rules.obligatoria('Archivo')]"
                             ></v-file-input>
                           </v-col>
                         </v-row>
+                        </v-form>
                       </v-card>
                     </v-card-text>
                   </v-card>
-                  <v-btn color="primary" @click="uploadFile()">
+                  <v-btn color="primary" @click="validateForm1()">
                     Subir archivo
                   </v-btn>
-                  <v-btn color="secondary" @click="e1 = 2"> Siguiente </v-btn>
+                  <v-btn color="secondary"
+                    :disabled="!valid_step_one"
+                    @click="nextStep(1)"> Siguiente </v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
@@ -172,7 +190,9 @@
                   <v-btn color="error" @click="rollbackContribution()">
                     Rehacer
                   </v-btn>
-                  <v-btn color="secondary" @click="e1 = 3"> Siguiente </v-btn>
+                  <v-btn color="secondary"
+                  :disabled="!valid_step_one"
+                    @click="nextStep(2)"> Siguiente </v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
@@ -183,12 +203,11 @@
                   ></v-card>
 
                   <v-btn color="primary" @click="ImportContributions()">
-                    Subir archivo
+                    Importar archivo
                   </v-btn>
                   <v-btn color="error" @click="rollbackContribution()">
                     Rehacer
                   </v-btn>
-                  <v-btn color="secondary" @click="e1 = 1"> Siguiente </v-btn>
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
@@ -208,6 +227,7 @@ export default {
     GlobalBreadCrumb,
   },
   data: () => ({
+    active: 'SENASIR',
     years: [],
     loading: false,
     year_selected: "",
@@ -215,15 +235,21 @@ export default {
     list_senasir_months: [],
     list_months_not_import: [],
     dialog: false,
-    e1: 1,
+    e1: 0,
     import_export: {},
     month_selected: "",
+    percentage:0,
+    valid_step_one: false,
+    progress: {}
   }),
   created() {
     this.getYears();
   },
   computed: {
     dateFormat() {
+      if(this.month_selected < 10)
+      return this.year_selected + "-" + "0"+this.month_selected + "-" + "01";
+      else
       return this.year_selected + "-" + this.month_selected + "-" + "01";
     },
   },
@@ -233,8 +259,22 @@ export default {
         this.getMonths();
       }
     },
+
   },
   methods: {
+    nextStep (n) {
+      if (n == this.steps) {
+        this.e1 = 1
+      }
+      else {
+        if(n==1){
+          this.progress.percentage= this.progress.percentage + 30
+        }if(n==2){
+          this.progress.percentage= this.progress.percentage + 30
+        }
+        this.e1 = n + 1
+      }
+    },
     async getYears() {
       try {
         this.loading = true;
@@ -287,11 +327,13 @@ export default {
         );
         if (res.payload.successfully) {
           this.$toast.success("Se ha realizado el copiado de " + res.payload.copied_record+ ' registros');
+          this.valid_step_one = true
         } else {
           this.$toast.error(res.payload.error);
         }
       } catch (e) {
         console.log(e);
+        this.$toast.error(e.message);
       }
     },
 
@@ -302,7 +344,7 @@ export default {
           }
         );
         if (res.payload.successfully) {
-          this.$toast.success("Se ha realizado la validación");
+          this.$toast.success("Se ha realizado la validación de los registros");
         } else {
           this.$toast.error(res.message);
           this.e1 = 1
@@ -334,10 +376,9 @@ export default {
           }
         );
         if (res.payload.validated_rollback) {
-          this.$toast.info(
-            res.message + " Se ha realizado el borrado de datos"
-          );
+          this.$toast.info(res.message + " Se ha realizado el borrado de datos");
           this.e1 = 1
+          this.progress.percentage = 0
         } else {
           this.$toast.error(res.message);
         }
@@ -354,13 +395,49 @@ export default {
         const url = window.URL.createObjectURL(new Blob([res]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "ReporteAfiliadosNoValidados.xls");
+        link.setAttribute("download", "ReporteMatriculasNoValidas.xls");
         document.body.appendChild(link);
         link.click();
       } catch (e) {
         console.log(e);
       }
     },
+    async importProgressBar() {
+      try {
+        let res = await this.$axios.post("api/contribution/import_progress_bar",{
+            date_payroll: this.dateFormat,
+          }
+        );
+        this.progress = res.payload.import_progress_bar
+        if(this.progress.query_step_1){
+          this.e1 = 2
+          this.progress.percentage = this.progress.percentage
+          if(this.progress.query_step_2){
+            this.e1 = 3
+            this.progress.percentage = this.progress.percentage
+          }else{
+            this.e1 = 2
+            this.progress.percentage = this.progress.percentage
+          }
+        }else {
+          this.e1 = 1
+          this.progress.percentage = 0
+      }
+         console.log(this.e1)
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    validateForm1() {
+      if (this.$refs.forStep1) {
+        if (this.$refs.forStep1.validate()) {
+          this.uploadFile();
+        } else {
+          this.$toast.error('Ingrese los datos necesarios');
+        }
+      }
+    },
+
   },
 };
 </script>
