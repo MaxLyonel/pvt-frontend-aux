@@ -115,28 +115,28 @@
                 v-model="month_selected"
                 outlined
                 @change ="importProgressBar()"
+                :disabled="progress.query_step_1"
               ></v-select>
-            <v-stepper v-model="e1">
-              <v-stepper-header>
 
+            <v-stepper v-model="e1" v-if="month_selected != null">
+              <v-stepper-header>
                 <v-stepper-step :complete="e1 > 1" step="1" editable>
                   Subir archivo
                 </v-stepper-step>
-
                 <v-divider></v-divider>
-
                 <v-stepper-step :complete="e1 > 2" step="2" editable>
                   Validar Datos
                 </v-stepper-step>
-
                 <v-divider></v-divider>
-
-                <v-stepper-step step="3" editable> Realizar importación </v-stepper-step>
+                <v-stepper-step step="3" editable>
+                  Realizar importación
+                </v-stepper-step>
               </v-stepper-header>
+
               <v-stepper-items>
                 <v-progress-linear
                   color="info"
-                  height="15"
+                  height="20"
                   :value="progress.percentage"
                   striped
                 >
@@ -148,11 +148,7 @@
                       <v-card color="white" class="pa-2">
                         <v-form ref="forStep1">
                         <v-row>
-                          <v-col cols="6" md="6">
-
-                          </v-col>
-
-                          <v-col cols="6" md="6">
+                          <v-col cols="12" md="12">
                             <v-file-input
                               counter
                               show-size
@@ -174,41 +170,62 @@
                     Subir archivo
                   </v-btn>
                   <v-btn color="secondary"
-                    :disabled="!valid_step_one"
+                    :disabled="!progress.query_step_1"
                     @click="nextStep(1)"> Siguiente </v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
-                  <v-card
-                    class="mb-12"
-                    color="grey lighten-1"
-                    height="200px"
-                  ></v-card>
+                  <v-card class="mb-12" color="grey lighten-1">
+                    <v-card-text>
+                      <v-card color="white" class="pa-2" v-if="progress.query_step_1">
+                        <v-row>
+                          <v-col cols="12" md="6">
+                            Nombre del archivo: {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                          </v-col>
+                          <v-col cols="12" md="6">
+                            Total de registros copiados: {{progress.reg_copy}}<br>
+                          </v-col>
+                        </v-row>
+                      </v-card>
+                    </v-card-text>
+                  </v-card>
                   <v-btn color="primary" @click="validateData()">
-                    Importar archivo
+                    Validar archivo
                   </v-btn>
                   <v-btn color="error" @click="rollbackContribution()">
                     Rehacer
                   </v-btn>
                   <v-btn color="secondary"
-                  :disabled="!valid_step_one"
+                    :disabled="!progress.query_step_2"
                     @click="nextStep(2)"> Siguiente </v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
-                  <v-card
-                    class="mb-12"
-                    color="grey lighten-1"
-                    height="200px"
-                  ></v-card>
-
+                  <v-card class="mb-12" color="grey lighten-1">
+                    <v-card-text>
+                      <v-card color="white" class="pa-2" v-if="progress.query_step_1">
+                        <v-row>
+                          <v-col cols="12" md="6">
+                            Nombre del archivo: {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                          </v-col>
+                          <v-col cols="12" md="6">
+                            Total de registros copiados: {{progress.reg_copy}}<br>
+                            Total de registros validados: {{progress.reg_validation}}
+                          </v-col>
+                        </v-row>
+                      </v-card>
+                    </v-card-text>
+                  </v-card>
                   <v-btn color="primary" @click="ImportContributions()">
                     Importar archivo
                   </v-btn>
-                  <v-btn color="error" @click="rollbackContribution()">
+                  <v-btn color="error" 
+                    :disabled="progress.query_step_3" 
+                    @click="rollbackContribution()">
                     Rehacer
                   </v-btn>
                 </v-stepper-content>
+
               </v-stepper-items>
             </v-stepper>
           </v-col>
@@ -230,17 +247,25 @@ export default {
     active: 'SENASIR',
     years: [],
     loading: false,
-    year_selected: "",
+    year_selected: null,
     period_type: "SENASIR",
     list_senasir_months: [],
     list_months_not_import: [],
     dialog: false,
-    e1: 0,
+    e1: 1,
     import_export: {},
-    month_selected: "",
-    percentage:0,
-    valid_step_one: false,
-    progress: {}
+    month_selected: null,
+    progress: {
+      file_exists: false,
+      file_name: null,
+      percentage: 0,
+      query_step_1: false,
+      query_step_2: false,
+      query_step_3: false,
+      reg_contribution: 0,
+      reg_copy: 0,
+      reg_validation: 0
+    },
   }),
   created() {
     this.getYears();
@@ -310,12 +335,14 @@ export default {
     },
     openDialog(year_selected) {
       this.dialog = true;
+      this.month_selected= null,
       console.log(year_selected);
     },
     close() {
       this.dialog = false;
+      this.clearData()
     },
-    //PASO1 METODOS
+    //PASO1
     //Metodo para subir el archivo
     async uploadFile() {
       let formData = new FormData();
@@ -325,9 +352,11 @@ export default {
         let res = await this.$axios.post("api/contribution/upload_copy_payroll_senasir",
           formData
         );
+        this.progress.reg_copy = res.payload.copied_record
         if (res.payload.successfully) {
           this.$toast.success("Se ha realizado el copiado de " + res.payload.copied_record+ ' registros');
-          this.valid_step_one = true
+          this.progress.query_step_1 = true
+          console.log(this.import_export.file.name)
         } else {
           this.$toast.error(res.payload.error);
         }
@@ -336,7 +365,7 @@ export default {
         this.$toast.error(e.message);
       }
     },
-
+    //PASO2
     async validateData() {
       try {
         let res = await this.$axios.post("api/contribution/validation_aid_contribution_affiliate_payroll_senasir",{
@@ -344,43 +373,16 @@ export default {
           }
         );
         if (res.payload.successfully) {
+          this.progress.query_step_2 = true
+          this.progress.reg_validation = res.payload.validated_record
           this.$toast.success("Se ha realizado la validación de los registros");
         } else {
-          this.$toast.error(res.message);
-          this.e1 = 1
-          this.downloadFailValidate();
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async ImportContributions() {
-      try {
-        let res = await this.$axios.post("api/contribution/import_create_or_update_contribution_payroll_period_senasir",{
-            period_contribution_senasir: this.dateFormat,
+          if(res.message == 'Excel'){
+            this.$toast.info('No se encontraron algunas matrículas, por favor revise el archivo Excel');
+            this.downloadFailValidate();
+          }else {
+            this.$toast.error(res.message);
           }
-        );
-        if (res.payload.successfully) {
-          this.$toast.success(res.message);
-        } else {
-          this.$toast.error(res.message);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async rollbackContribution() {
-      try {
-        let res = await this.$axios.post("api/contribution/rollback_copy_validate_senasir",{
-            date_payroll: this.dateFormat,
-          }
-        );
-        if (res.payload.validated_rollback) {
-          this.$toast.info(res.message + " Se ha realizado el borrado de datos");
-          this.e1 = 1
-          this.progress.percentage = 0
-        } else {
-          this.$toast.error(res.message);
         }
       } catch (e) {
         console.log(e);
@@ -398,6 +400,41 @@ export default {
         link.setAttribute("download", "ReporteMatriculasNoValidas.xls");
         document.body.appendChild(link);
         link.click();
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //PASO3
+    async ImportContributions() {
+      try {
+        let res = await this.$axios.post("api/contribution/import_create_or_update_contribution_payroll_period_senasir",{
+            period_contribution_senasir: this.dateFormat,
+          }
+        );
+        if (res.payload.successfully) {
+          this.$toast.success("Total de registros: "+ res.payload.num_total + "\n Registros creados: "+ res.payload.num_created + "\n Registros actualizados: "+ res.payload.num_updated)
+          this.dialog = false
+          this.clearData()
+          this.getMonths();
+        } else {
+          this.$toast.error(res.message);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async rollbackContribution() {
+      try {
+        let res = await this.$axios.post("api/contribution/rollback_copy_validate_senasir",{
+            date_payroll: this.dateFormat,
+          }
+        );
+        if (res.payload.validated_rollback) {
+          this.$toast.info(res.message + " Se ha realizado el borrado de datos");
+          this.clearData()
+        } else {
+          this.$toast.error(res.message);
+        }
       } catch (e) {
         console.log(e);
       }
@@ -437,6 +474,19 @@ export default {
         }
       }
     },
+    clearData(){
+      this.e1 = 1,
+      this.import_export = {},
+      this.progress.file_exists= false,
+      this.progress.file_name= null,
+      this.progress.percentage= 0,
+      this.progress.query_step_1= false,
+      this.progress.query_step_2= false,
+      this.progress.query_step_3= false,
+      this.progress.reg_contribution= 0,
+      this.progress.reg_copy= 0,
+      this.progress.reg_validation= 0
+    }
 
   },
 };
