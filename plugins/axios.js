@@ -36,7 +36,7 @@ export default (context, inject) => {
     return baseUrl + url
   }
 
-  function _http(method, url, data, customConfig) {
+  function _http(method, url, data, customHeaders, customConfig) {
     const _url = getUrl(url)
     let setting = {
       method,
@@ -50,7 +50,9 @@ export default (context, inject) => {
     if (context.store.state.token) {
       setting.headers = { 'Authorization': `Bearer ${context.store.state.token}` }
     }
-
+    if (customHeaders) {
+      setting.headers = { ...setting.headers, ...customHeaders }
+    }
     if (customConfig) {
       setting = { ...setting, ...customConfig }
     }
@@ -73,11 +75,21 @@ export default (context, inject) => {
   )
 
   const Axios = {
-    get: (url, config) => { return _http('get', url, undefined, config) },
-    post: (url, data, config) => { return _http('post', url, data, config) },
-    put: (url, data, config) => { return _http('put', url, data, config) },
-    patch: (url, data, config) => { return _http('patch', url, data, config) },
-    delete: (url, config) => { return _http('delete', url, data, config) },
+    get: (url, customHeaders, config) => {
+      return _http('get', url, undefined, customHeaders, config)
+    },
+    post: (url, data, customHeaders, config) => {
+      return _http('post', url, data, customHeaders, config)
+    },
+    put: (url, data, customHeaders, config) => {
+      return _http('put', url, data, customHeaders, config)
+    },
+    patch: (url, data, customHeaders, config) => {
+      return _http('patch', url, data, customHeaders, config)
+    },
+    delete: (url, data, customHeaders, config) => {
+      return _http('delete', url, data, customHeaders, config)
+    },
   }
 
   inject('axios', Axios)

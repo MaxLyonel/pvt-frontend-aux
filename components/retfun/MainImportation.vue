@@ -180,10 +180,10 @@
                       <v-card color="white" class="pa-2" v-if="progress.query_step_1">
                         <v-row>
                           <v-col cols="12" md="6">
-                            Nombre del archivo: {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                            <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
-                            Total de registros copiados: {{progress.reg_copy}}<br>
+                            <strong>Total de registros copiados:</strong> {{progress.reg_copy}}<br>
                           </v-col>
                         </v-row>
                       </v-card>
@@ -209,8 +209,8 @@
                             Nombre del archivo: {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
-                            Total de registros copiados: {{progress.reg_copy}}<br>
-                            Total de registros validados: {{progress.reg_validation}}
+                            <strong>Total de registros copiados:</strong> {{progress.reg_copy}}<br>
+                            <strong>Total de registros validados:</strong> {{progress.reg_validation}}
                           </v-col>
                         </v-row>
                       </v-card>
@@ -380,6 +380,9 @@ export default {
           if(res.message == 'Excel'){
             this.$toast.info('No se encontraron algunas matrículas, por favor revise el archivo Excel');
             this.downloadFailValidate();
+            this.e1 = 1
+            this.progress.query_step_1 = false
+            this.progress.percentage = 0
           }else {
             this.$toast.error(res.message);
           }
@@ -390,9 +393,22 @@ export default {
     },
     async downloadFailValidate() {
       try {
+        // ESTA ES OTRA FORMA QUE UTILIZA FETCH EN LUGAR DE AXIOS
+        /*let response = await fetch(
+          'http://localhost:8989/api/contribution/download_fail_validated_senasir', {
+            method: 'POST',
+            body: JSON.stringify({date_payroll: this.dateFormat}),
+            headers: new Headers({'Authorization': `Bearer 64|S34WMifFxR4XVdyQtC8WTdk4cVOFMocqZcQFCN9a`, 'responseType': 'blob', 'Content-Type': 'application/json'}),
+          }
+        );
+        let res = (await response.blob())*/
+
+        // Se debe enviar el responseType como configuracion, NO como header
         let res = await this.$axios.post("api/contribution/download_fail_validated_senasir",{
             date_payroll: this.dateFormat,
-          }
+          },
+          {'Accept': 'application/vnd.ms-excel' },
+          {'responseType': 'blob'}
         );
         const url = window.URL.createObjectURL(new Blob([res]));
         const link = document.createElement("a");
