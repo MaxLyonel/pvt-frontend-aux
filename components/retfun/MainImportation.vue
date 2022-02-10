@@ -69,7 +69,7 @@
               </v-col>
               <v-divider inset></v-divider>
               <v-col cols="12" md="12" class="py-0">
-                <v-tooltip top>
+                <!--<v-tooltip top>
                   <template v-slot:activator="{ on }">
                     <v-btn class="ma-2 teal white--text btn-period" v-on="on">
                       <v-icon dark left small>mdi-arrow-down</v-icon>Descargar
@@ -78,7 +78,14 @@
                   <div>
                     <span>Descargar información</span>
                   </div>
-                </v-tooltip>
+                </v-tooltip>-->
+                <span class="info--text">N° reg. copiados: </span><strong>{{item.data_count.num_total_data_copy}}</strong><br>
+                <span class="info--text">N° reg. considerados: </span><strong>{{item.data_count.num_data_considered}}</strong><br>
+                <span class="error--text">N° reg. no considerados: </span><strong>{{item.data_count.num_data_not_considered}}</strong><br>
+                <span class="info--text">N° reg. validados: </span><strong>{{item.data_count.num_data_validated}}</strong><br>
+                <span class="error--text">N° reg. no validados: </span><strong>{{item.data_count.num_data_not_validated}}</strong><br>
+                <span class="info--text">N° reg. importados: </span><strong>{{item.data_count.num_total_data_aid_contributions}}</strong><br>
+                <span class="info--text">Total aportes Bs.: </span><strong>{{item.data_count.sum_amount_total_aid_contribution}}</strong><br>
               </v-col>
             </v-row>
           </v-card-text>
@@ -148,7 +155,7 @@
                       <v-card color="white" class="pa-2">
                         <v-form ref="forStep1">
                         <v-row>
-                          <v-col cols="12" md="12">
+                          <v-col cols="12" md="6">
                             <v-file-input
                               counter
                               show-size
@@ -158,8 +165,13 @@
                               dense
                               label="Cargar Archivo"
                               v-model="import_export.file"
+                              :disabled="progress.query_step_1"
                               :rules="[$rules.obligatoria('Archivo')]"
                             ></v-file-input>
+                          </v-col>
+                          <v-col cols="12" md="6" v-if="progress.query_step_1">
+                            <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
                           </v-col>
                         </v-row>
                         </v-form>
@@ -181,9 +193,13 @@
                         <v-row>
                           <v-col cols="12" md="6">
                             <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                            <strong class="success--text">Total de registros considerados:</strong> {{data_count.num_data_considered}}<br>
+                            <strong class="red--text">Total de registros no considerados:</strong> {{data_count.num_data_not_considered}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
-                            <strong>Total de registros copiados:</strong> {{progress.reg_copy}}<br>
+                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
+                            <strong class="success--text">Total de registros validados:</strong> {{data_count.num_data_validated}}<br>
+                            <strong class="error--text">Total de registros no validados:</strong> {{data_count.num_data_not_validated}}<br>
                           </v-col>
                         </v-row>
                       </v-card>
@@ -206,11 +222,14 @@
                       <v-card color="white" class="pa-2" v-if="progress.query_step_1">
                         <v-row>
                           <v-col cols="12" md="6">
-                            Nombre del archivo: {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                            <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                            <strong class="success--text">Total de registros considerados:</strong> {{data_count.num_data_considered}}<br>
+                            <strong class="red--text">Total de registros no considerados:</strong> {{data_count.num_data_not_considered}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
-                            <strong>Total de registros copiados:</strong> {{progress.reg_copy}}<br>
-                            <strong>Total de registros validados:</strong> {{progress.reg_validation}}
+                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
+                            <strong class="success--text">Total de registros validados:</strong> {{data_count.num_data_validated}}<br>
+                            <strong class="error--text">Total de registros no validados:</strong> {{data_count.num_data_not_validated}}<br>
                           </v-col>
                         </v-row>
                       </v-card>
@@ -266,6 +285,14 @@ export default {
       reg_copy: 0,
       reg_validation: 0
     },
+    data_count:{
+      num_data_considered: 0,
+      num_data_not_considered: 0,
+      num_data_not_validated: 0,
+      num_data_validated: 0,
+      num_total_data_aid_contributions: 0,
+      num_total_data_copy: 0
+    }
   }),
   created() {
     this.getYears();
@@ -352,9 +379,11 @@ export default {
         let res = await this.$axios.post("api/contribution/upload_copy_payroll_senasir",
           formData
         );
-        this.progress.reg_copy = res.payload.copied_record
         if (res.payload.successfully) {
-          this.$toast.success("Se ha realizado el copiado de " + res.payload.copied_record+ ' registros');
+          this.data_count.num_total_data_copy = res.payload.data_count.num_total_data_copy
+          this.data_count.num_data_considered = res.payload.data_count.num_data_considered
+          this.data_count.num_data_not_considered = res.payload.data_count.num_data_not_considered
+          this.$toast.success("Se ha realizado el copiado de " + res.payload.data_count.num_total_data_copy+ ' registros');
           this.progress.query_step_1 = true
           console.log(this.import_export.file.name)
         } else {
@@ -374,8 +403,9 @@ export default {
         );
         if (res.payload.successfully) {
           this.progress.query_step_2 = true
-          this.progress.reg_validation = res.payload.validated_record
-          this.$toast.success("Se ha realizado la validación de los registros");
+          this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
+          this.data_count.num_data_validated = res.payload.data_count.num_data_validated
+          this.$toast.success("Se ha realizado la validación de "+ res.payload.data_count.num_data_validated+" registros");
         } else {
           if(res.message == 'Excel'){
             this.$toast.info('No se encontraron algunas matrículas, por favor revise el archivo Excel');
@@ -462,6 +492,7 @@ export default {
           }
         );
         this.progress = res.payload.import_progress_bar
+        this.data_count = res.payload.data_count
         if(this.progress.query_step_1){
           this.e1 = 2
           this.progress.percentage = this.progress.percentage
@@ -498,10 +529,7 @@ export default {
       this.progress.percentage= 0,
       this.progress.query_step_1= false,
       this.progress.query_step_2= false,
-      this.progress.query_step_3= false,
-      this.progress.reg_contribution= 0,
-      this.progress.reg_copy= 0,
-      this.progress.reg_validation= 0
+      this.progress.query_step_3= false
     }
 
   },
