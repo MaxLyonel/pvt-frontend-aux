@@ -83,7 +83,6 @@
                 <span class="info--text">N° reg. considerados: </span><strong>{{item.data_count.num_data_considered}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{item.data_count.num_data_not_considered}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{item.data_count.num_data_validated}}</strong><br>
-                <span class="error--text">N° reg. no validados: </span><strong>{{item.data_count.num_data_not_validated}}</strong><br>
                 <span class="info--text">N° reg. importados: </span><strong>{{item.data_count.num_total_data_aid_contributions}}</strong><br>
                 <span class="info--text">Total aportes Bs.: </span><strong>{{item.data_count.sum_amount_total_aid_contribution}}</strong><br>
               </v-col>
@@ -127,15 +126,15 @@
 
             <v-stepper v-model="e1" v-if="month_selected != null">
               <v-stepper-header>
-                <v-stepper-step :complete="e1 > 1" step="1" editable>
+                <v-stepper-step :complete="e1 > 1" step="1">
                   Subir archivo
                 </v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step :complete="e1 > 2" step="2" editable>
+                <v-stepper-step :complete="e1 > 2" step="2">
                   Validar Datos
                 </v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step step="3" editable>
+                <v-stepper-step step="3">
                   Realizar importación
                 </v-stepper-step>
               </v-stepper-header>
@@ -212,7 +211,7 @@
                   <v-btn color="primary" @click="validateData()">
                     Validar archivo
                   </v-btn>
-                  <v-btn color="error" @click="rollbackContribution()">
+                  <v-btn color="error" @click="dialog_confirm=true">
                     Rehacer
                   </v-btn>
                   <v-btn color="secondary"
@@ -239,7 +238,7 @@
                       </v-card>
                     </v-card-text>
                   </v-card>
-                  <v-btn color="primary" @click="ImportContributions()">
+                  <v-btn color="primary" @click="dialog_confirm_import=true">
                     Importar archivo
                   </v-btn>
                   <v-btn color="error" 
@@ -256,6 +255,63 @@
       </v-card>
     </v-dialog>
     <!--fin steps-->
+    <v-dialog
+      v-model="dialog_confirm"
+      max-width="600"
+    >
+      <v-card>
+        <v-card-title>
+          <center>¿Esta seguro que quiere rehacer el proceso de importación?</center>
+          <br>
+          <br> <small class='caption'>Al rehacer se borraran todos los datos ingresados</small>
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="error"
+            text
+            @click="dialog_confirm=false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="success"
+            text
+            @click="rollbackContribution()"
+          >
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="dialog_confirm_import"
+      max-width="500"
+    >
+      <v-card>
+        <v-card-title>
+          Esta seguro de realizar la importación?
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="error"
+            text
+            @click="dialog_confirm_import=false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="sucess"
+            text
+            :loading="loading_import"
+            @click="ImportContributions()"
+          >
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -301,6 +357,8 @@ export default {
     btn_validate_data: false,
     btn_import_contributions: false,
     btn_rollback: false,
+    dialog_confirm : false,
+    dialog_confirm_import:false,
   }),
   created() {
     this.getYears();
@@ -392,6 +450,8 @@ export default {
           this.data_count.num_total_data_copy = res.payload.data_count.num_total_data_copy
           this.data_count.num_data_considered = res.payload.data_count.num_data_considered
           this.data_count.num_data_not_considered = res.payload.data_count.num_data_not_considered
+          this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
+          this.data_count.num_data_validated = res.payload.data_count.num_data_validated
           this.$toast.success("Se ha realizado el copiado de " + res.payload.data_count.num_total_data_copy+ ' registros');
           this.progress.query_step_1 = true
           console.log(this.import_export.file.name)
@@ -477,6 +537,8 @@ export default {
         );
         if (res.payload.successfully) {
           this.$toast.success("Total de registros: "+ res.payload.num_total + "\n Registros creados: "+ res.payload.num_created + "\n Registros actualizados: "+ res.payload.num_updated)
+          this.progress.percentage = 100
+          this.dialog_confirm_import= false
           this.dialog = false
           this.clearData()
           this.getMonths();
@@ -499,6 +561,7 @@ export default {
         if (res.payload.validated_rollback) {
           this.$toast.info(res.message + " Se ha realizado el borrado de datos");
           this.clearData()
+          this.dialog_confirm=false
         } else {
           this.$toast.error(res.message);
         }
