@@ -178,7 +178,11 @@
                       </v-card>
                     </v-card-text>
                   </v-card>
-                  <v-btn color="primary" @click="validateForm1()">
+                  <v-btn 
+                    color="primary"
+                    @click="validateForm1()"
+                    :loading ="btn_update_file"
+                  >
                     Subir archivo
                   </v-btn>
                   <v-btn color="secondary"
@@ -292,7 +296,11 @@ export default {
       num_data_validated: 0,
       num_total_data_aid_contributions: 0,
       num_total_data_copy: 0
-    }
+    },
+    btn_update_file: false,
+    btn_validate_data: false,
+    btn_import_contributions: false,
+    btn_rollback: false,
   }),
   created() {
     this.getYears();
@@ -372,6 +380,7 @@ export default {
     //PASO1
     //Metodo para subir el archivo
     async uploadFile() {
+      this.btn_update_file = true;
       let formData = new FormData();
       formData.append("file", this.import_export.file);
       formData.append("date_payroll", this.dateFormat);
@@ -389,13 +398,16 @@ export default {
         } else {
           this.$toast.error(res.payload.error);
         }
+        this.btn_update_file = false;
       } catch (e) {
         console.log(e);
+        this.btn_update_file = false;
         this.$toast.error(e.message);
       }
     },
     //PASO2
     async validateData() {
+      this.btn_validate_data = true;
       try {
         let res = await this.$axios.post("api/contribution/validation_aid_contribution_affiliate_payroll_senasir",{
             date_payroll: this.dateFormat,
@@ -414,11 +426,16 @@ export default {
             this.progress.query_step_1 = false
             this.progress.percentage = 0
           }else {
+            this.e1 = 1
+            this.progress.query_step_1 = false
+            this.progress.percentage = 0
             this.$toast.error(res.message);
           }
         }
+        this.btn_validate_data = false;
       } catch (e) {
         console.log(e);
+        this.btn_validate_data = false;
       }
     },
     async downloadFailValidate() {
@@ -452,6 +469,7 @@ export default {
     },
     //PASO3
     async ImportContributions() {
+      this.btn_import_contributions = true;
       try {
         let res = await this.$axios.post("api/contribution/import_create_or_update_contribution_payroll_period_senasir",{
             period_contribution_senasir: this.dateFormat,
@@ -465,11 +483,14 @@ export default {
         } else {
           this.$toast.error(res.message);
         }
+        this.btn_import_contributions = false
       } catch (e) {
         console.log(e);
+        this.btn_import_contributions = false
       }
     },
     async rollbackContribution() {
+      this.btn_rollback = true
       try {
         let res = await this.$axios.post("api/contribution/rollback_copy_validate_senasir",{
             date_payroll: this.dateFormat,
@@ -481,6 +502,7 @@ export default {
         } else {
           this.$toast.error(res.message);
         }
+        this.btn_rollback = false
       } catch (e) {
         console.log(e);
       }
