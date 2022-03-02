@@ -1,35 +1,41 @@
 # PVT-FRONTEND
 
-# Requisitos
+## Requisitos
+    
+- Instalar ***Node.js*** en su versión reciente de *LTS*, (Al momento de que se redactó esta documentación, la versión LTS de node es: ***LTS v16.14.0***).
 
-- Instalar *Node Versión Manager* (***nvm***) herramienta para administrar mútiples versions de *Node.js*
-    
-    `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash`
-    
-- Activando la variable de entorno de *NVM* con el siguiente comando:
-    
-    `source ~/.bashrc`
-    
-- Instalar ***Node.js*** en su útlima versión:
-    
-    `nvm install node`
-    
-    El proyecto está construido con la versión v16.14.0. Por lo tanto debemos cambiarlo, con el siguiente comando:
-    
-    - Instalando la versión *v16.14.0*
+- Instalar yarn versión más reciente.
 
-        `nvm install v16.14.0`
-    - Cambiar de versión:
+Puede instalar ***Node.js*** en su versión LTS, a través de ***nvm*** (herramienta para administrar múltiples versiones de Node.js) o consultar la [documentación oficial](https://nodejs.org/es/docs/) para su instalación.
 
-        `nvm use v16.14.0`
+## Instalación de la última versión LTS de node mediante nvm
 
-- Instalar yarn:
-    Importando la clave GPG, con el siguiente comando:
-    
+### Instalación de la herramienta nvm
+
+La instalación de la herramienta para administrar múltiples versiones de Node.j (nvm) se lo realiza con el siguiente comando:
+
+`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash`
+
+Activando la variable de entorno de *NVM* con el siguiente comando:
+
+`source ~/.bashrc`
+
+Instalando la versión LTS v16.14.0 de Node.js:
+
+`nvm install v16.14.0`
+
+Compruebe la instalación con el siguiente comando:
+
+`node --version`
+
+
+## Instalación de yarn 
+
+Primero se debe importar la clave GPG, con el siguiente comando:
 
 `curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
 
-Habilitando el repositorio y añadiendo el repositorio yarn en *Ubuntu*:
+Habilitando el repositorio y añadiendo el repositorio yarn en Ubuntu:
 
 `echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
 
@@ -41,15 +47,46 @@ Compruebe que tenga instalado yarn:
 
 `yarn --version`
 
-- Configurar el archivo ***.env*** con la dirección del **BACKEND**
+## Puglins
 
-    `BASE_URL = http://<ip-backend>:<puerto>`
+El directorio de complementos contiene complemento de JavaScript que desea ejecutar antes de instanciar la aplicación raiz Vue.js. Puede agregar acá complementos Vue e inyectar funciones o constantes, mediante la adición de la ruta a los plugins en el archivo `nuxt.config.js`.
+
+Más información sobre el uso de este directorio en la [documentación](https://nuxtjs.org/docs/directory-structure/plugins/).
+
+
+### Instalar el plugin **dotenv**
+
+Puede realizar la instalación con el administrador de paquetes *npm*:
+
+`npm install @nuxtjs/dotenv`
+
+O con el administrador de paquetes *yarn*:
+
+`yarn add @nuxtjs/dotenv`
+
+## Configuraciones
+
+Debe realizar una serie de configuraciones en el proyecto antes de poder ejecutarlo.
+
+### Adicionar el archivo .env
+
+Este archivo nos sirve para personalizar las variables de entorno de nuestra aplicación. Debe configurar el archivo, con los siguientes parámetros:
+
+`APP_TITLE = Plataforma Virtual de Trámites`
+
+`BASE_URL = http://<ip-backend>:<puerto>`
+
+La ip y el puerto deben apuntar a donde esta implementado el **BACKEND**.
+
 
 ## Modo Ejecución
 
-- Descargar dependencias para el frontend:
+Para ejecutar el proyecto, utilizamos el administrador de paquetes yarn. 
+
+- Instalar dependenias
 
     `yarn install`
+    
 - Hacer correr el proyecto:
 
     `yarn dev`
