@@ -1,5 +1,7 @@
 # PVT-FRONTEND
 
+***NOTA:** Se uso el sistema operativo GNU/Linux en su distribución *Ubuntu 20.04**
+
 ## Requisitos
     
 - Instalar ***Node.js*** en su versión reciente de *LTS*, (Al momento de que se redactó esta documentación, la versión LTS de node es: ***LTS v16.14.0***).
@@ -16,7 +18,7 @@ La instalación de la herramienta para administrar múltiples versiones de Node.
 
 `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash`
 
-Activando la variable de entorno de *NVM* con el siguiente comando:
+Activando la variable de entorno de *nvm* con el siguiente comando:
 
 `source ~/.bashrc`
 
@@ -31,7 +33,11 @@ Compruebe la instalación con el siguiente comando:
 
 ## Instalación de yarn 
 
-Primero se debe importar la clave GPG, con el siguiente comando:
+Instalando yarn mediante *curl*. Si aún no tiene instalado *curl* en su sistema operativo, lo puede realizar con el siguiente comando:
+
+`sudo apt install curl`
+
+Añadir la clave GPG para verificar los paquetes de Yarn. Para ello debe importar la clave GPG con el siguiente comando:
 
 `curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
 
@@ -47,7 +53,7 @@ Compruebe que tenga instalado yarn:
 
 `yarn --version`
 
-## Puglins
+## Plugins
 
 El directorio de complementos contiene complemento de JavaScript que desea ejecutar antes de instanciar la aplicación raiz Vue.js. Puede agregar acá complementos Vue e inyectar funciones o constantes, mediante la adición de la ruta a los plugins en el archivo `nuxt.config.js`.
 
