@@ -55,7 +55,7 @@ Compruebe que tenga instalado yarn:
 
 ## Plugins
 
-El directorio de complementos contiene complemento de JavaScript que desea ejecutar antes de instanciar la aplicación raiz Vue.js. Puede agregar acá complementos Vue e inyectar funciones o constantes, mediante la adición de la ruta a los plugins en el archivo `nuxt.config.js`.
+El archivo de configuración y ajustes base del proyecto se encuentra en el archivo`nuxt.config.js`, ademas que se puede realizar la incorporación de pluguins a se utilizadas dentro el proyecto.
 
 Más información sobre el uso de este directorio en la [documentación](https://nuxtjs.org/docs/directory-structure/plugins/).
 
