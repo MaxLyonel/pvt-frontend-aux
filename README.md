@@ -1,69 +1,98 @@
-## PVT-FRONT
+# PVT-FRONTEND
 
-## Build Setup
+***NOTA:** Se uso el sistema operativo GNU/Linux en su distribución *Ubuntu 20.04**
 
-```bash
-# install dependencies
-$ yarn install
+## Requisitos
+    
+- Instalar ***Node.js*** en su versión reciente de *LTS*, (Al momento de que se redactó esta documentación, la versión LTS de node es: ***LTS v16.14.0***).
 
-# serve with hot reload at localhost:3000
-$ yarn dev
+- Instalar yarn versión más reciente.
 
-# build for production and launch server
-$ yarn build
-$ yarn start
+Puede instalar ***Node.js*** en su versión LTS, a través de ***nvm*** (herramienta para administrar múltiples versiones de Node.js) o consultar la [documentación oficial](https://nodejs.org/es/docs/) para su instalación.
 
-# generate static project
-$ yarn generate
-```
+## Instalación de la última versión LTS de node mediante nvm
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+### Instalación de la herramienta nvm
 
-## Special Directories
+La instalación de la herramienta para administrar múltiples versiones de Node.j (nvm) se lo realiza con el siguiente comando:
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash`
 
-### `assets`
+Activando la variable de entorno de *nvm* con el siguiente comando:
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+`source ~/.bashrc`
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+Instalando la versión LTS v16.14.0 de Node.js:
 
-### `components`
+`nvm install v16.14.0`
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
+Compruebe la instalación con el siguiente comando:
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+`node --version`
 
 
-### `pages`
+## Instalación de yarn 
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+Instalando yarn mediante *curl*. Si aún no tiene instalado *curl* en su sistema operativo, lo puede realizar con el siguiente comando:
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
+`sudo apt install curl`
 
-### `plugins`
+Añadir la clave GPG para verificar los paquetes de Yarn. Para ello debe importar la clave GPG con el siguiente comando:
 
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
+`curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
+Habilitando el repositorio y añadiendo el repositorio yarn en Ubuntu:
 
-### `static`
+`echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
 
-This directory contains your static files. Each file inside this directory is mapped to `/`.
+Actualizar el caché e instalar yarn
 
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
+`sudo apt update && sudo apt install yarn`
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
+Compruebe que tenga instalado yarn:
 
-### `store`
+`yarn --version`
 
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
+## Plugins
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+El archivo de configuración y ajustes base del proyecto se encuentra en el archivo`nuxt.config.js`, ademas que se puede realizar la incorporación de pluguins a se utilizadas dentro el proyecto.
+
+Más información sobre el uso de este directorio en la [documentación](https://nuxtjs.org/docs/directory-structure/plugins/).
+
+
+### Instalar el plugin **dotenv**
+
+Puede realizar la instalación con el administrador de paquetes *npm*:
+
+`npm install @nuxtjs/dotenv`
+
+O con el administrador de paquetes *yarn*:
+
+`yarn add @nuxtjs/dotenv`
+
+## Configuraciones
+
+Debe realizar una serie de configuraciones en el proyecto antes de poder ejecutarlo.
+
+### Adicionar el archivo .env
+
+Este archivo nos sirve para personalizar las variables de entorno de nuestra aplicación. Debe configurar el archivo, con los siguientes parámetros:
+
+`APP_TITLE = Plataforma Virtual de Trámites`
+
+`BASE_URL = http://<ip-backend>:<puerto>`
+
+La ip y el puerto deben apuntar a donde esta implementado el **BACKEND**.
+
+
+## Modo Ejecución
+
+Para ejecutar el proyecto, utilizamos el administrador de paquetes yarn. 
+
+- Instalar dependenias
+
+    `yarn install`
+    
+- Hacer correr el proyecto:
+
+    `yarn dev`
