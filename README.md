@@ -18,7 +18,7 @@ La instalación de la herramienta para administrar múltiples versiones de Node.
 
 `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash`
 
-Activando la variable de entorno de *nvm* con el siguiente comando:
+Activando la variable de entorno de *nvm*:
 
 `source ~/.bashrc`
 
@@ -55,7 +55,7 @@ Compruebe que tenga instalado yarn:
 
 ## Plugins
 
-El directorio de plugins contiene plugins de JavaScript que desea ejecutar antes de instanciar la aplicación raiz Vue.js. Puede agregar acá complementos Vue e inyectar funciones o constantes, mediante la adición de la ruta a los plugins en el archivo `nuxt.config.js`.
+El directorio de plugins contiene plugins de JavaScript que desea ejecutar antes de instanciar la aplicación raíz Vue.js. Puede agregar acá complementos Vue e inyectar funciones o constantes, mediante la adición de la ruta a los plugins en el archivo `nuxt.config.js`.
 
 Más información sobre el uso de este directorio en la [documentación](https://nuxtjs.org/docs/directory-structure/plugins/).
 
