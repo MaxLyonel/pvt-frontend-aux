@@ -83,8 +83,8 @@
                 <span class="info--text">N° reg. considerados: </span><strong>{{item.data_count.num_data_considered}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{item.data_count.num_data_not_considered}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{item.data_count.num_data_validated}}</strong><br>
-                <span class="info--text">N° reg. importados: </span><strong>{{item.data_count.num_total_data_aid_contributions}}</strong><br>
-                <span class="info--text">Total aportes Bs.: </span><strong>{{item.data_count.sum_amount_total_aid_contribution}}</strong><br>
+                <!--<span class="info--text">N° reg. importados: </span><strong>{{item.data_count.num_total_data_aid_contributions}}</strong><br>
+                <span class="info--text">Total aportes Bs.: </span><strong>{{item.data_count.sum_amount_total_aid_contribution}}</strong><br>-->
               </v-col>
             </v-row>
           </v-card-text>
@@ -124,19 +124,19 @@
                 :disabled="progress.query_step_1"
               ></v-select>
 
-            <v-stepper v-model="e1" v-if="month_selected != null">
+            <v-stepper v-model="e1" v-if="month_selected != null" editable>
               <v-stepper-header>
-                <v-stepper-step :complete="e1 > 1" step="1">
+                <v-stepper-step :complete="e1 > 1" step="1" editable >
                   Subir archivo
                 </v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step :complete="e1 > 2" step="2">
+                <v-stepper-step :complete="e1 > 2" step="2" editable>
                   Validar Datos
                 </v-stepper-step>
-                <v-divider></v-divider>
-                <v-stepper-step step="3">
-                  Realizar importación
-                </v-stepper-step>
+                <!--<v-divider></v-divider>
+                <v-stepper-step step="3" editable>
+                  Realizar importación 
+                </v-stepper-step>-->
               </v-stepper-header>
 
               <v-stepper-items>
@@ -208,18 +208,18 @@
                       </v-card>
                     </v-card-text>
                   </v-card>
-                  <v-btn color="primary" @click="validateData()">
+                  <v-btn color="primary" @click="dialog_confirm_import=true">
                     Validar archivo
                   </v-btn>
                   <v-btn color="error" @click="dialog_confirm=true">
                     Rehacer
                   </v-btn>
-                  <v-btn color="secondary"
+                  <!--<v-btn color="secondary"
                     :disabled="!progress.query_step_2"
-                    @click="nextStep(2)"> Siguiente </v-btn>
+                    @click="nextStep(2)"> Siguiente </v-btn>-->
                 </v-stepper-content>
 
-                <v-stepper-content step="3">
+                <!--<v-stepper-content step="3">
                   <v-card class="mb-12" color="grey lighten-1">
                     <v-card-text>
                       <v-card color="white" class="pa-2" v-if="progress.query_step_1">
@@ -246,7 +246,7 @@
                     @click="rollbackContribution()">
                     Rehacer
                   </v-btn>
-                </v-stepper-content>
+                </v-stepper-content>-->
 
               </v-stepper-items>
             </v-stepper>
@@ -304,8 +304,8 @@
           <v-btn
             color="sucess"
             text
-            :loading="loading_import"
-            @click="ImportContributions()"
+            @click="validateData()"
+            :loading= "btn_validate_data"
           >
             Aceptar
           </v-btn>
@@ -340,7 +340,7 @@ export default {
       percentage: 0,
       query_step_1: false,
       query_step_2: false,
-      query_step_3: false,
+      //query_step_3: false,
       reg_contribution: 0,
       reg_copy: 0,
       reg_validation: 0
@@ -350,7 +350,7 @@ export default {
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      num_total_data_aid_contributions: 0,
+      //num_total_data_aid_contributions: 0,
       num_total_data_copy: 0
     },
     btn_update_file: false,
@@ -386,9 +386,9 @@ export default {
       }
       else {
         if(n==1){
-          this.progress.percentage= this.progress.percentage + 30
+          this.progress.percentage= this.progress.percentage + 50
         }if(n==2){
-          this.progress.percentage= this.progress.percentage + 30
+          this.progress.percentage= this.progress.percentage + 100
         }
         this.e1 = n + 1
       }
@@ -397,8 +397,8 @@ export default {
       try {
         this.loading = true;
         let res = await this.$axios.get("api/contribution/list_senasir_years");
-        this.years = res.payload.list_senasir_years;
-        this.year_selected = this.years[this.years.length - 1];
+        this.years = res.payload.list_years;
+        this.year_selected = this.years[0];
 
         this.getMonths();
         this.loading = false;
@@ -409,7 +409,7 @@ export default {
     async getMonths() {
       try {
         this.list_months_not_import = [];
-        let res = await this.$axios.post("api/contribution/list_senasir_months",{
+        let res = await this.$axios.post("api/contribution/list_months_validate_senasir",{
             period_year: this.year_selected,
           }
         );
@@ -469,28 +469,34 @@ export default {
     async validateData() {
       this.btn_validate_data = true;
       try {
-        let res = await this.$axios.post("api/contribution/validation_aid_contribution_affiliate_payroll_senasir",{
+        let res = await this.$axios.post("api/contribution/validation_payroll_senasir",{
             date_payroll: this.dateFormat,
           }
         );
         if (res.payload.successfully) {
-          this.progress.query_step_2 = true
+          //this.progress.query_step_2 = true
           this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
           this.data_count.num_data_validated = res.payload.data_count.num_data_validated
-          this.$toast.success("Se ha realizado la validación de "+ res.payload.data_count.num_data_validated+" registros");
-        } else {
+
           if(res.message == 'Excel'){
             this.$toast.info('No se encontraron algunas matrículas, por favor revise el archivo Excel');
             this.downloadFailValidate();
-            this.e1 = 1
-            this.progress.query_step_1 = false
-            this.progress.percentage = 0
-          }else {
+            //this.e1 = 1
+            //this.progress.query_step_1 = false
+            //this.progress.percentage = 0
+          }
+          this.progress.percentage = 100
+          this.dialog_confirm_import = false
+          this.dialog = false
+          this.clearData()
+          this.getMonths();
+          this.$toast.success("Se ha realizado la validación de "+ res.payload.data_count.num_data_validated+" registros");
+
+        } else {
             this.e1 = 1
             this.progress.query_step_1 = false
             this.progress.percentage = 0
             this.$toast.error(res.message);
-          }
         }
         this.btn_validate_data = false;
       } catch (e) {
@@ -511,7 +517,7 @@ export default {
         let res = (await response.blob())*/
 
         // Se debe enviar el responseType como configuracion, NO como header
-        let res = await this.$axios.post("api/contribution/download_fail_validated_senasir",{
+        let res = await this.$axios.post("api/contribution/download_fail_not_found_payroll_senasir",{
             date_payroll: this.dateFormat,
           },
           {'Accept': 'application/vnd.ms-excel' },
@@ -554,12 +560,12 @@ export default {
     async rollbackContribution() {
       this.btn_rollback = true
       try {
-        let res = await this.$axios.post("api/contribution/rollback_copy_validate_senasir",{
+        let res = await this.$axios.post("api/contribution/rollback_payroll_copy_senasir",{
             date_payroll: this.dateFormat,
           }
         );
-        if (res.payload.validated_rollback) {
-          this.$toast.info(res.message + " Se ha realizado el borrado de datos");
+        if (res.payload.valid_rollbackk) {
+          this.$toast.info(res.message + ". Se ha realizado el borrado de datos");
           this.clearData()
           this.dialog_confirm=false
         } else {
@@ -572,7 +578,7 @@ export default {
     },
     async importProgressBar() {
       try {
-        let res = await this.$axios.post("api/contribution/import_progress_bar",{
+        let res = await this.$axios.post("api/contribution/import_payroll_senasir_progress_bar",{
             date_payroll: this.dateFormat,
           }
         );
@@ -581,13 +587,13 @@ export default {
         if(this.progress.query_step_1){
           this.e1 = 2
           this.progress.percentage = this.progress.percentage
-          if(this.progress.query_step_2){
+          /*if(this.progress.query_step_2){
             this.e1 = 3
             this.progress.percentage = this.progress.percentage
           }else{
             this.e1 = 2
             this.progress.percentage = this.progress.percentage
-          }
+          }*/
         }else {
           this.e1 = 1
           this.progress.percentage = 0
@@ -613,8 +619,8 @@ export default {
       this.progress.file_name= null,
       this.progress.percentage= 0,
       this.progress.query_step_1= false,
-      this.progress.query_step_2= false,
-      this.progress.query_step_3= false
+      this.progress.query_step_2= false
+      //this.progress.query_step_3= false
     }
 
   },
