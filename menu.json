@@ -6,8 +6,13 @@
   },
   {
     "href": "/retfun/importation",
-    "title": "Importación",
+    "title": "Importación de planillas de Rentas",
     "icon": "mdi-bank-transfer"
+  },
+  {
+    "href": "/retfun/contributionUpdate",
+    "title": "Actualización Aportes Auxilio Mortuorio",
+    "icon": "mdi-cash"
   },
   {
     "title": "Acceso",
