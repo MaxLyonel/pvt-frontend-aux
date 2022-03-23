@@ -82,8 +82,8 @@
                 </v-tooltip>
                 <v-progress-linear color="white"></v-progress-linear>
                 <div v-show="item.state_importation">
-                  <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_aid_contributions)}}</strong><br>
-                  <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_aid_contribution)}}</strong><br>
+                  <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives)}}</strong><br>
+                  <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contribution_passives)}}</strong><br>
 
                   <v-tooltip top class="my-0">
                     <template v-slot:activator="{ on }">
@@ -169,7 +169,7 @@ export default {
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      //num_total_data_aid_contributions: 0,
+      //num_total_data_contribution_passives: 0,
       num_total_data_copy: 0,
     },
     btn_update_file: false,

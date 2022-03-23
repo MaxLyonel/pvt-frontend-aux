@@ -86,8 +86,8 @@
                 <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
-                <!--<span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_aid_contributions}}</strong><br>
-                <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.thousands(item.data_count.sum_amount_total_aid_contribution}}</strong><br>-->
+                <!--<span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives}}</strong><br>
+                <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.thousands(item.data_count.sum_amount_total_contribution_passives}}</strong><br>-->
               </v-col>
             </v-row>
           </v-card-text>
@@ -355,7 +355,7 @@ export default {
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      //num_total_data_aid_contributions: 0,
+      //num_total_data_contribution_passives: 0,
       num_total_data_copy: 0
     },
     btn_update_file: false,
