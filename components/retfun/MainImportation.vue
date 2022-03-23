@@ -400,7 +400,7 @@ export default {
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
 
-        this.getMonths();
+        //this.getMonths();
         this.loading = false;
       } catch (e) {
         console.log(e);
