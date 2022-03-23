@@ -33,7 +33,8 @@ export default {
     { src: '~/plugins/axios.js', mode: 'client' },
     { src: '~/plugins/auth.js' },
     { src: '~/plugins/utils.js' },
-    { src: '~/plugins/rules.js' }
+    { src: '~/plugins/rules.js' },
+    { src: '~/plugins/filters.js' }
   ],
 
   build: {},
