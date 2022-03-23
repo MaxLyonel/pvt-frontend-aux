@@ -28,7 +28,12 @@
 
     </v-card>
     <!--contenido-->
-    <v-row justify="center" class="py-0 mt-2">
+          
+      <div v-if="loading_circular">
+        <GlobalLoading />
+      </div>
+
+    <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
       <v-card
         class="headline font-weight-bold ma-2 blue-grey lighten-5"
         max-width="250px"
@@ -128,11 +133,13 @@
 </template>
 
 <script>
-import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
+import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue"
+import GlobalLoading from "@/components/common/GlobalLoading.vue"
 export default {
   name: "MainImportation",
   components: {
     GlobalBreadCrumb,
+    GlobalLoading
   },
   data: () => ({
     active: "SENASIR",
@@ -171,6 +178,7 @@ export default {
     btn_rollback: false,
     dialog_confirm: false,
     dialog_confirm_import_contribution: false,
+    loading_circular: false
   }),
   created() {
     this.getYears();
@@ -219,6 +227,7 @@ export default {
       }
     },
     async getMonths() {
+      this.loading_circular = true
       try {
         //this.list_months_not_import = [];
         let res = await this.$axios.post(
@@ -235,9 +244,11 @@ export default {
             );
           }
         }*/
+        this.loading_circular = false
         console.log(this.year_selected);
       } catch (e) {
         console.log(e);
+        this.loading_circular = false
       }
     },
     openDialog(year_selected) {

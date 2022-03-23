@@ -48,8 +48,11 @@
       <v-card-text> </v-card-text>
     </v-card>
     <!--contenido-->
-    <v-row justify="center" class="py-0 mt-2">
-      <v-card
+    <div v-if="loading_circular">
+      <GlobalLoading />
+    </div>
+    <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
+       <v-card
         class="headline font-weight-bold ma-2"
         max-width="200px"
         v-for="(item, i) in list_senasir_months"
@@ -317,10 +320,12 @@
 
 <script>
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
+import GlobalLoading from "@/components/common/GlobalLoading.vue";
 export default {
   name: "MainImportation",
   components: {
     GlobalBreadCrumb,
+    GlobalLoading
   },
   data: () => ({
     active: 'SENASIR',
@@ -359,6 +364,7 @@ export default {
     btn_rollback: false,
     dialog_confirm : false,
     dialog_confirm_import:false,
+    loading_circular:false
   }),
   created() {
     this.getYears();
@@ -407,6 +413,7 @@ export default {
       }
     },
     async getMonths() {
+      this.loading_circular = true
       try {
         this.list_months_not_import = [];
         let res = await this.$axios.post("api/contribution/list_months_validate_senasir",{
@@ -416,14 +423,14 @@ export default {
         this.list_senasir_months = res.payload.list_senasir_months;
         for (let i = 0; i < res.payload.list_senasir_months.length; i++) {
           if (res.payload.list_senasir_months[i].state_importation == false) {
-            this.list_months_not_import.push(
-              res.payload.list_senasir_months[i]
-            );
+            this.list_months_not_import.push(res.payload.list_senasir_months[i]);
           }
         }
         console.log(this.year_selected);
+        this.loading_circular = false
       } catch (e) {
         console.log(e);
+        this.loading_circular = false
       }
     },
     openDialog(year_selected) {
