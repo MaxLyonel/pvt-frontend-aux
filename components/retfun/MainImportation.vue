@@ -79,12 +79,12 @@
                     <span>Descargar información</span>
                   </div>
                 </v-tooltip>-->
-                <span class="info--text">N° reg. copiados: </span><strong>{{item.data_count.num_total_data_copy}}</strong><br>
-                <span class="info--text">N° reg. considerados: </span><strong>{{item.data_count.num_data_considered}}</strong><br>
-                <span class="error--text">N° reg. no considerados: </span><strong>{{item.data_count.num_data_not_considered}}</strong><br>
-                <span class="info--text">N° reg. validados: </span><strong>{{item.data_count.num_data_validated}}</strong><br>
-                <!--<span class="info--text">N° reg. importados: </span><strong>{{item.data_count.num_total_data_aid_contributions}}</strong><br>
-                <span class="info--text">Total aportes Bs.: </span><strong>{{item.data_count.sum_amount_total_aid_contribution}}</strong><br>-->
+                <span class="info--text">N° reg. copiados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_copy)}}</strong><br>
+                <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
+                <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
+                <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
+                <!--<span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_aid_contributions}}</strong><br>
+                <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.thousands(item.data_count.sum_amount_total_aid_contribution}}</strong><br>-->
               </v-col>
             </v-row>
           </v-card-text>
@@ -170,7 +170,7 @@
                           </v-col>
                           <v-col cols="12" md="6" v-if="progress.query_step_1">
                             <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
-                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
+                            <strong>Total de registros copiados:</strong> {{$filters.thousands(data_count.num_total_data_copy)}}<br>
                           </v-col>
                         </v-row>
                         </v-form>
@@ -196,13 +196,13 @@
                         <v-row>
                           <v-col cols="12" md="6">
                             <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
-                            <strong class="success--text">Total de registros considerados:</strong> {{data_count.num_data_considered}}<br>
-                            <strong class="red--text">Total de registros no considerados:</strong> {{data_count.num_data_not_considered}}<br>
+                            <strong class="success--text">Total de registros considerados:</strong> {{$filters.thousands(data_count.num_data_considered)}}<br>
+                            <strong class="red--text">Total de registros no considerados:</strong> {{$filters.thousands(data_count.num_data_not_considered)}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
                             <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
-                            <strong class="success--text">Total de registros validados:</strong> {{data_count.num_data_validated}}<br>
-                            <strong class="error--text">Total de registros no validados:</strong> {{data_count.num_data_not_validated}}<br>
+                            <strong class="success--text">Total de registros validados:</strong> {{$filters.thousands(data_count.num_data_validated)}}<br>
+                            <strong class="error--text">Total de registros no validados:</strong> {{$filters.thousands(data_count.num_data_not_validated)}}<br>
                           </v-col>
                         </v-row>
                       </v-card>

@@ -13,7 +13,7 @@
             <v-btn value="COMANDO"> Comando </v-btn>
             <v-btn value="SENASIR"> Senasir </v-btn>
           </v-btn-toggle>
-          <v-divider class="mx-2" inset vertical></v-divider>
+
           <v-select
             :items="years"
             :loading="loading"
@@ -30,7 +30,7 @@
     <!--contenido-->
     <v-row justify="center" class="py-0 mt-2">
       <v-card
-        class="headline font-weight-bold ma-2"
+        class="headline font-weight-bold ma-2 blue-grey lighten-5"
         max-width="250px"
         v-for="(item, i) in list_senasir_months"
         :key="i"
@@ -38,13 +38,13 @@
         <template v-if="item.state_validated_payroll">
           <v-card-title :class="item.state_importation ? 'teal' : 'normal'">
             <v-row justify="center">
-              <h3 class="white--text">{{ item.period_month_name }}</h3></v-row
-            >
+              <h3 class="white--text">{{ item.period_month_name }}</h3>
+            </v-row>
           </v-card-title>
           <v-divider inset></v-divider>
-          <v-card-text class="blue-grey lighten-5">
+          <v-card-text>
             <v-row v-if="period_type === 'SENASIR'">
-              <v-divider inset></v-divider>
+    
               <v-col cols="12" md="12" class="py-0">
                 <!--<span class="info--text">N° reg. copiados: </span
                 ><strong>{{ item.data_count.num_total_data_copy }}</strong
@@ -56,48 +56,46 @@
                 ><strong>{{ item.data_count.num_data_not_considered }}</strong
                 ><br />-->
                 <span class="info--text">N° reg. validados: </span
-                ><strong>{{ item.data_count.num_data_validated }}</strong
-                ><br />
+                ><strong>{{$filters.thousands(item.data_count.num_data_validated) }}</strong
+                >
 
-              </v-col>
-              <v-col cols="12" md="12" class="py-0">
-              <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn 
-                      class="ma-2 teal white--text btn-period" 
-                      v-on="on"
-                      @click="confirm_import_contribution(item.period_month, true)"
-                      :disabled="item.state_importation"
-                    >
-                      <v-icon dark left small>mdi-arrow-down</v-icon>Act. Aportes
-                    </v-btn>
-                  </template>
-                  <div>
-                    <span>Actualizar Aportes</span>
-                  </div>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-btn 
+                        class="ma-2 teal white--text btn-period" 
+                        v-on="on"
+                        @click="confirm_import_contribution(item.period_month, true)"
+                        :disabled="item.state_importation"
+                      >
+                        <v-icon dark left small>mdi-arrow-down</v-icon>Act. Aportes
+                      </v-btn>
+                    </template>
+                    <div>
+                      <span>Actualizar Aportes</span>
+                    </div>
                 </v-tooltip>
+                <v-progress-linear color="white"></v-progress-linear>
+                <div v-show="item.state_importation">
+                  <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_aid_contributions)}}</strong><br>
+                  <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_aid_contribution)}}</strong><br>
 
-                <template v-if="item.state_importation">
-                  <br>
-                <span class="info--text">N° reg. importados: </span><strong>{{item.data_count.num_total_data_aid_contributions}}</strong><br>
-                <span class="info--text">Total aportes Bs.: </span><strong>{{item.data_count.sum_amount_total_aid_contribution}}</strong><br>
-                </template>
-                                <v-tooltip top class="my-0">
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    :disabled="!item.importation"
-                    small
-                    :color="'primary'"
-                    fab
-                    v-on="on"
-                  >
-                    <v-icon>mdi-file-document</v-icon>
-                  </v-btn>
-                </template>
-                <div>
-                  <span>Reporte Pago Comando</span>
+                  <v-tooltip top class="my-0">
+                    <template v-slot:activator="{ on }">
+                      <v-btn
+                        small
+                        :color="'primary'"
+                        fab
+                        v-on="on"
+                      >
+                        <v-icon>mdi-file-document</v-icon>
+                      </v-btn>
+                    </template>
+                    <div>
+                      <span>Detalle de Aportes</span>
+                    </div>
+                  </v-tooltip>
                 </div>
-              </v-tooltip>
 
               </v-col>
             </v-row>
