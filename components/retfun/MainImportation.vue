@@ -48,8 +48,11 @@
       <v-card-text> </v-card-text>
     </v-card>
     <!--contenido-->
-    <v-row justify="center" class="py-0 mt-2">
-      <v-card
+    <div v-if="loading_circular">
+      <GlobalLoading />
+    </div>
+    <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
+       <v-card
         class="headline font-weight-bold ma-2"
         max-width="200px"
         v-for="(item, i) in list_senasir_months"
@@ -83,8 +86,8 @@
                 <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
-                <!--<span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_aid_contributions}}</strong><br>
-                <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.thousands(item.data_count.sum_amount_total_aid_contribution}}</strong><br>-->
+                <!--<span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives}}</strong><br>
+                <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.thousands(item.data_count.sum_amount_total_contribution_passives}}</strong><br>-->
               </v-col>
             </v-row>
           </v-card-text>
@@ -317,10 +320,12 @@
 
 <script>
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
+import GlobalLoading from "@/components/common/GlobalLoading.vue";
 export default {
   name: "MainImportation",
   components: {
     GlobalBreadCrumb,
+    GlobalLoading
   },
   data: () => ({
     active: 'SENASIR',
@@ -350,7 +355,7 @@ export default {
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      //num_total_data_aid_contributions: 0,
+      //num_total_data_contribution_passives: 0,
       num_total_data_copy: 0
     },
     btn_update_file: false,
@@ -359,6 +364,7 @@ export default {
     btn_rollback: false,
     dialog_confirm : false,
     dialog_confirm_import:false,
+    loading_circular:false
   }),
   created() {
     this.getYears();
@@ -400,13 +406,14 @@ export default {
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
 
-        this.getMonths();
+        //this.getMonths();
         this.loading = false;
       } catch (e) {
         console.log(e);
       }
     },
     async getMonths() {
+      this.loading_circular = true
       try {
         this.list_months_not_import = [];
         let res = await this.$axios.post("api/contribution/list_months_validate_senasir",{
@@ -416,14 +423,14 @@ export default {
         this.list_senasir_months = res.payload.list_senasir_months;
         for (let i = 0; i < res.payload.list_senasir_months.length; i++) {
           if (res.payload.list_senasir_months[i].state_importation == false) {
-            this.list_months_not_import.push(
-              res.payload.list_senasir_months[i]
-            );
+            this.list_months_not_import.push(res.payload.list_senasir_months[i]);
           }
         }
         console.log(this.year_selected);
+        this.loading_circular = false
       } catch (e) {
         console.log(e);
+        this.loading_circular = false
       }
     },
     openDialog(year_selected) {

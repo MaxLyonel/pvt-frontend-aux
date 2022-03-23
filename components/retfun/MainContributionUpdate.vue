@@ -28,7 +28,12 @@
 
     </v-card>
     <!--contenido-->
-    <v-row justify="center" class="py-0 mt-2">
+          
+      <div v-if="loading_circular">
+        <GlobalLoading />
+      </div>
+
+    <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
       <v-card
         class="headline font-weight-bold ma-2 blue-grey lighten-5"
         max-width="250px"
@@ -77,8 +82,8 @@
                 </v-tooltip>
                 <v-progress-linear color="white"></v-progress-linear>
                 <div v-show="item.state_importation">
-                  <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_aid_contributions)}}</strong><br>
-                  <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_aid_contribution)}}</strong><br>
+                  <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives)}}</strong><br>
+                  <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contribution_passives)}}</strong><br>
 
                   <v-tooltip top class="my-0">
                     <template v-slot:activator="{ on }">
@@ -128,11 +133,13 @@
 </template>
 
 <script>
-import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
+import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue"
+import GlobalLoading from "@/components/common/GlobalLoading.vue"
 export default {
   name: "MainImportation",
   components: {
     GlobalBreadCrumb,
+    GlobalLoading
   },
   data: () => ({
     active: "SENASIR",
@@ -162,7 +169,7 @@ export default {
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      //num_total_data_aid_contributions: 0,
+      //num_total_data_contribution_passives: 0,
       num_total_data_copy: 0,
     },
     btn_update_file: false,
@@ -171,6 +178,7 @@ export default {
     btn_rollback: false,
     dialog_confirm: false,
     dialog_confirm_import_contribution: false,
+    loading_circular: false
   }),
   created() {
     this.getYears();
@@ -212,13 +220,14 @@ export default {
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
 
-        this.getMonths();
+        //this.getMonths();
         this.loading = false;
       } catch (e) {
         console.log(e);
       }
     },
     async getMonths() {
+      this.loading_circular = true
       try {
         //this.list_months_not_import = [];
         let res = await this.$axios.post(
@@ -235,9 +244,11 @@ export default {
             );
           }
         }*/
+        this.loading_circular = false
         console.log(this.year_selected);
       } catch (e) {
         console.log(e);
+        this.loading_circular = false
       }
     },
     openDialog(year_selected) {
