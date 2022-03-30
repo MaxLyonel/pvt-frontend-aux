@@ -54,7 +54,7 @@
     <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
        <v-card
         class="headline font-weight-bold ma-2"
-        max-width="200px"
+        max-width="250px"
         v-for="(item, i) in list_senasir_months"
         :key="i"
       >
@@ -113,8 +113,12 @@
         <v-row justify="center" class="mt-5"
           ><v-col cols="8">
             <v-toolbar-title class="pb-5">
-              <center><b>GESTIÓN {{year_selected}}</b></center>
-            </v-toolbar-title>
+              <center><b>GESTIÓN {{year_selected}}</b></center>gits
+              <div class="text-right">
+                <Information />
+              </div>
+              </v-toolbar-title>
+
               <v-select
                 dense
                 :items="list_months_not_import"
@@ -129,11 +133,11 @@
 
             <v-stepper v-model="e1" v-if="month_selected != null" editable>
               <v-stepper-header>
-                <v-stepper-step :complete="e1 > 1" step="1" editable >
+                <v-stepper-step :complete="e1 > 1" step="1" >
                   Subir archivo
                 </v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step :complete="e1 > 2" step="2" editable>
+                <v-stepper-step :complete="e1 > 2" step="2">
                   Validar Datos
                 </v-stepper-step>
                 <!--<v-divider></v-divider>
@@ -321,11 +325,13 @@
 <script>
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
 import GlobalLoading from "@/components/common/GlobalLoading.vue";
+import Information from "@/components/retfun/Information.vue";
 export default {
   name: "MainImportation",
   components: {
     GlobalBreadCrumb,
-    GlobalLoading
+    GlobalLoading,
+    Information
   },
   data: () => ({
     active: 'SENASIR',
