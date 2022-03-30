@@ -204,7 +204,7 @@ export default {
     async getUsers() {
       try {
         this.loading = true
-        let res = await this.$axios.get(`api/admin/user`, {
+        let res = await this.$axios.get(`api/admin/user`, undefined, {
           params: {
             page: this.options.page,
             per_page: this.options.itemsPerPage,

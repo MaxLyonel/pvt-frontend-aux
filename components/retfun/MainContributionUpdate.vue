@@ -13,7 +13,7 @@
             <v-btn value="COMANDO"> Comando </v-btn>
             <v-btn value="SENASIR"> Senasir </v-btn>
           </v-btn-toggle>
-
+          <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
             :items="years"
             :loading="loading"
@@ -28,14 +28,14 @@
 
     </v-card>
     <!--contenido-->
-          
+
       <div v-if="loading_circular">
         <GlobalLoading />
       </div>
 
     <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
       <v-card
-        class="headline font-weight-bold ma-2 blue-grey lighten-5"
+        :class="item.state_importation ? 'headline font-weight-bold ma-2 blue-grey lighten-5' : 'headline font-weight-bold ma-2'"
         max-width="250px"
         v-for="(item, i) in list_senasir_months"
         :key="i"
@@ -49,21 +49,11 @@
           <v-divider inset></v-divider>
           <v-card-text>
             <v-row v-if="period_type === 'SENASIR'">
-    
+
               <v-col cols="12" md="12" class="py-0">
-                <!--<span class="info--text">N° reg. copiados: </span
-                ><strong>{{ item.data_count.num_total_data_copy }}</strong
-                ><br />
-                <span class="info--text">N° reg. considerados: </span
-                ><strong>{{ item.data_count.num_data_considered }}</strong
-                ><br />
-                <span class="error--text">N° reg. no considerados: </span
-                ><strong>{{ item.data_count.num_data_not_considered }}</strong
-                ><br />-->
                 <span class="info--text">N° reg. validados: </span
                 ><strong>{{$filters.thousands(item.data_count.num_data_validated) }}</strong
                 >
-
 
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
@@ -80,11 +70,11 @@
                       <span>Actualizar Aportes</span>
                     </div>
                 </v-tooltip>
-                <v-progress-linear color="white"></v-progress-linear>
+  
                 <div v-show="item.state_importation">
                   <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives)}}</strong><br>
                   <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contribution_passives)}}</strong><br>
-
+                  <div class="text-right pb-1">
                   <v-tooltip top class="my-0">
                     <template v-slot:activator="{ on }">
                       <v-btn
@@ -100,6 +90,7 @@
                       <span>Detalle de Aportes</span>
                     </div>
                   </v-tooltip>
+                  </div>
                 </div>
 
               </v-col>
@@ -115,8 +106,13 @@
         <v-card-title> Esta seguro de actualizar los aportes? </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" text @click="dialog_confirm_import_contribution = false">
-            Cancelar
+          <v-btn 
+            color="error" 
+            text 
+            @click="dialog_confirm_import_contribution = false"
+            :disabled="btn_import_contributions"
+          >
+            Cerrar
           </v-btn>
           <v-btn
             color="sucess"
@@ -148,35 +144,16 @@ export default {
     year_selected: null,
     period_type: "SENASIR",
     list_senasir_months: [],
-    list_months_not_import: [],
     dialog: false,
-    e1: 1,
-    import_export: {},
     month_selected: null,
-    progress: {
-      file_exists: false,
-      file_name: null,
-      percentage: 0,
-      query_step_1: false,
-      query_step_2: false,
-      //query_step_3: false,
-      reg_contribution: 0,
-      reg_copy: 0,
-      reg_validation: 0,
-    },
     data_count: {
       num_data_considered: 0,
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      //num_total_data_contribution_passives: 0,
       num_total_data_copy: 0,
     },
-    btn_update_file: false,
-    btn_validate_data: false,
     btn_import_contributions: false,
-    btn_rollback: false,
-    dialog_confirm: false,
     dialog_confirm_import_contribution: false,
     loading_circular: false
   }),
@@ -200,19 +177,6 @@ export default {
     },
   },
   methods: {
-    nextStep(n) {
-      if (n == this.steps) {
-        this.e1 = 1;
-      } else {
-        if (n == 1) {
-          this.progress.percentage = this.progress.percentage + 50;
-        }
-        if (n == 2) {
-          this.progress.percentage = this.progress.percentage + 100;
-        }
-        this.e1 = n + 1;
-      }
-    },
     async getYears() {
       try {
         this.loading = true;
@@ -229,31 +193,17 @@ export default {
     async getMonths() {
       this.loading_circular = true
       try {
-        //this.list_months_not_import = [];
-        let res = await this.$axios.post(
-          "api/contribution/list_months_import_contribution_senasir",
-          {
+        let res = await this.$axios.post("api/contribution/list_months_import_contribution_senasir",{
             period_year: this.year_selected,
           }
         );
         this.list_senasir_months = res.payload.list_senasir_months;
-        /*for (let i = 0; i < res.payload.list_senasir_months.length; i++) {
-          if (res.payload.list_senasir_months[i].state_importation == false) {
-            this.list_months_not_import.push(
-              res.payload.list_senasir_months[i]
-            );
-          }
-        }*/
         this.loading_circular = false
         console.log(this.year_selected);
       } catch (e) {
         console.log(e);
         this.loading_circular = false
       }
-    },
-    openDialog(year_selected) {
-      this.dialog = true;
-      (this.month_selected = null), console.log(year_selected);
     },
     close() {
       this.dialog = false;
@@ -268,10 +218,7 @@ export default {
           }
         );
         if (res.payload.successfully) {
-          this.$toast.success("Total de registros: "+ res.payload.num_total + "\n Registros creados: "+ res.payload.num_created + "\n Registros actualizados: "+ res.payload.num_updated)
-          /*this.progress.percentage = 100
-          this.dialog = false
-          this.clearData()*/
+          this.$toast.success("Total de registros: "+ res.payload.num_total)
           this.dialog_confirm_import_contribution = false
           this.getMonths();
         } else {
@@ -287,8 +234,6 @@ export default {
       this.month_selected = month_selected
       this.dialog_confirm_import_contribution= valor
       console.log( month_selected)
-      console.log( valor)
-
     }
   },
 };

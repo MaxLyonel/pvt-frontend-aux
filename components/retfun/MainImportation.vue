@@ -17,7 +17,7 @@
           <v-select
             :items="years"
             :loading="loading"
-            label="Gestion"
+            label="Gestión"
             v-model="year_selected"
             dense
             outlined
@@ -54,7 +54,7 @@
     <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
        <v-card
         class="headline font-weight-bold ma-2"
-        max-width="200px"
+        max-width="250px"
         v-for="(item, i) in list_senasir_months"
         :key="i"
       >
@@ -72,22 +72,10 @@
               </v-col>
               <v-divider inset></v-divider>
               <v-col cols="12" md="12" class="py-0">
-                <!--<v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn class="ma-2 teal white--text btn-period" v-on="on">
-                      <v-icon dark left small>mdi-arrow-down</v-icon>Descargar
-                    </v-btn>
-                  </template>
-                  <div>
-                    <span>Descargar información</span>
-                  </div>
-                </v-tooltip>-->
                 <span class="info--text">N° reg. copiados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_copy)}}</strong><br>
                 <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
-                <!--<span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives}}</strong><br>
-                <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.thousands(item.data_count.sum_amount_total_contribution_passives}}</strong><br>-->
               </v-col>
             </v-row>
           </v-card-text>
@@ -114,7 +102,11 @@
           ><v-col cols="8">
             <v-toolbar-title class="pb-5">
               <center><b>GESTIÓN {{year_selected}}</b></center>
-            </v-toolbar-title>
+              <div class="text-right">
+                <Information />
+              </div>
+              </v-toolbar-title>
+
               <v-select
                 dense
                 :items="list_months_not_import"
@@ -129,17 +121,13 @@
 
             <v-stepper v-model="e1" v-if="month_selected != null" editable>
               <v-stepper-header>
-                <v-stepper-step :complete="e1 > 1" step="1" editable >
+                <v-stepper-step :complete="e1 > 1" step="1" >
                   Subir archivo
                 </v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step :complete="e1 > 2" step="2" editable>
+                <v-stepper-step :complete="e1 > 2" step="2">
                   Validar Datos
                 </v-stepper-step>
-                <!--<v-divider></v-divider>
-                <v-stepper-step step="3" editable>
-                  Realizar importación 
-                </v-stepper-step>-->
               </v-stepper-header>
 
               <v-stepper-items>
@@ -217,40 +205,7 @@
                   <v-btn color="error" @click="dialog_confirm=true">
                     Rehacer
                   </v-btn>
-                  <!--<v-btn color="secondary"
-                    :disabled="!progress.query_step_2"
-                    @click="nextStep(2)"> Siguiente </v-btn>-->
                 </v-stepper-content>
-
-                <!--<v-stepper-content step="3">
-                  <v-card class="mb-12" color="grey lighten-1">
-                    <v-card-text>
-                      <v-card color="white" class="pa-2" v-if="progress.query_step_1">
-                        <v-row>
-                          <v-col cols="12" md="6">
-                            <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
-                            <strong class="success--text">Total de registros considerados:</strong> {{data_count.num_data_considered}}<br>
-                            <strong class="red--text">Total de registros no considerados:</strong> {{data_count.num_data_not_considered}}<br>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
-                            <strong class="success--text">Total de registros validados:</strong> {{data_count.num_data_validated}}<br>
-                            <strong class="error--text">Total de registros no validados:</strong> {{data_count.num_data_not_validated}}<br>
-                          </v-col>
-                        </v-row>
-                      </v-card>
-                    </v-card-text>
-                  </v-card>
-                  <v-btn color="primary" @click="dialog_confirm_import=true">
-                    Importar archivo
-                  </v-btn>
-                  <v-btn color="error" 
-                    :disabled="progress.query_step_3" 
-                    @click="rollbackContribution()">
-                    Rehacer
-                  </v-btn>
-                </v-stepper-content>-->
-
               </v-stepper-items>
             </v-stepper>
           </v-col>
@@ -301,14 +256,15 @@
             color="error"
             text
             @click="dialog_confirm_import=false"
+            :disabled="btn_validate_data"
           >
-            Cancelar
+            Cerrar
           </v-btn>
           <v-btn
             color="sucess"
             text
             @click="validateData()"
-            :loading= "btn_validate_data"
+            :loading="btn_validate_data"
           >
             Aceptar
           </v-btn>
@@ -321,11 +277,13 @@
 <script>
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
 import GlobalLoading from "@/components/common/GlobalLoading.vue";
+import Information from "@/components/retfun/Information.vue";
 export default {
   name: "MainImportation",
   components: {
     GlobalBreadCrumb,
-    GlobalLoading
+    GlobalLoading,
+    Information
   },
   data: () => ({
     active: 'SENASIR',
@@ -344,18 +302,13 @@ export default {
       file_name: null,
       percentage: 0,
       query_step_1: false,
-      query_step_2: false,
-      //query_step_3: false,
-      reg_contribution: 0,
-      reg_copy: 0,
-      reg_validation: 0
+      query_step_2: false
     },
     data_count:{
       num_data_considered: 0,
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      //num_total_data_contribution_passives: 0,
       num_total_data_copy: 0
     },
     btn_update_file: false,
@@ -405,8 +358,6 @@ export default {
         let res = await this.$axios.get("api/contribution/list_senasir_years");
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
-
-        //this.getMonths();
         this.loading = false;
       } catch (e) {
         console.log(e);
@@ -426,7 +377,7 @@ export default {
             this.list_months_not_import.push(res.payload.list_senasir_months[i]);
           }
         }
-        console.log(this.year_selected);
+        //console.log(this.year_selected);
         this.loading_circular = false
       } catch (e) {
         console.log(e);
@@ -481,16 +432,12 @@ export default {
           }
         );
         if (res.payload.successfully) {
-          //this.progress.query_step_2 = true
           this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
           this.data_count.num_data_validated = res.payload.data_count.num_data_validated
 
           if(res.message == 'Excel'){
             this.$toast.info('No se encontraron algunas matrículas, por favor revise el archivo Excel');
             this.downloadFailValidate();
-            //this.e1 = 1
-            //this.progress.query_step_1 = false
-            //this.progress.percentage = 0
           }
           this.progress.percentage = 100
           this.dialog_confirm_import = false
@@ -594,13 +541,6 @@ export default {
         if(this.progress.query_step_1){
           this.e1 = 2
           this.progress.percentage = this.progress.percentage
-          /*if(this.progress.query_step_2){
-            this.e1 = 3
-            this.progress.percentage = this.progress.percentage
-          }else{
-            this.e1 = 2
-            this.progress.percentage = this.progress.percentage
-          }*/
         }else {
           this.e1 = 1
           this.progress.percentage = 0
@@ -627,7 +567,6 @@ export default {
       this.progress.percentage= 0,
       this.progress.query_step_1= false,
       this.progress.query_step_2= false
-      //this.progress.query_step_3= false
     }
 
   },

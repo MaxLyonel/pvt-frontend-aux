@@ -189,9 +189,7 @@ export default {
     async getPermissions() {
       try {
         this.loading = true;
-        let res = await this.$axios.get(
-          `api/admin/role/${this.selectedRole}/role_permissions`,
-          {
+        let res = await this.$axios.get(`api/admin/role/${this.selectedRole}/role_permissions`, undefined, {
             params: {
               display_name: this.search,
               page: this.options.page,

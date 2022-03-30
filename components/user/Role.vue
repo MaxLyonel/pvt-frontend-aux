@@ -113,7 +113,7 @@ export default {
     async getRolesModuleUser(id) {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`api/admin/user/${id}/module_role_state_user`,{
+        let res = await this.$axios.get(`api/admin/user/${id}/module_role_state_user`, undefined,{
             params: {
               module_id: this.modules[this.selectedModule].id,
               page: this.options.page,
