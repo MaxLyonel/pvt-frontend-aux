@@ -104,7 +104,7 @@ export default {
 
   toast: {
     position: "bottom-right",
-    timeout: 3000,
+    timeout: 5000,
     closeOnClick: true,
     pauseOnFocusLoss: true,
     pauseOnHover: true,
