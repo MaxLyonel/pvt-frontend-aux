@@ -60,7 +60,7 @@
                       <v-btn 
                         class="ma-2 teal white--text btn-period" 
                         v-on="on"
-                        @click="confirm_import_contribution(item.period_month, true)"
+                        @click="confirmImportContribution(item.period_month, true)"
                         :disabled="item.state_importation"
                       >
                         <v-icon dark left small>mdi-arrow-down</v-icon>Act. Aportes
@@ -75,21 +75,23 @@
                   <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives)}}</strong><br>
                   <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contribution_passives)}}</strong><br>
                   <div class="text-right pb-1">
-                  <v-tooltip top class="my-0">
-                    <template v-slot:activator="{ on }">
-                      <v-btn
-                        small
-                        :color="'primary'"
-                        fab
-                        v-on="on"
-                      >
-                        <v-icon>mdi-file-document</v-icon>
-                      </v-btn>
-                    </template>
-                    <div>
-                      <span>Detalle de Aportes</span>
-                    </div>
-                  </v-tooltip>
+                    <v-tooltip top class="my-0">
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          small
+                          :color="'primary'"
+                          fab
+                          v-on="on"
+                          :loading="loading_rep_state && i == loading_pos_index"
+                          @click.stop="loading_pos_index = i; reportImportContributionSenasir(item.period_month)"
+                        >
+                          <v-icon>mdi-file-document</v-icon>
+                        </v-btn>
+                      </template>
+                      <div>
+                        <span>Detalle de Aportes</span>
+                      </div>
+                    </v-tooltip>
                   </div>
                 </div>
 
@@ -132,7 +134,7 @@
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue"
 import GlobalLoading from "@/components/common/GlobalLoading.vue"
 export default {
-  name: "MainImportation",
+  name: "MainContributionUpdate",
   components: {
     GlobalBreadCrumb,
     GlobalLoading
@@ -155,7 +157,9 @@ export default {
     },
     btn_import_contributions: false,
     dialog_confirm_import_contribution: false,
-    loading_circular: false
+    loading_circular: false,
+    loading_pos_index: -1,
+    loading_rep_state: false,
   }),
   created() {
     this.getYears();
@@ -180,11 +184,9 @@ export default {
     async getYears() {
       try {
         this.loading = true;
-        let res = await this.$axios.get("api/contribution/list_senasir_years");
+        let res = await this.$axios.get(`api/contribution/list_senasir_years`)
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
-
-        //this.getMonths();
         this.loading = false;
       } catch (e) {
         console.log(e);
@@ -214,11 +216,11 @@ export default {
       this.btn_import_contributions = true;
       try {
         let res = await this.$axios.post("api/contribution/import_create_or_update_contribution_period_senasir",{
-            period_contribution_senasir: this.dateFormat,
+            period_contribution_senasir: this.dateFormat
           }
         );
         if (res.payload.successfully) {
-          this.$toast.success("Total de registros: "+ res.payload.num_total)
+          this.$toast.success("Total de registros importados: "+ res.payload.num_created)
           this.dialog_confirm_import_contribution = false
           this.getMonths();
         } else {
@@ -230,10 +232,34 @@ export default {
         this.btn_import_contributions = false
       }
     },
-    confirm_import_contribution(month_selected, valor){
+    confirmImportContribution(month_selected, valor){
       this.month_selected = month_selected
       this.dialog_confirm_import_contribution= valor
       console.log( month_selected)
+    },
+
+    async reportImportContributionSenasir(month_selected){
+      this.month_selected = month_selected
+      this.loading_rep_state=true;
+      try {
+        let res = await this.$axios.post("api/contribution/report_import_contribution_senasir",{
+            date_contribution: this.dateFormat
+          },
+          {'Accept': 'application/vnd.ms-excel' },
+          {'responseType': 'blob'}
+        );
+        const url = window.URL.createObjectURL(new Blob([res]))
+        const link = document.createElement("a")
+        link.href = url;
+        link.setAttribute("download", "ReporteDetalleAportesImportes.xls")
+        document.body.appendChild(link)
+        link.click()
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.loading_rep_state=false;
+        this.loading_pos_index=-1;
+      }
     }
   },
 };

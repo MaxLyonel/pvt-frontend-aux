@@ -26,7 +26,7 @@ export default {
   },
   async created() {
     this.getBreadCrumbs();
-    console.log(this.$route.name);
+    //console.log(this.$route.name);
   },
 
   methods: {

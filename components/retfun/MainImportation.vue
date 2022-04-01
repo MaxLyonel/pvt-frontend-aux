@@ -76,6 +76,25 @@
                 <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
+                  <div class="text-right pb-1">
+                    <v-tooltip top class="my-0">
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          small
+                          :color="'primary'"
+                          fab
+                          v-on="on"
+                          :loading="loading_rep_state && i == loading_pos_index"
+                          @click.stop="loading_pos_index = i; reportPayrollSenasir(item.period_month)"
+                        >
+                          <v-icon>mdi-file-document</v-icon>
+                        </v-btn>
+                      </template>
+                      <div>
+                        <span>Detalle de Importación de registros válidos</span>
+                      </div>
+                    </v-tooltip>
+                  </div>
               </v-col>
             </v-row>
           </v-card-text>
@@ -317,7 +336,9 @@ export default {
     btn_rollback: false,
     dialog_confirm : false,
     dialog_confirm_import:false,
-    loading_circular:false
+    loading_circular:false,
+    loading_pos_index: -1,
+    loading_rep_state: false,
   }),
   created() {
     this.getYears();
@@ -360,6 +381,7 @@ export default {
         this.year_selected = this.years[0];
         this.loading = false;
       } catch (e) {
+        this.loading = false;
         console.log(e);
       }
     },
@@ -567,8 +589,31 @@ export default {
       this.progress.percentage= 0,
       this.progress.query_step_1= false,
       this.progress.query_step_2= false
-    }
+    },
 
+    async reportPayrollSenasir(month_selected){
+      this.month_selected = month_selected
+      this.loading_rep_state=true;
+      try {
+        let res = await this.$axios.post("api/contribution/report_payroll_senasir",{
+            date_payroll: this.dateFormat
+          },
+          {'Accept': 'application/vnd.ms-excel' },
+          {'responseType': 'blob'}
+        );
+        const url = window.URL.createObjectURL(new Blob([res]))
+        const link = document.createElement("a")
+        link.href = url;
+        link.setAttribute("download", "ReporteDatosSenasir.xls")
+        document.body.appendChild(link)
+        link.click()
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.loading_rep_state=false;
+        this.loading_pos_index=-1;
+      }
+    }
   },
 };
 </script>

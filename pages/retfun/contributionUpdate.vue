@@ -5,7 +5,7 @@
 <script>
 import MainContributionUpdate from "@/components/retfun/MainContributionUpdate.vue";
 export default {
-  name: "PageImportation",
+  name: "PageContributionUpdate",
   components: {
     MainContributionUpdate,
   },
