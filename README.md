@@ -1,10 +1,10 @@
 # PVT-FRONTEND
 
-***NOTA:** Se uso el sistema operativo GNU/Linux en su distribución *Ubuntu 20.04**
+***NOTA:** Se usó el sistema operativo GNU/Linux en su distribución *Ubuntu 20.04**
 
 ## Requisitos
     
-- Instalar ***Node.js*** en su versión reciente de *LTS*, (Al momento de que se redactó esta documentación, la versión LTS de node es: ***LTS v16.14.0***).
+- Instalar ***Node.js*** en su versión reciente de *LTS*, (Al momento de redactar esta documentación, la versión LTS de node es: ***LTS v16.14.0***).
 
 - Instalar yarn versión más reciente.
 
@@ -18,7 +18,7 @@ La instalación de la herramienta para administrar múltiples versiones de Node.
 
 `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash`
 
-Activando la variable de entorno de *nvm* con el siguiente comando:
+Activando la variable de entorno de *nvm*:
 
 `source ~/.bashrc`
 
@@ -55,7 +55,7 @@ Compruebe que tenga instalado yarn:
 
 ## Plugins
 
-El archivo de configuración y ajustes base del proyecto se encuentra en el archivo`nuxt.config.js`, ademas que se puede realizar la incorporación de pluguins a se utilizadas dentro el proyecto.
+El directorio de plugins contiene plugins de JavaScript que desea ejecutar antes de instanciar la aplicación raíz Vue.js. Puede agregar acá complementos Vue e inyectar funciones o constantes, mediante la adición de la ruta a los plugins en el archivo `nuxt.config.js`.
 
 Más información sobre el uso de este directorio en la [documentación](https://nuxtjs.org/docs/directory-structure/plugins/).
 
@@ -76,13 +76,13 @@ Debe realizar una serie de configuraciones en el proyecto antes de poder ejecuta
 
 ### Adicionar el archivo .env
 
-Este archivo nos sirve para personalizar las variables de entorno de nuestra aplicación. Debe configurar el archivo, con los siguientes parámetros:
+Dicho archivo sirve para personalizar las variables de entorno de la aplicación. Debe configurar el archivo, con los siguientes parámetros:
 
 `APP_TITLE = Plataforma Virtual de Trámites`
 
 `BASE_URL = http://<ip-backend>:<puerto>`
 
-La ip y el puerto deben apuntar a donde esta implementado el **BACKEND**.
+La ip y el puerto deben apuntar a la dirección donde está implementado el **BACKEND**.
 
 
 ## Modo Ejecución

@@ -17,7 +17,7 @@
           <v-select
             :items="years"
             :loading="loading"
-            label="Gestion"
+            label="Gestión"
             v-model="year_selected"
             dense
             outlined
@@ -48,10 +48,13 @@
       <v-card-text> </v-card-text>
     </v-card>
     <!--contenido-->
-    <v-row justify="center" class="py-0 mt-2">
-      <v-card
+    <div v-if="loading_circular">
+      <GlobalLoading />
+    </div>
+    <v-row justify="center" class="py-0 mt-2" v-if="!loading_circular">
+       <v-card
         class="headline font-weight-bold ma-2"
-        max-width="200px"
+        max-width="250px"
         v-for="(item, i) in list_senasir_months"
         :key="i"
       >
@@ -69,22 +72,29 @@
               </v-col>
               <v-divider inset></v-divider>
               <v-col cols="12" md="12" class="py-0">
-                <!--<v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn class="ma-2 teal white--text btn-period" v-on="on">
-                      <v-icon dark left small>mdi-arrow-down</v-icon>Descargar
-                    </v-btn>
-                  </template>
-                  <div>
-                    <span>Descargar información</span>
+                <span class="info--text">N° reg. copiados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_copy)}}</strong><br>
+                <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
+                <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
+                <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
+                  <div class="text-right pb-1">
+                    <v-tooltip top class="my-0">
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          small
+                          :color="'primary'"
+                          fab
+                          v-on="on"
+                          :loading="loading_rep_state && i == loading_pos_index"
+                          @click.stop="loading_pos_index = i; reportPayrollSenasir(item.period_month)"
+                        >
+                          <v-icon>mdi-file-document</v-icon>
+                        </v-btn>
+                      </template>
+                      <div>
+                        <span>Detalle de Importación de registros válidos</span>
+                      </div>
+                    </v-tooltip>
                   </div>
-                </v-tooltip>-->
-                <span class="info--text">N° reg. copiados: </span><strong>{{item.data_count.num_total_data_copy}}</strong><br>
-                <span class="info--text">N° reg. considerados: </span><strong>{{item.data_count.num_data_considered}}</strong><br>
-                <span class="error--text">N° reg. no considerados: </span><strong>{{item.data_count.num_data_not_considered}}</strong><br>
-                <span class="info--text">N° reg. validados: </span><strong>{{item.data_count.num_data_validated}}</strong><br>
-                <span class="info--text">N° reg. importados: </span><strong>{{item.data_count.num_total_data_aid_contributions}}</strong><br>
-                <span class="info--text">Total aportes Bs.: </span><strong>{{item.data_count.sum_amount_total_aid_contribution}}</strong><br>
               </v-col>
             </v-row>
           </v-card-text>
@@ -111,7 +121,11 @@
           ><v-col cols="8">
             <v-toolbar-title class="pb-5">
               <center><b>GESTIÓN {{year_selected}}</b></center>
-            </v-toolbar-title>
+              <div class="text-right">
+                <Information />
+              </div>
+              </v-toolbar-title>
+
               <v-select
                 dense
                 :items="list_months_not_import"
@@ -124,18 +138,14 @@
                 :disabled="progress.query_step_1"
               ></v-select>
 
-            <v-stepper v-model="e1" v-if="month_selected != null">
+            <v-stepper v-model="e1" v-if="month_selected != null" editable>
               <v-stepper-header>
-                <v-stepper-step :complete="e1 > 1" step="1">
+                <v-stepper-step :complete="e1 > 1" step="1" >
                   Subir archivo
                 </v-stepper-step>
                 <v-divider></v-divider>
                 <v-stepper-step :complete="e1 > 2" step="2">
                   Validar Datos
-                </v-stepper-step>
-                <v-divider></v-divider>
-                <v-stepper-step step="3">
-                  Realizar importación
                 </v-stepper-step>
               </v-stepper-header>
 
@@ -170,7 +180,7 @@
                           </v-col>
                           <v-col cols="12" md="6" v-if="progress.query_step_1">
                             <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
-                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
+                            <strong>Total de registros copiados:</strong> {{$filters.thousands(data_count.num_total_data_copy)}}<br>
                           </v-col>
                         </v-row>
                         </v-form>
@@ -196,58 +206,25 @@
                         <v-row>
                           <v-col cols="12" md="6">
                             <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
-                            <strong class="success--text">Total de registros considerados:</strong> {{data_count.num_data_considered}}<br>
-                            <strong class="red--text">Total de registros no considerados:</strong> {{data_count.num_data_not_considered}}<br>
+                            <strong class="success--text">Total de registros considerados:</strong> {{$filters.thousands(data_count.num_data_considered)}}<br>
+                            <strong class="red--text">Total de registros no considerados:</strong> {{$filters.thousands(data_count.num_data_not_considered)}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
                             <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
-                            <strong class="success--text">Total de registros validados:</strong> {{data_count.num_data_validated}}<br>
-                            <strong class="error--text">Total de registros no validados:</strong> {{data_count.num_data_not_validated}}<br>
-                          </v-col>
-                        </v-row>
-                      </v-card>
-                    </v-card-text>
-                  </v-card>
-                  <v-btn color="primary" @click="validateData()">
-                    Validar archivo
-                  </v-btn>
-                  <v-btn color="error" @click="dialog_confirm=true">
-                    Rehacer
-                  </v-btn>
-                  <v-btn color="secondary"
-                    :disabled="!progress.query_step_2"
-                    @click="nextStep(2)"> Siguiente </v-btn>
-                </v-stepper-content>
-
-                <v-stepper-content step="3">
-                  <v-card class="mb-12" color="grey lighten-1">
-                    <v-card-text>
-                      <v-card color="white" class="pa-2" v-if="progress.query_step_1">
-                        <v-row>
-                          <v-col cols="12" md="6">
-                            <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
-                            <strong class="success--text">Total de registros considerados:</strong> {{data_count.num_data_considered}}<br>
-                            <strong class="red--text">Total de registros no considerados:</strong> {{data_count.num_data_not_considered}}<br>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
-                            <strong class="success--text">Total de registros validados:</strong> {{data_count.num_data_validated}}<br>
-                            <strong class="error--text">Total de registros no validados:</strong> {{data_count.num_data_not_validated}}<br>
+                            <strong class="success--text">Total de registros validados:</strong> {{$filters.thousands(data_count.num_data_validated)}}<br>
+                            <strong class="error--text">Total de registros no validados:</strong> {{$filters.thousands(data_count.num_data_not_validated)}}<br>
                           </v-col>
                         </v-row>
                       </v-card>
                     </v-card-text>
                   </v-card>
                   <v-btn color="primary" @click="dialog_confirm_import=true">
-                    Importar archivo
+                    Validar archivo
                   </v-btn>
-                  <v-btn color="error" 
-                    :disabled="progress.query_step_3" 
-                    @click="rollbackContribution()">
+                  <v-btn color="error" @click="dialog_confirm=true">
                     Rehacer
                   </v-btn>
                 </v-stepper-content>
-
               </v-stepper-items>
             </v-stepper>
           </v-col>
@@ -298,14 +275,15 @@
             color="error"
             text
             @click="dialog_confirm_import=false"
+            :disabled="btn_validate_data"
           >
-            Cancelar
+            Cerrar
           </v-btn>
           <v-btn
             color="sucess"
             text
-            :loading="loading_import"
-            @click="ImportContributions()"
+            @click="validateData()"
+            :loading="btn_validate_data"
           >
             Aceptar
           </v-btn>
@@ -317,10 +295,14 @@
 
 <script>
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
+import GlobalLoading from "@/components/common/GlobalLoading.vue";
+import Information from "@/components/retfun/Information.vue";
 export default {
   name: "MainImportation",
   components: {
     GlobalBreadCrumb,
+    GlobalLoading,
+    Information
   },
   data: () => ({
     active: 'SENASIR',
@@ -339,18 +321,13 @@ export default {
       file_name: null,
       percentage: 0,
       query_step_1: false,
-      query_step_2: false,
-      query_step_3: false,
-      reg_contribution: 0,
-      reg_copy: 0,
-      reg_validation: 0
+      query_step_2: false
     },
     data_count:{
       num_data_considered: 0,
       num_data_not_considered: 0,
       num_data_not_validated: 0,
       num_data_validated: 0,
-      num_total_data_aid_contributions: 0,
       num_total_data_copy: 0
     },
     btn_update_file: false,
@@ -359,6 +336,9 @@ export default {
     btn_rollback: false,
     dialog_confirm : false,
     dialog_confirm_import:false,
+    loading_circular:false,
+    loading_pos_index: -1,
+    loading_rep_state: false,
   }),
   created() {
     this.getYears();
@@ -386,9 +366,9 @@ export default {
       }
       else {
         if(n==1){
-          this.progress.percentage= this.progress.percentage + 30
+          this.progress.percentage= this.progress.percentage + 50
         }if(n==2){
-          this.progress.percentage= this.progress.percentage + 30
+          this.progress.percentage= this.progress.percentage + 100
         }
         this.e1 = n + 1
       }
@@ -397,33 +377,33 @@ export default {
       try {
         this.loading = true;
         let res = await this.$axios.get("api/contribution/list_senasir_years");
-        this.years = res.payload.list_senasir_years;
-        this.year_selected = this.years[this.years.length - 1];
-
-        this.getMonths();
+        this.years = res.payload.list_years;
+        this.year_selected = this.years[0];
         this.loading = false;
       } catch (e) {
+        this.loading = false;
         console.log(e);
       }
     },
     async getMonths() {
+      this.loading_circular = true
       try {
         this.list_months_not_import = [];
-        let res = await this.$axios.post("api/contribution/list_senasir_months",{
+        let res = await this.$axios.post("api/contribution/list_months_validate_senasir",{
             period_year: this.year_selected,
           }
         );
         this.list_senasir_months = res.payload.list_senasir_months;
         for (let i = 0; i < res.payload.list_senasir_months.length; i++) {
           if (res.payload.list_senasir_months[i].state_importation == false) {
-            this.list_months_not_import.push(
-              res.payload.list_senasir_months[i]
-            );
+            this.list_months_not_import.push(res.payload.list_senasir_months[i]);
           }
         }
-        console.log(this.year_selected);
+        //console.log(this.year_selected);
+        this.loading_circular = false
       } catch (e) {
         console.log(e);
+        this.loading_circular = false
       }
     },
     openDialog(year_selected) {
@@ -469,28 +449,30 @@ export default {
     async validateData() {
       this.btn_validate_data = true;
       try {
-        let res = await this.$axios.post("api/contribution/validation_aid_contribution_affiliate_payroll_senasir",{
+        let res = await this.$axios.post("api/contribution/validation_payroll_senasir",{
             date_payroll: this.dateFormat,
           }
         );
         if (res.payload.successfully) {
-          this.progress.query_step_2 = true
           this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
           this.data_count.num_data_validated = res.payload.data_count.num_data_validated
-          this.$toast.success("Se ha realizado la validación de "+ res.payload.data_count.num_data_validated+" registros");
-        } else {
+
           if(res.message == 'Excel'){
             this.$toast.info('No se encontraron algunas matrículas, por favor revise el archivo Excel');
             this.downloadFailValidate();
-            this.e1 = 1
-            this.progress.query_step_1 = false
-            this.progress.percentage = 0
-          }else {
+          }
+          this.progress.percentage = 100
+          this.dialog_confirm_import = false
+          this.dialog = false
+          this.clearData()
+          this.getMonths();
+          this.$toast.success("Se ha realizado la validación de "+ res.payload.data_count.num_data_validated+" registros");
+
+        } else {
             this.e1 = 1
             this.progress.query_step_1 = false
             this.progress.percentage = 0
             this.$toast.error(res.message);
-          }
         }
         this.btn_validate_data = false;
       } catch (e) {
@@ -511,7 +493,7 @@ export default {
         let res = (await response.blob())*/
 
         // Se debe enviar el responseType como configuracion, NO como header
-        let res = await this.$axios.post("api/contribution/download_fail_validated_senasir",{
+        let res = await this.$axios.post("api/contribution/download_fail_not_found_payroll_senasir",{
             date_payroll: this.dateFormat,
           },
           {'Accept': 'application/vnd.ms-excel' },
@@ -554,12 +536,12 @@ export default {
     async rollbackContribution() {
       this.btn_rollback = true
       try {
-        let res = await this.$axios.post("api/contribution/rollback_copy_validate_senasir",{
+        let res = await this.$axios.post("api/contribution/rollback_payroll_copy_senasir",{
             date_payroll: this.dateFormat,
           }
         );
-        if (res.payload.validated_rollback) {
-          this.$toast.info(res.message + " Se ha realizado el borrado de datos");
+        if (res.payload.valid_rollbackk) {
+          this.$toast.info(res.message + ". Se ha realizado el borrado de datos");
           this.clearData()
           this.dialog_confirm=false
         } else {
@@ -572,7 +554,7 @@ export default {
     },
     async importProgressBar() {
       try {
-        let res = await this.$axios.post("api/contribution/import_progress_bar",{
+        let res = await this.$axios.post("api/contribution/import_payroll_senasir_progress_bar",{
             date_payroll: this.dateFormat,
           }
         );
@@ -581,13 +563,6 @@ export default {
         if(this.progress.query_step_1){
           this.e1 = 2
           this.progress.percentage = this.progress.percentage
-          if(this.progress.query_step_2){
-            this.e1 = 3
-            this.progress.percentage = this.progress.percentage
-          }else{
-            this.e1 = 2
-            this.progress.percentage = this.progress.percentage
-          }
         }else {
           this.e1 = 1
           this.progress.percentage = 0
@@ -613,10 +588,32 @@ export default {
       this.progress.file_name= null,
       this.progress.percentage= 0,
       this.progress.query_step_1= false,
-      this.progress.query_step_2= false,
-      this.progress.query_step_3= false
-    }
+      this.progress.query_step_2= false
+    },
 
+    async reportPayrollSenasir(month_selected){
+      this.month_selected = month_selected
+      this.loading_rep_state=true;
+      try {
+        let res = await this.$axios.post("api/contribution/report_payroll_senasir",{
+            date_payroll: this.dateFormat
+          },
+          {'Accept': 'application/vnd.ms-excel' },
+          {'responseType': 'blob'}
+        );
+        const url = window.URL.createObjectURL(new Blob([res]))
+        const link = document.createElement("a")
+        link.href = url;
+        link.setAttribute("download", "ReporteDatosSenasir.xls")
+        document.body.appendChild(link)
+        link.click()
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.loading_rep_state=false;
+        this.loading_pos_index=-1;
+      }
+    }
   },
 };
 </script>

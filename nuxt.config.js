@@ -33,7 +33,8 @@ export default {
     { src: '~/plugins/axios.js', mode: 'client' },
     { src: '~/plugins/auth.js' },
     { src: '~/plugins/utils.js' },
-    { src: '~/plugins/rules.js' }
+    { src: '~/plugins/rules.js' },
+    { src: '~/plugins/filters.js' }
   ],
 
   build: {},
@@ -103,7 +104,7 @@ export default {
 
   toast: {
     position: "bottom-right",
-    timeout: 3000,
+    timeout: 5000,
     closeOnClick: true,
     pauseOnFocusLoss: true,
     pauseOnHover: true,
