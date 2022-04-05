@@ -1,29 +1,10 @@
 <template>
-  <v-container>
-    <v-row align="center" class="pa-0 ma-0">
-      <v-col cols="8">
-        <v-row>
-          <v-col cols="12">
-            <!--<v-img
-              src="_nuxt/assets/images/muserpol.jpg"
-              aspect-ratio="4.6"
-              max-height
-            ></v-img>-->
-            <img src="~/assets/images/muserpol.jpg" width="700" height="300"/>
-          </v-col>
-          <v-col cols="12">
-            <v-card-title primary-title class="justify-center text-no-wrap">
-              <div class="text-md-center text-uppercase">
-                <p>BIENVENIDO A LA PLATAFORMA VIRTUAL DE TRÁMITES</p>
-              </div>
-            </v-card-title>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="4" style="background: #fff">
-        <v-container fluid>
-          <v-card-text>
-            <v-form ref="forLogin">
+  <!-- <v-container> -->
+    <div>
+      <v-row >
+        <v-col md="12" >
+          <v-card-text class="background" >
+            <v-form ref="forLogin" >
               <div
                 class="
                   display-1
@@ -61,10 +42,13 @@
               >
             </v-form>
           </v-card-text>
-        </v-container>
-      </v-col>
-    </v-row>
-  </v-container>
+           </v-col>
+        </v-row>
+
+          </div>
+       
+<!--  
+  </v-container> -->
 </template>
 
 <script>
@@ -91,7 +75,6 @@ export default {
         console.log(e);
       }
     },
-
     async getUser() {
       try {
         let res = await this.$axios.get("/api/auth/auth_user");
@@ -100,7 +83,6 @@ export default {
         console.log(e);
       }
     },
-
     validateForm() {
       if (this.$refs.forLogin) {
         if (this.$refs.forLogin.validate()) {
