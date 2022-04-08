@@ -5,7 +5,6 @@
     permanent
     clipped
     :expand-on-hover="!expanded"
-    width="160px"
   >
     <v-list
       nav
@@ -59,7 +58,7 @@ export default {
   props: {
     expanded: {
       type: Boolean,
-      default: false
+      default: false,
     }
   },
   data: () => ({
