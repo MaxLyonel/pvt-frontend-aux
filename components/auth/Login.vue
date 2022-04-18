@@ -25,7 +25,6 @@
                 autofocus
                 :rules="[$rules.obligatoria('Usuario'), $rules.soloLetras()]"
               ></v-text-field>
-
               <v-text-field
                 class="pl-5 pr-5 mb-3"
                 @keyup.enter="validateForm()"
@@ -36,19 +35,14 @@
                 autocomplete="on"
                 :rules="[$rules.obligatoria('Contraseña')]"
               ></v-text-field>
-
               <v-btn @click="validateForm()" primary large block color="primary"
                 >Ingresar</v-btn
               >
             </v-form>
           </v-card-text>
-           </v-col>
-        </v-row>
-
-          </div>
-       
-<!--  
-  </v-container> -->
+        </v-col>
+      </v-row>
+    </div>
 </template>
 
 <script>
@@ -65,7 +59,7 @@ export default {
   methods: {
     async authenticate() {
       try {
-        let response = await this.$axios.post("/api/auth/login", this.form);
+        let response = await this.$axios.post("/auth/login", this.form);//api
         this.$auth.startSession(
           response.payload.user,
           response.payload.access_token
@@ -77,7 +71,7 @@ export default {
     },
     async getUser() {
       try {
-        let res = await this.$axios.get("/api/auth/auth_user");
+        let res = await this.$axios.get("/auth/auth_user");//api
         console.log(res);
       } catch (e) {
         console.log(e);
