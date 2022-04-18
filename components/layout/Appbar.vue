@@ -25,7 +25,7 @@
           outlined
           class="mx-3"
           @click="$router.push('/changeModuleRol')"
-       >
+        >
           <v-icon>mdi-keyboard-return</v-icon>
         </v-btn>
     </div>
@@ -82,4 +82,5 @@ export default {
     },
   },
 }
+    
 </script>

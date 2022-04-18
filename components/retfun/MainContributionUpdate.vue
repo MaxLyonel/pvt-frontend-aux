@@ -184,7 +184,7 @@ export default {
     async getYears() {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`api/contribution/list_senasir_years`)
+        let res = await this.$axios.get(`/contribution/list_senasir_years`)
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
         this.loading = false;
@@ -195,7 +195,7 @@ export default {
     async getMonths() {
       this.loading_circular = true
       try {
-        let res = await this.$axios.post("api/contribution/list_months_import_contribution_senasir",{
+        let res = await this.$axios.post("/contribution/list_months_import_contribution_senasir",{
             period_year: this.year_selected,
           }
         );
@@ -215,7 +215,7 @@ export default {
     async ImportContributions() {
       this.btn_import_contributions = true;
       try {
-        let res = await this.$axios.post("api/contribution/import_create_or_update_contribution_period_senasir",{
+        let res = await this.$axios.post("/contribution/import_create_or_update_contribution_period_senasir",{
             period_contribution_senasir: this.dateFormat
           }
         );
@@ -242,7 +242,7 @@ export default {
       this.month_selected = month_selected
       this.loading_rep_state=true;
       try {
-        let res = await this.$axios.post("api/contribution/report_import_contribution_senasir",{
+        let res = await this.$axios.post("/contribution/report_import_contribution_senasir",{
             date_contribution: this.dateFormat
           },
           {'Accept': 'application/vnd.ms-excel' },

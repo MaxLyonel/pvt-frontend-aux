@@ -129,7 +129,7 @@ export default {
     async synchronizeUsers(value){
       try {
         this.loading = true
-        let res = await this.$axios.get(`api/admin/sync_employees`)
+        let res = await this.$axios.get(`/admin/sync_employees`)
         this.new_users_ldap = res.payload.new_users_ldap
         if(value){
           this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevos usuarios')
@@ -143,7 +143,7 @@ export default {
     },
     async getCities() {
       try {
-        let res = await this.$axios.get(`api/global/city`)
+        let res = await this.$axios.get(`/global/city`)
         this.cities = res
         console.log(this.cities)
       } catch (e) {
@@ -153,7 +153,7 @@ export default {
     // FIXME ruta para actualizar ci de usuarios, BORRAR DESPUES DE PONER EM PRODUCCION
     async ruta() {
       try {
-        let res = await this.$axios.get(`api/admin/update_users_ci`)
+        let res = await this.$axios.get(`/admin/update_users_ci`)
         console.log(res)
       } catch (e) {
         console.log(e)
@@ -162,7 +162,7 @@ export default {
     async saveUser() {
       try {
         this.loading = true
-        let res = await this.$axios.post(`api/admin/user`,{
+        let res = await this.$axios.post(`/admin/user`,{
           username: this.data_user.username,
           first_name: this.data_user.first_name,
           last_name: this.data_user.last_name,
