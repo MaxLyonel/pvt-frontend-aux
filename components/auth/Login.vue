@@ -43,10 +43,6 @@
         </v-col>
       </v-row>
     </div>
-<<<<<<< HEAD
-=======
-  <!--</v-container>-->
->>>>>>> 114f4aec8b1c746a0a12223d8fb83f9f7dfc9210
 </template>
 
 <script>

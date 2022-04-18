@@ -191,7 +191,7 @@ export default {
     async switchActiveUser(id) {
       try {
         this.loading = true
-        let res = await this.$axios.patch(`api/admin/user/${id}`, {
+        let res = await this.$axios.patch(`/admin/user/${id}`, {//api
           active: !this.active
         })
         this.$nuxt.$emit('removed', id)
@@ -204,7 +204,7 @@ export default {
     async getUsers() {
       try {
         this.loading = true
-        let res = await this.$axios.get(`api/admin/user`, undefined, {
+        let res = await this.$axios.get(`/admin/user`, undefined, {//api
           params: {
             page: this.options.page,
             per_page: this.options.itemsPerPage,
@@ -233,7 +233,7 @@ export default {
     async synchronizeUsers(){
       try {
         this.loading = true
-        let res = await this.$axios.get(`api/admin/sync_employees`)
+        let res = await this.$axios.get(`/admin/sync_employees`)//api
         this.new_users_ldap = res.payload.new_users_ldap
         this.$toast.info('Se encontraron ' +  this.new_users_ldap.length +' nuevo usuarios')
       } catch (e) {

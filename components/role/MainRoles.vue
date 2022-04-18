@@ -58,7 +58,7 @@
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-divider class="mx-2" inset vertical></v-divider>
-                <v-flex xs3> 
+                <v-flex xs3>
                   <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
@@ -165,7 +165,7 @@ export default {
     async getModules() {
       try {
         this.loading = true;
-        let res = await this.$axios.get("api/admin/module");
+        let res = await this.$axios.get("/admin/module");//api
         this.modules = res.payload.modules;
         this.loading = false;
         console.log(this.modules);
@@ -177,7 +177,7 @@ export default {
       try {
         this.loading = true;
         let res = await this.$axios.get(
-          `api/admin/module/${this.selectedModule}/role`
+          `/admin/module/${this.selectedModule}/role`//api
         );
         this.roles = res.payload.roles;
       } catch (e) {
@@ -189,7 +189,7 @@ export default {
     async getPermissions() {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`api/admin/role/${this.selectedRole}/role_permissions`, undefined, {
+        let res = await this.$axios.get(`/admin/role/${this.selectedRole}/role_permissions`, undefined, {//api
             params: {
               display_name: this.search,
               page: this.options.page,
@@ -211,7 +211,7 @@ export default {
     },
     async switchPermission(permission_id) {
       try {
-        let res = await this.$axios.patch(`api/admin/role/${this.selectedRole}/permission`,{
+        let res = await this.$axios.patch(`/admin/role/${this.selectedRole}/permission`,{//api
             permission_id: permission_id,
           }
         );

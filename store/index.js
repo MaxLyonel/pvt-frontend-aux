@@ -131,7 +131,7 @@ export const actions = {
         cookieEncoded = this.$utils.getCookieValue(req.headers.cookie, 'token')
         if (cookieEncoded) {
           cookieDecoded = JSON.parse(decodeURIComponent(cookieEncoded))
-          let sessionEncontrada = await dispatch('loadUser', {url: process.env.BASE_URL+'/api/auth/auth_user', token: cookieDecoded.token });
+          let sessionEncontrada = await dispatch('loadUser', {url: process.env.BASE_URL+'/auth/auth_user', token: cookieDecoded.token });//api
           if(sessionEncontrada) {
             commit('START_SESSION', {user: sessionEncontrada, token: cookieDecoded.token})
           }
