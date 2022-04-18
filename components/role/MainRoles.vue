@@ -165,7 +165,7 @@ export default {
     async getModules() {
       try {
         this.loading = true;
-        let res = await this.$axios.get("/admin/module");//api
+        let res = await this.$axios.get("/admin/module");
         this.modules = res.payload.modules;
         this.loading = false;
         console.log(this.modules);
@@ -177,7 +177,7 @@ export default {
       try {
         this.loading = true;
         let res = await this.$axios.get(
-          `/admin/module/${this.selectedModule}/role`//api
+          `/admin/module/${this.selectedModule}/role`
         );
         this.roles = res.payload.roles;
       } catch (e) {
@@ -189,7 +189,7 @@ export default {
     async getPermissions() {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`/admin/role/${this.selectedRole}/role_permissions`, undefined, {//api
+        let res = await this.$axios.get(`/admin/role/${this.selectedRole}/role_permissions`, undefined, {
             params: {
               display_name: this.search,
               page: this.options.page,
@@ -211,7 +211,7 @@ export default {
     },
     async switchPermission(permission_id) {
       try {
-        let res = await this.$axios.patch(`/admin/role/${this.selectedRole}/permission`,{//api
+        let res = await this.$axios.patch(`/admin/role/${this.selectedRole}/permission`,{
             permission_id: permission_id,
           }
         );

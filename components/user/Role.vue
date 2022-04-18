@@ -103,7 +103,7 @@ export default {
     async getModules() {
       try {
         this.loading = true;
-        let res = await this.$axios.get("/admin/module");//api
+        let res = await this.$axios.get("/admin/module");
         this.modules = res.payload.modules;
         console.log(this.modules);
       } catch (e) {
@@ -113,7 +113,7 @@ export default {
     async getRolesModuleUser(id) {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`/admin/user/${id}/module_role_state_user`, undefined,{//api
+        let res = await this.$axios.get(`/admin/user/${id}/module_role_state_user`, undefined,{
             params: {
               module_id: this.modules[this.selectedModule].id,
               page: this.options.page,
@@ -133,7 +133,7 @@ export default {
     },
     async switchRole(role_id) {
       try {
-        let res = await this.$axios.patch(`/admin/user/${this.user}/role`, {//api
+        let res = await this.$axios.patch(`/admin/user/${this.user}/role`, {
           role_id: role_id
         })
         this.$toast.success("Actualizado correctamente");

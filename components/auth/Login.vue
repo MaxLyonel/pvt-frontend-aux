@@ -59,7 +59,7 @@ export default {
   methods: {
     async authenticate() {
       try {
-        let response = await this.$axios.post("/auth/login", this.form);//api
+        let response = await this.$axios.post("/auth/login", this.form);
         this.$auth.startSession(
           response.payload.user,
           response.payload.access_token
@@ -72,7 +72,7 @@ export default {
     },
     async getUser() {
       try {
-        let res = await this.$axios.get("/auth/auth_user");//api
+        let res = await this.$axios.get("/auth/auth_user");
         console.log(res);
       } catch (e) {
         console.log(e);
