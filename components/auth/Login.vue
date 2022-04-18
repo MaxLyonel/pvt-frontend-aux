@@ -33,7 +33,7 @@
                 label="Contraseña"
                 type="password"
                 autocomplete="on"
-                :rules="[$rules.obligatoria('Contraseña')]"
+                :rules="[$rules.obligatoria('Contraseña'), $rules.longitudMinima(4)]"
               ></v-text-field>
               <v-btn @click="validateForm()" primary large block color="primary"
                 >Ingresar</v-btn
@@ -43,6 +43,10 @@
         </v-col>
       </v-row>
     </div>
+<<<<<<< HEAD
+=======
+  <!--</v-container>-->
+>>>>>>> 114f4aec8b1c746a0a12223d8fb83f9f7dfc9210
 </template>
 
 <script>
@@ -67,6 +71,7 @@ export default {
         console.log(response);
       } catch (e) {
         console.log(e);
+        this.$toast.error(e.message)
       }
     },
     async getUser() {
