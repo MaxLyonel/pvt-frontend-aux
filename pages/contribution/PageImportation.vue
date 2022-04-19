@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import MainImportation from "@/components/retfun/MainImportation.vue";
+import MainImportation from "@/components/contribution/MainImportation.vue";
 export default {
   name: "PageImportation",
   components: {

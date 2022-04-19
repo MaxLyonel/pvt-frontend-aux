@@ -24,7 +24,7 @@
           color="white"
           outlined
           class="mx-3"
-          @click="$router.push('/changeModuleRol')"
+          @click="$router.push('/PageChangeModuleRol')"
         >
           <v-icon>mdi-keyboard-return</v-icon>
         </v-btn>

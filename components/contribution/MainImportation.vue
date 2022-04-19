@@ -210,7 +210,7 @@
                             <strong class="red--text">Total de registros no considerados:</strong> {{$filters.thousands(data_count.num_data_not_considered)}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
-                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
+                            <strong>Total de registros copiados:</strong> {{$filters.thousands(data_count.num_total_data_copy)}}<br>
                             <strong class="success--text">Total de registros validados:</strong> {{$filters.thousands(data_count.num_data_validated)}}<br>
                             <strong class="error--text">Total de registros no validados:</strong> {{$filters.thousands(data_count.num_data_not_validated)}}<br>
                           </v-col>
@@ -296,7 +296,7 @@
 <script>
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
 import GlobalLoading from "@/components/common/GlobalLoading.vue";
-import Information from "@/components/retfun/Information.vue";
+import Information from "@/components/contribution/Information.vue";
 export default {
   name: "MainImportation",
   components: {
