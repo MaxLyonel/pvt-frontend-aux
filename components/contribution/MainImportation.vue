@@ -10,8 +10,8 @@
             active-class="secondary white--text"
             mandatory
           >
-            <v-btn value="COMANDO"> Comando </v-btn>
-            <v-btn value="SENASIR"> Senasir </v-btn>
+            <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-command')" value="COMANDO"> Comando </v-btn>
+            <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-senasir')" value="SENASIR"> Senasir </v-btn>
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
@@ -76,7 +76,7 @@
                 <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
-                  <div class="text-right pb-1">
+                  <div class="text-right pb-1" v-if="permissionSimpleSelected.includes('download-report-payroll-senasir')">
                     <v-tooltip top class="my-0">
                       <template v-slot:activator="{ on }">
                         <v-btn
@@ -344,6 +344,10 @@ export default {
     this.getYears();
   },
   computed: {
+    //permisos del selector global por rol
+    permissionSimpleSelected () {
+      return this.$store.getters.permissionSimpleSelected
+    },
     dateFormat() {
       if(this.month_selected < 10)
       return this.year_selected + "-" + "0"+this.month_selected + "-" + "01";
@@ -351,6 +355,7 @@ export default {
       return this.year_selected + "-" + this.month_selected + "-" + "01";
     },
   },
+
   watch: {
     year_selected(newVal, oldVal) {
       if (newVal != oldVal) {
