@@ -5,7 +5,6 @@
     permanent
     clipped
     :expand-on-hover="!expanded"
-    width="160px"
   >
     <v-list
       nav
@@ -74,7 +73,7 @@ export default {
       methods: {
     checkPermission(item) {
       let hasPermission = true
-        if (item.hasOwnProperty('permission')) 
+        if (item.hasOwnProperty('permission'))
           hasPermission &= (item.permission == null || this.permissionSimpleSelected.includes(item.permission))
       return hasPermission
     }

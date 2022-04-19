@@ -376,7 +376,7 @@ export default {
     async getYears() {
       try {
         this.loading = true;
-        let res = await this.$axios.get("api/contribution/list_senasir_years");
+        let res = await this.$axios.get("/contribution/list_senasir_years");
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
         this.loading = false;
@@ -389,7 +389,7 @@ export default {
       this.loading_circular = true
       try {
         this.list_months_not_import = [];
-        let res = await this.$axios.post("api/contribution/list_months_validate_senasir",{
+        let res = await this.$axios.post("/contribution/list_months_validate_senasir",{
             period_year: this.year_selected,
           }
         );
@@ -423,7 +423,7 @@ export default {
       formData.append("file", this.import_export.file);
       formData.append("date_payroll", this.dateFormat);
       try {
-        let res = await this.$axios.post("api/contribution/upload_copy_payroll_senasir",
+        let res = await this.$axios.post("/contribution/upload_copy_payroll_senasir",
           formData
         );
         if (res.payload.successfully) {
@@ -449,7 +449,7 @@ export default {
     async validateData() {
       this.btn_validate_data = true;
       try {
-        let res = await this.$axios.post("api/contribution/validation_payroll_senasir",{
+        let res = await this.$axios.post("/contribution/validation_payroll_senasir",{
             date_payroll: this.dateFormat,
           }
         );
@@ -493,7 +493,7 @@ export default {
         let res = (await response.blob())*/
 
         // Se debe enviar el responseType como configuracion, NO como header
-        let res = await this.$axios.post("api/contribution/download_fail_not_found_payroll_senasir",{
+        let res = await this.$axios.post("/contribution/download_fail_not_found_payroll_senasir",{
             date_payroll: this.dateFormat,
           },
           {'Accept': 'application/vnd.ms-excel' },
@@ -513,7 +513,7 @@ export default {
     async ImportContributions() {
       this.btn_import_contributions = true;
       try {
-        let res = await this.$axios.post("api/contribution/import_create_or_update_contribution_payroll_period_senasir",{
+        let res = await this.$axios.post("/contribution/import_create_or_update_contribution_payroll_period_senasir",{
             period_contribution_senasir: this.dateFormat,
           }
         );
@@ -536,7 +536,7 @@ export default {
     async rollbackContribution() {
       this.btn_rollback = true
       try {
-        let res = await this.$axios.post("api/contribution/rollback_payroll_copy_senasir",{
+        let res = await this.$axios.post("/contribution/rollback_payroll_copy_senasir",{
             date_payroll: this.dateFormat,
           }
         );
@@ -554,7 +554,7 @@ export default {
     },
     async importProgressBar() {
       try {
-        let res = await this.$axios.post("api/contribution/import_payroll_senasir_progress_bar",{
+        let res = await this.$axios.post("/contribution/import_payroll_senasir_progress_bar",{
             date_payroll: this.dateFormat,
           }
         );
@@ -595,7 +595,7 @@ export default {
       this.month_selected = month_selected
       this.loading_rep_state=true;
       try {
-        let res = await this.$axios.post("api/contribution/report_payroll_senasir",{
+        let res = await this.$axios.post("/contribution/report_payroll_senasir",{
             date_payroll: this.dateFormat
           },
           {'Accept': 'application/vnd.ms-excel' },
