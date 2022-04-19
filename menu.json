@@ -7,12 +7,14 @@
   {
     "href": "/contribution/PageImportation",
     "title": "Importación de planillas de Rentas",
-    "icon": "mdi-bank-transfer"
+    "icon": "mdi-bank-transfer",
+    "permission": "read-import-payroll"
   },
   {
     "href": "/contribution/PageContributionUpdate",
     "title": "Actualización Aportes Auxilio Mortuorio",
-    "icon": "mdi-cash"
+    "icon": "mdi-cash",
+    "permission": "read-import-contribution"
   },
   {
     "title": "Acceso",
