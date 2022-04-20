@@ -235,6 +235,7 @@
     <v-dialog
       v-model="dialog_confirm"
       max-width="600"
+      persistent
     >
       <v-card>
         <v-card-title>
@@ -264,6 +265,7 @@
     <v-dialog
       v-model="dialog_confirm_import"
       max-width="500"
+      persistent
     >
       <v-card>
         <v-card-title>

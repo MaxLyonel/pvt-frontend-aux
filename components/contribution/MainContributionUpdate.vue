@@ -103,7 +103,11 @@
     </v-row>
     <!--fin contenido-->
 
-    <v-dialog v-model="dialog_confirm_import_contribution" max-width="500">
+    <v-dialog 
+      v-model="dialog_confirm_import_contribution" 
+      max-width="500"
+      persistent
+    >
       <v-card>
         <v-card-title> Esta seguro de actualizar los aportes? </v-card-title>
         <v-card-actions>
