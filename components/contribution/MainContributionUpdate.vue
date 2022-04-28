@@ -67,7 +67,7 @@
                       </v-btn>
                     </template>
                     <div>
-                      <span>Actualizar Aportes</span>
+                      <span>Importar Aportes</span>
                     </div>
                 </v-tooltip>
   
@@ -109,7 +109,7 @@
       persistent
     >
       <v-card>
-        <v-card-title> Esta seguro de actualizar los aportes? </v-card-title>
+        <v-card-title> Esta seguro de Importar los aportes? </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn 
