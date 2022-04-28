@@ -44,6 +44,7 @@
 
 <script>
 export default {
+  name:"Information",
     data: ()=>({
         dialog_menu: false
     })

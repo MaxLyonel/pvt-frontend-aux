@@ -10,8 +10,8 @@
             active-class="secondary white--text"
             mandatory
           >
-            <v-btn value="COMANDO"> Comando </v-btn>
-            <v-btn value="SENASIR"> Senasir </v-btn>
+            <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-command')" value="COMANDO"> Comando </v-btn>
+            <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-senasir')" value="SENASIR"> Senasir </v-btn>
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
@@ -76,7 +76,7 @@
                 <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
                 <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
                 <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
-                  <div class="text-right pb-1">
+                  <div class="text-right pb-1" v-if="permissionSimpleSelected.includes('download-report-payroll-senasir')">
                     <v-tooltip top class="my-0">
                       <template v-slot:activator="{ on }">
                         <v-btn
@@ -210,7 +210,7 @@
                             <strong class="red--text">Total de registros no considerados:</strong> {{$filters.thousands(data_count.num_data_not_considered)}}<br>
                           </v-col>
                           <v-col cols="12" md="6">
-                            <strong>Total de registros copiados:</strong> {{data_count.num_total_data_copy}}<br>
+                            <strong>Total de registros copiados:</strong> {{$filters.thousands(data_count.num_total_data_copy)}}<br>
                             <strong class="success--text">Total de registros validados:</strong> {{$filters.thousands(data_count.num_data_validated)}}<br>
                             <strong class="error--text">Total de registros no validados:</strong> {{$filters.thousands(data_count.num_data_not_validated)}}<br>
                           </v-col>
@@ -235,6 +235,7 @@
     <v-dialog
       v-model="dialog_confirm"
       max-width="600"
+      persistent
     >
       <v-card>
         <v-card-title>
@@ -264,6 +265,7 @@
     <v-dialog
       v-model="dialog_confirm_import"
       max-width="500"
+      persistent
     >
       <v-card>
         <v-card-title>
@@ -296,7 +298,7 @@
 <script>
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
 import GlobalLoading from "@/components/common/GlobalLoading.vue";
-import Information from "@/components/retfun/Information.vue";
+import Information from "@/components/contribution/Information.vue";
 export default {
   name: "MainImportation",
   components: {
@@ -344,6 +346,10 @@ export default {
     this.getYears();
   },
   computed: {
+    //permisos del selector global por rol
+    permissionSimpleSelected () {
+      return this.$store.getters.permissionSimpleSelected
+    },
     dateFormat() {
       if(this.month_selected < 10)
       return this.year_selected + "-" + "0"+this.month_selected + "-" + "01";
@@ -351,6 +357,7 @@ export default {
       return this.year_selected + "-" + this.month_selected + "-" + "01";
     },
   },
+
   watch: {
     year_selected(newVal, oldVal) {
       if (newVal != oldVal) {

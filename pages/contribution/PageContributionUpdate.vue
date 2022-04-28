@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import MainContributionUpdate from "@/components/retfun/MainContributionUpdate.vue";
+import MainContributionUpdate from "@/components/contribution/MainContributionUpdate.vue";
 export default {
   name: "PageContributionUpdate",
   components: {

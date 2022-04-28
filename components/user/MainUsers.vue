@@ -15,7 +15,7 @@
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-flex xs1> </v-flex>
-          <v-btn color="success mx-1" dark @click="$router.push('addUser')">
+          <v-btn color="success mx-1" dark @click="$router.push('PageAddUser')">
             Adicionar usuario
           </v-btn>
           <v-btn color="info mx-1" dark @click="$refs.ListComponent.clearAll()">

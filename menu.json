@@ -1,18 +1,20 @@
 [
   {
-    "href": "/dashboard",
+    "href": "/PageDashboard",
     "title": "Inicio",
     "icon": "mdi-home"
   },
   {
-    "href": "/retfun/importation",
+    "href": "/contribution/PageImportation",
     "title": "Importación de planillas de Rentas",
-    "icon": "mdi-bank-transfer"
+    "icon": "mdi-bank-transfer",
+    "permission": "read-import-payroll"
   },
   {
-    "href": "/retfun/contributionUpdate",
+    "href": "/contribution/PageContributionUpdate",
     "title": "Actualización Aportes Auxilio Mortuorio",
-    "icon": "mdi-cash"
+    "icon": "mdi-cash",
+    "permission": "read-import-contribution"
   },
   {
     "title": "Acceso",
@@ -20,13 +22,13 @@
     "permission": "show-user",
     "group": [
       {
-        "href": "/administration/users",
+        "href": "/administration/PageUsers",
         "title": "Usuarios",
         "icon": "mdi-account-outline",
         "permission": "show-user",
         "role": "TE-admin"
       }, {
-        "href": "/administration/roles",
+        "href": "/administration/PageRoles",
         "title": "Roles",
         "icon": "mdi-shield-lock-outline",
         "permission": "show-role"

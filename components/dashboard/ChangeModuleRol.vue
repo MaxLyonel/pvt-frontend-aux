@@ -51,7 +51,7 @@
 <script>
 
 export default {
-  name: "dashboard-ChangeModuleRol",
+  name: "ChangeModuleRol",
   data() {
     return {
       rolesPermissionsItems: [],
@@ -76,7 +76,7 @@ export default {
 			//this.$store.commit('setRolePermissionSelected', item)
       //console.log(item)
       this.$auth.setCurrentRole(item.id)
-			this.$router.push("dashboard")
+			this.$router.push("PageDashboard")
 		}
   },
 };
