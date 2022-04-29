@@ -56,7 +56,7 @@ export default {
       console.log("logout");
       // FIXME: hasta corregir el error del backend quitar el try/catch
       try {
-        await this.$axios.post("/api/auth/logout");
+        await this.$axios.post("/auth/logout");
       } catch (error) {}
       this.$auth.endSession();
     },

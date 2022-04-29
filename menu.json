@@ -12,7 +12,7 @@
   },
   {
     "href": "/contribution/PageContributionUpdate",
-    "title": "Actualización Aportes Auxilio Mortuorio",
+    "title": "Importacion Aportes Auxilio Mortuorio",
     "icon": "mdi-cash",
     "permission": "read-import-contribution"
   },
