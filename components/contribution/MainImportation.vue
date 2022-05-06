@@ -55,7 +55,7 @@
        <v-card
         class="headline font-weight-bold ma-2"
         max-width="250px"
-        v-for="(item, i) in list_senasir_months"
+        v-for="(item, i) in list_months"
         :key="i"
       >
         <template v-if="item.state_importation">
@@ -312,7 +312,7 @@ export default {
     loading: false,
     year_selected: null,
     period_type: "SENASIR",
-    list_senasir_months: [],
+    list_months: [],
     list_months_not_import: [],
     dialog: false,
     e1: 1,
@@ -400,10 +400,10 @@ export default {
             period_year: this.year_selected,
           }
         );
-        this.list_senasir_months = res.payload.list_senasir_months;
-        for (let i = 0; i < res.payload.list_senasir_months.length; i++) {
-          if (res.payload.list_senasir_months[i].state_importation == false) {
-            this.list_months_not_import.push(res.payload.list_senasir_months[i]);
+        this.list_months = res.payload.list_months;
+        for (let i = 0; i < res.payload.list_months.length; i++) {
+          if (res.payload.list_months[i].state_importation == false) {
+            this.list_months_not_import.push(res.payload.list_months[i]);
           }
         }
         //console.log(this.year_selected);
