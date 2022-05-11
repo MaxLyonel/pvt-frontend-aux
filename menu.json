@@ -11,8 +11,8 @@
     "permission": "read-import-payroll"
   },
   {
-    "href": "/contribution/PageContributionUpdate",
-    "title": "Importacion Aportes Auxilio Mortuorio",
+    "href": "/contribution/PageContributionImportation",
+    "title": "Importacion Aportes",
     "icon": "mdi-cash",
     "permission": "read-import-contribution"
   },
