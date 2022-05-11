@@ -6,13 +6,13 @@
   },
   {
     "href": "/contribution/PageImportation",
-    "title": "Importación de planillas de Rentas",
+    "title": "Importación de Planillas",
     "icon": "mdi-bank-transfer",
     "permission": "read-import-payroll"
   },
   {
     "href": "/contribution/PageContributionImportation",
-    "title": "Importacion Aportes",
+    "title": "Importación de Aportes",
     "icon": "mdi-cash",
     "permission": "read-import-contribution"
   },
