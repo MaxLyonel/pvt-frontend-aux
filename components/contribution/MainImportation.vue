@@ -115,7 +115,7 @@
           <v-btn icon dark @click="dialog = close()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>IMPORTACION SENASIR</v-toolbar-title>
+          <v-toolbar-title>IMPORTACIÓN SENASIR</v-toolbar-title>
         </v-toolbar>
         <v-row justify="center" class="mt-5"
           ><v-col cols="8">
@@ -218,11 +218,11 @@
                       </v-card>
                     </v-card-text>
                   </v-card>
-                  <v-btn color="primary" @click="dialog_confirm_import=true">
-                    Validar archivo
-                  </v-btn>
                   <v-btn color="error" @click="dialog_confirm=true">
                     Rehacer
+                  </v-btn>
+                  <v-btn color="primary" @click="dialog_confirm_import=true">
+                    Validar archivo
                   </v-btn>
                 </v-stepper-content>
               </v-stepper-items>
