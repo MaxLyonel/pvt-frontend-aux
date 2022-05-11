@@ -63,7 +63,7 @@
                         @click="confirmImportContribution(item.period_month, true)"
                         :disabled="item.state_importation"
                       >
-                        <v-icon dark left small>mdi-arrow-down</v-icon>Act. Aportes
+                        <v-icon dark left small>mdi-arrow-down</v-icon>Imp. Aportes
                       </v-btn>
                     </template>
                     <div>
@@ -138,7 +138,7 @@
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue"
 import GlobalLoading from "@/components/common/GlobalLoading.vue"
 export default {
-  name: "MainContributionUpdate",
+  name: "MainContributionImportation",
   components: {
     GlobalBreadCrumb,
     GlobalLoading
@@ -192,7 +192,7 @@ export default {
     async getYears() {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`/contribution/list_senasir_years`)
+        let res = await this.$axios.get(`/contribution/list_years`)
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
         this.loading = false;
@@ -207,7 +207,7 @@ export default {
             period_year: this.year_selected,
           }
         );
-        this.list_senasir_months = res.payload.list_senasir_months;
+        this.list_senasir_months = res.payload.list_months;
         this.loading_circular = false
         console.log(this.year_selected);
       } catch (e) {
