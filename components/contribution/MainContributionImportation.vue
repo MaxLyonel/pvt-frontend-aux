@@ -192,7 +192,7 @@ export default {
     async getYears() {
       try {
         this.loading = true;
-        let res = await this.$axios.get(`/contribution/list_senasir_years`)
+        let res = await this.$axios.get(`/contribution/list_years`)
         this.years = res.payload.list_years;
         this.year_selected = this.years[0];
         this.loading = false;
