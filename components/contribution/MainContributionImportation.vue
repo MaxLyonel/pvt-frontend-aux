@@ -10,8 +10,11 @@
             active-class="secondary white--text"
             mandatory
           >
-            <v-btn value="COMANDO" v-if="permissionSimpleSelected.includes('create-import-command')"> Comando </v-btn>
-            <v-btn value="SENASIR" v-if="permissionSimpleSelected.includes('create-import-senasir')"> Senasir </v-btn>
+          <v-btn
+              v-for="item in items_import"
+              :key="item.name"
+              :value="item.name"
+            > {{item.name}}</v-btn>
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
@@ -37,7 +40,7 @@
       <v-card
         :class="item.state_importation ? 'headline font-weight-bold ma-2 blue-grey lighten-5' : 'headline font-weight-bold ma-2'"
         max-width="250px"
-        v-for="(item, i) in list_senasir_months"
+        v-for="(item, i) in list_months"
         :key="i"
       >
         <template v-if="item.state_validated_payroll">
@@ -72,8 +75,14 @@
                 </v-tooltip>
   
                 <div v-show="item.state_importation">
-                  <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives)}}</strong><br>
-                  <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contribution_passives)}}</strong><br>
+                  <template v-if="type_import.name == 'SENASIR'">
+                    <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contribution_passives)}}</strong><br>
+                    <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contribution_passives)}}</strong><br>
+                   </template>
+                  <template v-if="type_import.name == 'COMANDO'">
+                    <span class="info--text">N° reg. importados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_contributions)}}</strong><br>
+                    <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contributions)}}</strong><br>
+                  </template>
                   <div class="text-right pb-1" >
                     <v-tooltip top class="my-0" v-if="permissionSimpleSelected.includes('download-report-senasir')">
                       <template v-slot:activator="{ on }">
@@ -83,7 +92,7 @@
                           fab
                           v-on="on"
                           :loading="loading_rep_state && i == loading_pos_index"
-                          @click.stop="loading_pos_index = i; reportImportContributionSenasir(item.period_month)"
+                          @click.stop="loading_pos_index = i; reportImportContribution(item.period_month)"
                         >
                           <v-icon>mdi-file-document</v-icon>
                         </v-btn>
@@ -149,24 +158,48 @@ export default {
     loading: false,
     year_selected: null,
     period_type: "SENASIR",
-    list_senasir_months: [],
+    list_months: [],
     dialog: false,
     month_selected: null,
-    data_count: {
-      num_data_considered: 0,
-      num_data_not_considered: 0,
-      num_data_not_validated: 0,
-      num_data_validated: 0,
-      num_total_data_copy: 0,
+    data_count:{
+      num_data_validated: 0,  //senasir , command
+      sum_amount_total_contribution_passives: 0, //senasir
+      num_total_data_contribution_passives: 0, //senasir
+      num_total_data_contributions: 0, //command
+      sum_amount_total_contributions: 0 //command
     },
     btn_import_contributions: false,
     dialog_confirm_import_contribution: false,
     loading_circular: false,
     loading_pos_index: -1,
     loading_rep_state: false,
+    items_import: [],
+     type_import:{}
   }),
   created() {
+     this.items_import= [
+      {
+        id: 1,
+        name: 'SENASIR',
+        permisison: 'permission',
+        route_get_months: '/contribution/list_months_import_contribution_senasir',
+        route_import_contribution: '/contribution/import_create_or_update_contribution_period_senasir', //Creacion de aportes
+        message_validate_data: 'No se encontraron algunas matrículas, por favor revise el archivo Excel',
+        route_download: '/contribution/report_import_contribution_senasir'
+      },
+      {
+        id: 2,
+        name: 'COMANDO',
+        permisison: 'permission',
+        route_get_months: '/contribution/list_months_import_contribution_command',
+        route_import_contribution: '/contribution/import_contribution_command', //Creacion de aportes
+        message_validate_data: 'El archivo excel contiene informacion de los afiliados creados',
+        route_download: ' '
+      }
+    ],
     this.getYears();
+    this.type_import = this.items_import[0]
+    this.getMonths()
   },
   computed: {
     //permisos del selector global por rol
@@ -182,6 +215,17 @@ export default {
     },
   },
   watch: {
+    active(newVal, oldVal) {
+     if (newVal != oldVal) {
+       for(let i=0; i < this.items_import.length; i++){
+         if(this.active == this.items_import[i].name){
+           this.type_import = this.items_import[i]
+         }
+       }
+       this.getMonths()
+     }
+   },
+
     year_selected(newVal, oldVal) {
       if (newVal != oldVal) {
         this.getMonths();
@@ -203,11 +247,12 @@ export default {
     async getMonths() {
       this.loading_circular = true
       try {
-        let res = await this.$axios.post("/contribution/list_months_import_contribution_senasir",{
+        let res = await this.$axios.post(`${this.type_import.route_get_months}`,{
             period_year: this.year_selected,
           }
         );
-        this.list_senasir_months = res.payload.list_months;
+        this.list_months = res.payload.list_months;
+        this.data_count.num_data_validated = res.payload.data_count.num_data_validated;
         this.loading_circular = false
         console.log(this.year_selected);
       } catch (e) {
@@ -223,11 +268,21 @@ export default {
     async ImportContributions() {
       this.btn_import_contributions = true;
       try {
-        let res = await this.$axios.post("/contribution/import_create_or_update_contribution_period_senasir",{
-            period_contribution_senasir: this.dateFormat
+        let res = await this.$axios.post(`${this.type_import.route_import_contribution}`,{
+            period_contribution: this.dateFormat
           }
         );
         if (res.payload.successfully) {
+             
+          if(this.type_import.name == 'SENASIR'){
+            this.data_count.num_data_validated = res.payload.data_count.num_data_validated
+            this.data_count.sum_amount_total_contribution_passives = res.payload.data_count.sum_amount_total_contribution_passives
+            this.data_count.num_total_data_contribution_passives = res.payload.data_count.num_total_data_contribution_passives
+          } else if(this.type_import.name == 'COMANDO'){
+            this.data_count.num_data_validated = res.payload.data_count.num_data_validated
+            this.data_count.num_total_data_contributions = res.payload.data_count.num_total_data_contributions
+            this.data_count.sum_amount_total_contributions = res.payload.data_count.sum_amount_total_contributions
+          }
           this.$toast.success("Total de registros importados: "+ res.payload.num_created)
           this.dialog_confirm_import_contribution = false
           this.getMonths();
@@ -246,11 +301,11 @@ export default {
       console.log( month_selected)
     },
 
-    async reportImportContributionSenasir(month_selected){
+    async reportImportContribution(month_selected){
       this.month_selected = month_selected
       this.loading_rep_state=true;
       try {
-        let res = await this.$axios.post("/contribution/report_import_contribution_senasir",{
+        let res = await this.$axios.post(`${this.type_import.route_download}`,{
             date_contribution: this.dateFormat
           },
           {'Accept': 'application/vnd.ms-excel' },
