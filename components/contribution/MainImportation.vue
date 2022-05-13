@@ -10,8 +10,12 @@
             active-class="secondary white--text"
             mandatory
           >
-            <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-command')" value="COMANDO"> Comando </v-btn>
-            <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-senasir')" value="SENASIR"> Senasir </v-btn>
+            <v-btn
+              v-for="item in items_import"
+              :key="item.name"
+              :value="item.name"
+            > {{item.name}}</v-btn>
+            <!-- <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-senasir')" value="SENASIR"> Senasir </v-btn> -->
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
@@ -68,14 +72,20 @@
           <v-card-text class="blue-grey lighten-5">
             <v-row v-if="period_type === 'SENASIR'">
               <v-col cols="12" md="12" class="py-0">
-                <b>Senasir <v-icon small>mdi-home-analytics</v-icon></b>
+                <b>{{ type_import.name }} <v-icon small>mdi-home-analytics</v-icon></b>
               </v-col>
               <v-divider inset></v-divider>
               <v-col cols="12" md="12" class="py-0">
                 <span class="info--text">N° reg. copiados: </span><strong>{{$filters.thousands(item.data_count.num_total_data_copy)}}</strong><br>
-                <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
-                <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
-                <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
+                <template v-if="type_import.name == 'SENASIR'">
+                  <span class="info--text">N° reg. considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_considered)}}</strong><br>
+                  <span class="error--text">N° reg. no considerados: </span><strong>{{$filters.thousands(item.data_count.num_data_not_considered)}}</strong><br>
+                  <span class="info--text">N° reg. validados: </span><strong>{{$filters.thousands(item.data_count.num_data_validated)}}</strong><br>
+                </template>
+                <template v-if="type_import.name == 'COMANDO'">
+                  <span class="info--text">N° reg. nuevos: </span><strong>{{$filters.thousands(item.data_count.num_data_new)}}</strong><br>
+                  <span class="info--text">N° reg. regulares: </span><strong>{{$filters.thousands(item.data_count.num_data_regular)}}</strong><br>
+                </template>
                   <div class="text-right pb-1" v-if="permissionSimpleSelected.includes('download-report-payroll-senasir')">
                     <v-tooltip top class="my-0">
                       <template v-slot:activator="{ on }">
@@ -115,7 +125,7 @@
           <v-btn icon dark @click="dialog = close()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>IMPORTACIÓN SENASIR</v-toolbar-title>
+          <v-toolbar-title>IMPORTACIÓN {{type_import.name}}</v-toolbar-title>
         </v-toolbar>
         <v-row justify="center" class="mt-5"
           ><v-col cols="8">
@@ -203,7 +213,7 @@
                   <v-card class="mb-12" color="grey lighten-1">
                     <v-card-text>
                       <v-card color="white" class="pa-2" v-if="progress.query_step_1">
-                        <v-row>
+                        <v-row v-if="type_import.name == 'SENASIR'">
                           <v-col cols="12" md="6">
                             <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
                             <strong class="success--text">Total de registros considerados:</strong> {{$filters.thousands(data_count.num_data_considered)}}<br>
@@ -213,6 +223,17 @@
                             <strong>Total de registros copiados:</strong> {{$filters.thousands(data_count.num_total_data_copy)}}<br>
                             <strong class="success--text">Total de registros validados:</strong> {{$filters.thousands(data_count.num_data_validated)}}<br>
                             <strong class="error--text">Total de registros no validados:</strong> {{$filters.thousands(data_count.num_data_not_validated)}}<br>
+                          </v-col>
+                        </v-row>
+                        <v-row v-if="type_import.name == 'COMANDO'">
+                          <v-col cols="12" md="6">
+                            <strong>Nombre del archivo:</strong> {{ progress.file_exists ? progress.file_name :  import_export.file.name}}<br>
+                            <strong>Total de registros copiados:</strong> {{$filters.thousands(data_count.num_total_data_copy)}}<br>
+                            <strong class="success--text">Total de registros validados:</strong> {{$filters.thousands(data_count.num_data_validated)}}<br>
+                          </v-col>
+                          <v-col cols="12" md="6">
+                            <strong>Total de registros nuevo:</strong> {{$filters.thousands(data_count.num_data_new)}}<br>
+                            <strong class="success--text">Total de registros regulares:</strong> {{$filters.thousands(data_count.num_data_regular)}}<br>
                           </v-col>
                         </v-row>
                       </v-card>
@@ -326,11 +347,13 @@ export default {
       query_step_2: false
     },
     data_count:{
-      num_data_considered: 0,
-      num_data_not_considered: 0,
-      num_data_not_validated: 0,
-      num_data_validated: 0,
-      num_total_data_copy: 0
+      num_data_considered: 0, //senasir
+      num_data_not_considered: 0, //senasir
+      num_data_not_validated: 0, //senasir
+      num_data_validated: 0, //senasir , command
+      num_total_data_copy: 0, //senasir, command
+      num_data_new: 0, //command
+      num_data_regular: 0 //command
     },
     btn_update_file: false,
     btn_validate_data: false,
@@ -341,9 +364,43 @@ export default {
     loading_circular:false,
     loading_pos_index: -1,
     loading_rep_state: false,
+    items_import: [],
+    type_import:{}
   }),
   created() {
+    this.items_import= [
+      {
+        id: 1,
+        name: 'SENASIR',
+        permisison: 'create-import-payroll-senasir',
+        route_get_months: '/contribution/list_months_validate_senasir',
+        route_upload_file: '/contribution/upload_copy_payroll_senasir', //Step1
+        route_validate_data: '/contribution/validation_payroll_senasir', //step2
+        message_validate_data: 'No se encontraron algunas matrículas, por favor revise el archivo Excel',
+        route_rollback_contribution: '/contribution/rollback_payroll_copy_senasir',
+        route_import_progressBar: '/contribution/import_payroll_senasir_progress_bar',
+        route_download_file: '/contribution/download_fail_not_found_payroll_senasir',
+        name_download_file: "ReporteMatriculasNoValidas.xls",
+        route_report: '/contribution/report_payroll_senasir',
+      },
+      {
+        id: 2,
+        name: 'COMANDO',
+        permisison: 'create-import-payroll-command',
+        route_get_months: '/contribution/list_months_validate_command',
+        route_upload_file: '/contribution/upload_copy_payroll_command', //Step1
+        route_validate_data: '/contribution/validation_payroll_command', //step2
+        message_validate_data: 'El archivo excel contiene informacion de los afiliados creados',
+        route_rollback_contribution: '/contribution/rollback_payroll_copy_command',
+        route_import_progressBar: '/contribution/import_payroll_command_progress_bar',
+        route_download_file: '/contribution/download_new_affiliates_payroll_command',
+        name_download_file: "ReporteNuevosAfiliados.xls",
+        route_report: '',
+      }
+    ],
     this.getYears();
+    this.type_import = this.items_import[0]
+    this.getMonths()
   },
   computed: {
     //permisos del selector global por rol
@@ -359,6 +416,16 @@ export default {
   },
 
   watch: {
+    active(newVal, oldVal) {
+      if (newVal != oldVal) {
+        for(let i=0; i < this.items_import.length; i++){
+          if(this.active == this.items_import[i].name){
+            this.type_import = this.items_import[i]
+          }
+        }
+        this.getMonths()
+      }
+    },
     year_selected(newVal, oldVal) {
       if (newVal != oldVal) {
         this.getMonths();
@@ -396,7 +463,7 @@ export default {
       this.loading_circular = true
       try {
         this.list_months_not_import = [];
-        let res = await this.$axios.post("/contribution/list_months_validate_senasir",{
+        let res = await this.$axios.post(`${this.type_import.route_get_months}`,{
             period_year: this.year_selected,
           }
         );
@@ -430,16 +497,23 @@ export default {
       formData.append("file", this.import_export.file);
       formData.append("date_payroll", this.dateFormat);
       try {
-        let res = await this.$axios.post("/contribution/upload_copy_payroll_senasir",
+        let res = await this.$axios.post(`${this.type_import.route_upload_file}`,
           formData
         );
         if (res.payload.successfully) {
-          this.data_count.num_total_data_copy = res.payload.data_count.num_total_data_copy
-          this.data_count.num_data_considered = res.payload.data_count.num_data_considered
-          this.data_count.num_data_not_considered = res.payload.data_count.num_data_not_considered
-          this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
-          this.data_count.num_data_validated = res.payload.data_count.num_data_validated
-          this.$toast.success("Se ha realizado el copiado de " + res.payload.data_count.num_total_data_copy+ ' registros');
+          if(this.type_import.name == 'SENASIR'){
+            this.data_count.num_total_data_copy = res.payload.data_count.num_total_data_copy
+            this.data_count.num_data_considered = res.payload.data_count.num_data_considered
+            this.data_count.num_data_not_considered = res.payload.data_count.num_data_not_considered
+            this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
+            this.data_count.num_data_validated = res.payload.data_count.num_data_validated
+          } else if(this.type_import.name == 'COMANDO'){
+            this.data_count.num_total_data_copy = res.payload.data_count.num_total_data_copy
+            this.data_count.num_data_validated = res.payload.data_count.num_data_validated
+            this.data_count.num_data_new = res.payload.data_count.num_data_new
+            this.data_count.num_data_regular = res.payload.data_count.num_data_regular
+          }
+          this.$toast.success("Se ha realizado el copiado de " + this.data_count.num_total_data_copy + ' registros');
           this.progress.query_step_1 = true
           console.log(this.import_export.file.name)
         } else {
@@ -456,7 +530,7 @@ export default {
     async validateData() {
       this.btn_validate_data = true;
       try {
-        let res = await this.$axios.post("/contribution/validation_payroll_senasir",{
+        let res = await this.$axios.post(`${this.type_import.route_validate_data}`,{
             date_payroll: this.dateFormat,
           }
         );
@@ -464,10 +538,21 @@ export default {
           this.data_count.num_data_not_validated = res.payload.data_count.num_data_not_validated
           this.data_count.num_data_validated = res.payload.data_count.num_data_validated
 
-          if(res.message == 'Excel'){
-            this.$toast.info('No se encontraron algunas matrículas, por favor revise el archivo Excel');
-            this.downloadFailValidate();
+          if(this.type_import.name == 'SENASIR'){
+            if(res.message == 'Excel'){
+              this.$toast.info(this.type_import.message_validate_data);
+              this.downloadFile();
+            }
           }
+          if(this.type_import.name == 'COMANDO'){
+            this.data_count.num_data_new = res.payload.data_count.num_data_new
+            if(res.payload.data_count.num_data_new > 0){
+              console.log(res.payload.data_count.num_data_new)
+              this.$toast.info(this.type_import.message_validate_data);
+              this.downloadFile();
+            }
+          }
+
           this.progress.percentage = 100
           this.dialog_confirm_import = false
           this.dialog = false
@@ -487,7 +572,7 @@ export default {
         this.btn_validate_data = false;
       }
     },
-    async downloadFailValidate() {
+    async downloadFile() {
       try {
         // ESTA ES OTRA FORMA QUE UTILIZA FETCH EN LUGAR DE AXIOS
         /*let response = await fetch(
@@ -500,7 +585,7 @@ export default {
         let res = (await response.blob())*/
 
         // Se debe enviar el responseType como configuracion, NO como header
-        let res = await this.$axios.post("/contribution/download_fail_not_found_payroll_senasir",{
+        let res = await this.$axios.post(`${this.type_import.route_download_file}`,{
             date_payroll: this.dateFormat,
           },
           {'Accept': 'application/vnd.ms-excel' },
@@ -509,7 +594,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([res]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "ReporteMatriculasNoValidas.xls");
+        link.setAttribute("download", `${this.type_import.name_download_file}`);
         document.body.appendChild(link);
         link.click();
       } catch (e) {
@@ -517,33 +602,33 @@ export default {
       }
     },
     //PASO3
-    async ImportContributions() {
-      this.btn_import_contributions = true;
-      try {
-        let res = await this.$axios.post("/contribution/import_create_or_update_contribution_payroll_period_senasir",{
-            period_contribution_senasir: this.dateFormat,
-          }
-        );
-        if (res.payload.successfully) {
-          this.$toast.success("Total de registros: "+ res.payload.num_total + "\n Registros creados: "+ res.payload.num_created + "\n Registros actualizados: "+ res.payload.num_updated)
-          this.progress.percentage = 100
-          this.dialog_confirm_import= false
-          this.dialog = false
-          this.clearData()
-          this.getMonths();
-        } else {
-          this.$toast.error(res.message);
-        }
-        this.btn_import_contributions = false
-      } catch (e) {
-        console.log(e);
-        this.btn_import_contributions = false
-      }
-    },
+    // async ImportContributions() {
+    //   this.btn_import_contributions = true;
+    //   try {
+    //     let res = await this.$axios.post("/contribution/import_create_or_update_contribution_payroll_period_senasir",{
+    //         period_contribution_senasir: this.dateFormat,
+    //       }
+    //     );
+    //     if (res.payload.successfully) {
+    //       this.$toast.success("Total de registros: "+ res.payload.num_total + "\n Registros creados: "+ res.payload.num_created + "\n Registros actualizados: "+ res.payload.num_updated)
+    //       this.progress.percentage = 100
+    //       this.dialog_confirm_import= false
+    //       this.dialog = false
+    //       this.clearData()
+    //       this.getMonths();
+    //     } else {
+    //       this.$toast.error(res.message);
+    //     }
+    //     this.btn_import_contributions = false
+    //   } catch (e) {
+    //     console.log(e);
+    //     this.btn_import_contributions = false
+    //   }
+    // },
     async rollbackContribution() {
       this.btn_rollback = true
       try {
-        let res = await this.$axios.post("/contribution/rollback_payroll_copy_senasir",{
+        let res = await this.$axios.post(`${this.type_import.route_rollback_contribution}`,{
             date_payroll: this.dateFormat,
           }
         );
@@ -561,7 +646,7 @@ export default {
     },
     async importProgressBar() {
       try {
-        let res = await this.$axios.post("/contribution/import_payroll_senasir_progress_bar",{
+        let res = await this.$axios.post(`${this.type_import.route_import_progressBar}`,{
             date_payroll: this.dateFormat,
           }
         );
@@ -602,7 +687,7 @@ export default {
       this.month_selected = month_selected
       this.loading_rep_state=true;
       try {
-        let res = await this.$axios.post("/contribution/report_payroll_senasir",{
+        let res = await this.$axios.post(`${this.type_import.route_report}`,{
             date_payroll: this.dateFormat
           },
           {'Accept': 'application/vnd.ms-excel' },
