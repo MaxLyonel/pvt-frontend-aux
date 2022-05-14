@@ -199,7 +199,14 @@ export default {
     ],
     this.getYears();
     this.type_import = this.items_import[0]
-    this.getMonths()
+     //seleccionar el mes en caso de null
+    if(this.year_selected){
+      this.getMonths()
+    }else{
+      this.year_selected = new Date().getFullYear()
+      this.getMonths()
+    }
+   // this.getMonths()
   },
   computed: {
     //permisos del selector global por rol
@@ -273,16 +280,7 @@ export default {
           }
         );
         if (res.payload.successfully) {
-             
-          if(this.type_import.name == 'SENASIR'){
-            this.data_count.num_data_validated = res.payload.data_count.num_data_validated
-            this.data_count.sum_amount_total_contribution_passives = res.payload.data_count.sum_amount_total_contribution_passives
-            this.data_count.num_total_data_contribution_passives = res.payload.data_count.num_total_data_contribution_passives
-          } else if(this.type_import.name == 'COMANDO'){
-            this.data_count.num_data_validated = res.payload.data_count.num_data_validated
-            this.data_count.num_total_data_contributions = res.payload.data_count.num_total_data_contributions
-            this.data_count.sum_amount_total_contributions = res.payload.data_count.sum_amount_total_contributions
-          }
+
           this.$toast.success("Total de registros importados: "+ res.payload.num_created)
           this.dialog_confirm_import_contribution = false
           this.getMonths();
