@@ -84,7 +84,7 @@
                     <span class="info--text">Total aportes Bs.: </span><strong>{{$filters.money(item.data_count.sum_amount_total_contributions)}}</strong><br>
                   </template>
                   <div class="text-right pb-1" >
-                    <v-tooltip top class="my-0" v-if="permissionSimpleSelected.includes('download-report-senasir')">
+                    <v-tooltip top class="my-0" v-if="permissionSimpleSelected.includes(type_import.permissions_download)">
                       <template v-slot:activator="{ on }">
                         <v-btn
                           small
@@ -181,7 +181,7 @@ export default {
       {
         id: 1,
         name: 'SENASIR',
-        permisison: 'permission',
+        permissions_download: 'download-report-senasir',
         route_get_months: '/contribution/list_months_import_contribution_senasir',
         route_import_contribution: '/contribution/import_create_or_update_contribution_period_senasir', //Creacion de aportes
         route_download: '/contribution/report_import_contribution_senasir',
@@ -190,7 +190,7 @@ export default {
       {
         id: 2,
         name: 'COMANDO',
-        permisison: 'permission',
+        permissions_download: 'download-report-command',
         route_get_months: '/contribution/list_months_import_contribution_command',
         route_import_contribution: '/contribution/import_contribution_command', //Creacion de aportes
         route_download: ' ',

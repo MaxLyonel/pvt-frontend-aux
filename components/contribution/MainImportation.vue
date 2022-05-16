@@ -10,12 +10,13 @@
             active-class="secondary white--text"
             mandatory
           >
+          <span  v-for="item in items_import" :key="item.name">
             <v-btn
-              v-for="item in items_import"
-              :key="item.name"
+              v-if="permissionSimpleSelected.includes(item.permissions_create)"
               :value="item.name"
             > {{item.name}}</v-btn>
             <!-- <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-senasir')" value="SENASIR"> Senasir </v-btn> -->
+          </span>
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
@@ -86,7 +87,7 @@
                   <span class="info--text">N° reg. nuevos: </span><strong>{{$filters.thousands(item.data_count.num_data_new)}}</strong><br>
                   <span class="info--text">N° reg. regulares: </span><strong>{{$filters.thousands(item.data_count.num_data_regular)}}</strong><br>
                 </template>
-                  <div class="text-right pb-1" v-if="permissionSimpleSelected.includes('download-report-payroll-senasir')">
+                  <div class="text-right pb-1" v-if="permissionSimpleSelected.includes(type_import.permissions_download)">
                     <v-tooltip top class="my-0">
                       <template v-slot:activator="{ on }">
                         <v-btn
@@ -372,7 +373,8 @@ export default {
       {
         id: 1,
         name: 'SENASIR',
-        permisison: 'create-import-payroll-senasir',
+        permissions_create: 'create-import-payroll-senasir',
+        permissions_download: 'download-report-payroll-senasir',
         route_get_months: '/contribution/list_months_validate_senasir',
         route_upload_file: '/contribution/upload_copy_payroll_senasir', //Step1
         route_validate_data: '/contribution/validation_payroll_senasir', //step2
@@ -387,7 +389,8 @@ export default {
       {
         id: 2,
         name: 'COMANDO',
-        permisison: 'create-import-payroll-command',
+        permissions_create: 'create-import-payroll-command',
+        permissions_download: 'download-report-payroll-command',
         route_get_months: '/contribution/list_months_validate_command',
         route_upload_file: '/contribution/upload_copy_payroll_command', //Step1
         route_validate_data: '/contribution/validation_payroll_command', //step2
