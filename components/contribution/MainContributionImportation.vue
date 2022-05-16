@@ -10,11 +10,12 @@
             active-class="secondary white--text"
             mandatory
           >
-          <v-btn
-              v-for="item in items_import"
-              :key="item.name"
-              :value="item.name"
-            > {{item.name}}</v-btn>
+            <span  v-for="item in items_import" :key="item.name">
+              <v-btn
+                v-if="permissionSimpleSelected.includes(item.permissions_create)"
+                :value="item.name"
+              > {{item.name}}</v-btn>
+            </span>
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
@@ -181,6 +182,7 @@ export default {
       {
         id: 1,
         name: 'SENASIR',
+        permissions_create: 'create-import-senasir',
         permissions_download: 'download-report-senasir',
         route_get_months: '/contribution/list_months_import_contribution_senasir',
         route_import_contribution: '/contribution/import_create_or_update_contribution_period_senasir', //Creacion de aportes
@@ -190,6 +192,7 @@ export default {
       {
         id: 2,
         name: 'COMANDO',
+        permissions_create: 'create-import-command',
         permissions_download: 'download-report-command',
         route_get_months: '/contribution/list_months_import_contribution_command',
         route_import_contribution: '/contribution/import_contribution_command', //Creacion de aportes
