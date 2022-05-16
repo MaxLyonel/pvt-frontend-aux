@@ -10,12 +10,13 @@
             active-class="secondary white--text"
             mandatory
           >
+          <span  v-for="item in items_import" :key="item.name">
             <v-btn
-              v-for="item in items_import"
-              :key="item.name"
+              v-if="permissionSimpleSelected.includes(item.permissions_create)"
               :value="item.name"
             > {{item.name}}</v-btn>
             <!-- <v-btn v-if="permissionSimpleSelected.includes('create-import-payroll-senasir')" value="SENASIR"> Senasir </v-btn> -->
+          </span>
           </v-btn-toggle>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-select
@@ -86,7 +87,7 @@
                   <span class="info--text">N° reg. nuevos: </span><strong>{{$filters.thousands(item.data_count.num_data_new)}}</strong><br>
                   <span class="info--text">N° reg. regulares: </span><strong>{{$filters.thousands(item.data_count.num_data_regular)}}</strong><br>
                 </template>
-                  <div class="text-right pb-1" v-if="permissionSimpleSelected.includes('download-report-payroll-senasir')">
+                  <div class="text-right pb-1" v-if="permissionSimpleSelected.includes(type_import.permissions_download)">
                     <v-tooltip top class="my-0">
                       <template v-slot:activator="{ on }">
                         <v-btn
@@ -95,7 +96,7 @@
                           fab
                           v-on="on"
                           :loading="loading_rep_state && i == loading_pos_index"
-                          @click.stop="loading_pos_index = i; reportPayrollSenasir(item.period_month)"
+                          @click.stop="loading_pos_index = i; reportPayroll(item.period_month)"
                         >
                           <v-icon>mdi-file-document</v-icon>
                         </v-btn>
@@ -372,7 +373,8 @@ export default {
       {
         id: 1,
         name: 'SENASIR',
-        permisison: 'create-import-payroll-senasir',
+        permissions_create: 'create-import-payroll-senasir',
+        permissions_download: 'download-report-payroll-senasir',
         route_get_months: '/contribution/list_months_validate_senasir',
         route_upload_file: '/contribution/upload_copy_payroll_senasir', //Step1
         route_validate_data: '/contribution/validation_payroll_senasir', //step2
@@ -382,11 +384,13 @@ export default {
         route_download_file: '/contribution/download_fail_not_found_payroll_senasir',
         name_download_file: "ReporteMatriculasNoValidas.xls",
         route_report: '/contribution/report_payroll_senasir',
+        name_report_file: "ReporteDatosSenasir.xls"
       },
       {
         id: 2,
         name: 'COMANDO',
-        permisison: 'create-import-payroll-command',
+        permissions_create: 'create-import-payroll-command',
+        permissions_download: 'download-report-payroll-command',
         route_get_months: '/contribution/list_months_validate_command',
         route_upload_file: '/contribution/upload_copy_payroll_command', //Step1
         route_validate_data: '/contribution/validation_payroll_command', //step2
@@ -396,11 +400,18 @@ export default {
         route_download_file: '/contribution/download_new_affiliates_payroll_command',
         name_download_file: "ReporteNuevosAfiliados.xls",
         route_report: '',
+        name_report_file: "ReporteDatosComando.xls"
       }
     ],
     this.getYears();
-    this.type_import = this.items_import[0]
-    this.getMonths()
+    this.type_import = this.items_import[0]//Toma por defecto la importacion del item 0 = Seanasir
+    //seleccionar el mes en caso de null
+    if(this.year_selected){
+      this.getMonths()
+    }else{
+      this.year_selected = new Date().getFullYear()
+      this.getMonths()
+    }
   },
   computed: {
     //permisos del selector global por rol
@@ -447,6 +458,7 @@ export default {
         this.e1 = n + 1
       }
     },
+    //Función Global para importacion
     async getYears() {
       try {
         this.loading = true;
@@ -601,30 +613,6 @@ export default {
         console.log(e);
       }
     },
-    //PASO3
-    // async ImportContributions() {
-    //   this.btn_import_contributions = true;
-    //   try {
-    //     let res = await this.$axios.post("/contribution/import_create_or_update_contribution_payroll_period_senasir",{
-    //         period_contribution_senasir: this.dateFormat,
-    //       }
-    //     );
-    //     if (res.payload.successfully) {
-    //       this.$toast.success("Total de registros: "+ res.payload.num_total + "\n Registros creados: "+ res.payload.num_created + "\n Registros actualizados: "+ res.payload.num_updated)
-    //       this.progress.percentage = 100
-    //       this.dialog_confirm_import= false
-    //       this.dialog = false
-    //       this.clearData()
-    //       this.getMonths();
-    //     } else {
-    //       this.$toast.error(res.message);
-    //     }
-    //     this.btn_import_contributions = false
-    //   } catch (e) {
-    //     console.log(e);
-    //     this.btn_import_contributions = false
-    //   }
-    // },
     async rollbackContribution() {
       this.btn_rollback = true
       try {
@@ -683,7 +671,7 @@ export default {
       this.progress.query_step_2= false
     },
 
-    async reportPayrollSenasir(month_selected){
+    async reportPayroll(month_selected){
       this.month_selected = month_selected
       this.loading_rep_state=true;
       try {
@@ -696,7 +684,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([res]))
         const link = document.createElement("a")
         link.href = url;
-        link.setAttribute("download", "ReporteDatosSenasir.xls")
+        link.setAttribute("download", `${this.type_import.name_report_file}`)
         document.body.appendChild(link)
         link.click()
       } catch (e) {
