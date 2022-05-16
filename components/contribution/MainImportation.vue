@@ -399,7 +399,7 @@ export default {
         route_import_progressBar: '/contribution/import_payroll_command_progress_bar',
         route_download_file: '/contribution/download_new_affiliates_payroll_command',
         name_download_file: "ReporteNuevosAfiliados.xls",
-        route_report: '',
+        route_report: '/contribution/report_payroll_command',
         name_report_file: "ReporteDatosComando.xls"
       }
     ],
