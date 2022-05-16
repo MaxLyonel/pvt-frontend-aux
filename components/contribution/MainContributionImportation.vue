@@ -184,8 +184,8 @@ export default {
         permisison: 'permission',
         route_get_months: '/contribution/list_months_import_contribution_senasir',
         route_import_contribution: '/contribution/import_create_or_update_contribution_period_senasir', //Creacion de aportes
-        message_validate_data: 'No se encontraron algunas matrículas, por favor revise el archivo Excel',
-        route_download: '/contribution/report_import_contribution_senasir'
+        route_download: '/contribution/report_import_contribution_senasir',
+        name_download_file: "ReporteDetalleAportesSenasir.xls"
       },
       {
         id: 2,
@@ -193,8 +193,8 @@ export default {
         permisison: 'permission',
         route_get_months: '/contribution/list_months_import_contribution_command',
         route_import_contribution: '/contribution/import_contribution_command', //Creacion de aportes
-        message_validate_data: 'El archivo excel contiene informacion de los afiliados creados',
-        route_download: ' '
+        route_download: ' ',
+        name_download_file: "ReporteDetalleAportesComando.xls"
       }
     ],
     this.getYears();
@@ -258,8 +258,7 @@ export default {
             period_year: this.year_selected,
           }
         );
-        this.list_months = res.payload.list_months;
-        this.data_count.num_data_validated = res.payload.data_count.num_data_validated;
+        this.list_months = res.payload.list_months
         this.loading_circular = false
         console.log(this.year_selected);
       } catch (e) {
@@ -312,7 +311,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([res]))
         const link = document.createElement("a")
         link.href = url;
-        link.setAttribute("download", "ReporteDetalleAportesImportes.xls")
+        link.setAttribute("download", `${this.type_import.name_download_file}`)
         document.body.appendChild(link)
         link.click()
       } catch (e) {
