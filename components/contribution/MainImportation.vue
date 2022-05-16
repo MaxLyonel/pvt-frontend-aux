@@ -71,7 +71,7 @@
           </v-card-title>
           <v-divider inset></v-divider>
           <v-card-text class="blue-grey lighten-5">
-            <v-row v-if="period_type === 'SENASIR'">
+            <v-row>
               <v-col cols="12" md="12" class="py-0">
                 <b>{{ type_import.name }} <v-icon small>mdi-home-analytics</v-icon></b>
               </v-col>
@@ -333,7 +333,6 @@ export default {
     years: [],
     loading: false,
     year_selected: null,
-    period_type: "SENASIR",
     list_months: [],
     list_months_not_import: [],
     dialog: false,
