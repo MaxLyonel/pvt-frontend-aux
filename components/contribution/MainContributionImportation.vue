@@ -52,7 +52,7 @@
           </v-card-title>
           <v-divider inset></v-divider>
           <v-card-text>
-            <v-row v-if="period_type === 'SENASIR'">
+            <v-row>
 
               <v-col cols="12" md="12" class="py-0">
                 <span class="info--text">N° reg. validados: </span
@@ -158,7 +158,6 @@ export default {
     years: [],
     loading: false,
     year_selected: null,
-    period_type: "SENASIR",
     list_months: [],
     dialog: false,
     month_selected: null,
@@ -196,7 +195,7 @@ export default {
         permissions_download: 'download-report-command',
         route_get_months: '/contribution/list_months_import_contribution_command',
         route_import_contribution: '/contribution/import_contribution_command', //Creacion de aportes
-        route_download: ' ',
+        route_download: '/contribution/report_import_contribution_command',
         name_download_file: "ReporteDetalleAportesComando.xls"
       }
     ],
