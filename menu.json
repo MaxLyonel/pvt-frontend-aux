@@ -34,5 +34,10 @@
         "permission": "show-role"
       }
     ]
+  },
+  {
+    "title": "Listado de afiliados",
+    "icon": "mdi-key",
+    "href": "/affiliate/PageListAffiliate"
   }
 ]
