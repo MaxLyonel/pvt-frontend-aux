@@ -37,7 +37,7 @@
   },
   {
     "title": "Listado de afiliados",
-    "icon": "mdi-key",
+    "icon": "mdi-account-group",
     "href": "/affiliate/PageListAffiliate"
   }
 ]
