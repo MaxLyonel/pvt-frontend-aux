@@ -91,7 +91,10 @@ export default {
           danger: '#ff6d00',
           normal: '#757575',
           teal: '#29617B',
-          background: '#EDF2F4'
+          background: '#EDF2F4',
+          table: '#34495E',
+          plomoAzul: '#EFFBFE'
+          // #EEF1F5
         }
       }
     }
