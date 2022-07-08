@@ -76,12 +76,12 @@
           <!-- Vista de los filtros -->
           <template slot="body.prepend">
             <tr v-if="show_filter">
-                <!--<td><v-text-field placeholder="C.I. Afiliado" spellcheck="false" class="filter-text" v-model="searching.identity_card_affiliate" @keydown.enter="list_affiliates"></v-text-field></td>-->
-                <td><v-text-field placeholder="C.I. Afiliado" spellcheck="false" class="filter-text" v-model="searching.identity_card_affiliate" @input="list_affiliates"></v-text-field></td>
-                <td><v-text-field placeholder="Nombre Completo" spellcheck="false" class="filter-text" v-model="searching.full_name_affiliate" @input="list_affiliates"></v-text-field></td>
-                <td><v-text-field placeholder="Matricula" spellcheck="false" class="filter-text" v-model="searching.registration_affiliate" @input="list_affiliates"></v-text-field></td>
-                <td><v-text-field placeholder="Grado" spellcheck="false" class="filter-text" v-model="searching.name_degree" @input="list_affiliates"></v-text-field></td>
-                <td><v-text-field placeholder="Estado" spellcheck="false" class="filter-text" v-model="searching.name_affiliate_state" @input="list_affiliates"></v-text-field></td>
+                <!--<td><v-text-field placeholder="C.I. Afiliado" spellcheck="false" class="filter-text" v-model="searching.identity_card_affiliate" @keydown.enter="getListAffiliates"></v-text-field></td>-->
+                <td><v-text-field placeholder="C.I. Afiliado" spellcheck="false" class="filter-text" v-model="searching.identity_card_affiliate" @input="getListAffiliates"></v-text-field></td>
+                <td><v-text-field placeholder="Nombre Completo" spellcheck="false" class="filter-text" v-model="searching.full_name_affiliate" @input="getListAffiliates"></v-text-field></td>
+                <td><v-text-field placeholder="Matricula" spellcheck="false" class="filter-text" v-model="searching.registration_affiliate" @input="getListAffiliates"></v-text-field></td>
+                <td><v-text-field placeholder="Grado" spellcheck="false" class="filter-text" v-model="searching.name_degree" @input="getListAffiliates"></v-text-field></td>
+                <td><v-text-field placeholder="Estado" spellcheck="false" class="filter-text" v-model="searching.name_affiliate_state" @input="getListAffiliates"></v-text-field></td>
                 <td><v-text-field disabled class="filter-text"></v-text-field></td>
             </tr>
           </template>
@@ -138,7 +138,7 @@ export default {
         newVal.itemsPerPage != oldVal.itemsPerPage ||
         newVal.sortDesc != oldVal.sortDesc
       ) {
-        this.list_affiliates()
+        this.getListAffiliates()
       }
     },
     searching: {
@@ -151,10 +151,10 @@ export default {
     
   },
   mounted() {
-    this.list_affiliates()
+    this.getListAffiliates()
   },
   methods: {
-    async list_affiliates() {
+    async getListAffiliates() {
 
       this.loading_table = true
       try {
@@ -195,7 +195,7 @@ export default {
       this.searching.registration_affiliate = "",
       this.searching.name_degree= "",
       this.searching.name_affiliate_state= "",
-      this.list_affiliates()
+      this.getListAffiliates()
     },
   },
 };
