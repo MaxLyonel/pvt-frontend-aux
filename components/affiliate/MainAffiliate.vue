@@ -1,141 +1,139 @@
 <template>
   <v-card flat>
     <v-card-title style="text-align:center ;">
-    <v-col>
-      <v-toolbar dense color="tertiary" style="z-index: 1;">
-              <!-- <Breadcrumbs/> -->
-        <v-col cols="8">
-          <v-toolbar-title color="background">
-                {{affiliate.full_name}}
-          </v-toolbar-title>
-        </v-col>
-        <v-col cols="4">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-
-                dark
-                v-bind="attrs"
-                v-on="on"
-                @click.stop="saveAffiliate()"
-                :color="editable ? 'success' : 'secondary'"
-              >
-                <v-toolbar-title v-if="!editable"> EDITAR</v-toolbar-title>
-                <v-toolbar-title v-else> Confirmar</v-toolbar-title>
-              </v-btn>
+      <v-col>
+        <v-toolbar dense color="tertiary" style="z-index: 1;">
+          <v-col cols="8">
+            <v-toolbar-title color="background">
+              {{affiliate.full_name}}
+            </v-toolbar-title>
+          </v-col>
+          <v-col cols="4">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  @click.stop="saveAffiliate()"
+                  :color="editable ? 'success' : 'secondary'"
+                >
+                  <v-toolbar-title v-if="!editable"> EDITAR</v-toolbar-title>
+                  <v-toolbar-title v-else> Confirmar</v-toolbar-title>
+                </v-btn>
+              </template>
+              <span>EDITAR</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="error"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  v-show="editable"
+                  @click.stop="editable=false"
+                >
+                  <v-toolbar-title> cancelar</v-toolbar-title>
+                </v-btn>
             </template>
             <span>EDITAR</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="error"
-                dark
-                v-bind="attrs"
-                v-on="on"
-                v-show="editable"
-                @click.stop="editable=false"
-              >
-              <v-toolbar-title> cancelar</v-toolbar-title>
-              </v-btn>
-            </template>
-            <span>EDITAR</span>
-          </v-tooltip>
-
-        </v-col>
-      </v-toolbar>
+            </v-tooltip>
+          </v-col>
+        </v-toolbar>
       </v-col>
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="black--text my-0 py-0">
       <v-tabs
-        background-color="normal"
+        background-color="secondary"
         class="elevation-2"
         dark
         :vertical="true"
       >
+        <v-card color="background" >
+          <div class="pa-3" >
+            <div style="text-align: center;">
+              <v-avatar
+                color="tertiary"
+                size="128"
+              >
+                <v-icon size="125" color="secondary">mdi-face-man</v-icon>
+              </v-avatar>
+            </div>
+          </div>
+          <v-divider class="mx-4"></v-divider>
+          <v-card-text class="black--text my-0 py-0">
+            <v-row>
+              <v-col cols="12" md="12" align="start" class="subtitle-1">
+                <h4 align="center">Datos del Afiliado</h4>
+                  <b>C.I.:  </b> {{affiliate.identity_card}}
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
         <v-tabs-slider></v-tabs-slider>
-
         <v-tab
-
           :href="`#tab-1`"
         >
-        <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-icon
-          v-if="icons"
-          v-bind="attrs"
-          v-on="on"
-          >mdi-account
-          </v-icon>
-          </template>
-        <span><b>INFORMACION DEL AFILIADO</b></span>
-        </v-tooltip>
+        DASHBOARD
         </v-tab>
-
         <v-tab
           :href="`#tab-2`"
         >
-        <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-icon
-          v-if="icons"
-          v-bind="attrs"
-          v-on="on"
-          >mdi-account
-          </v-icon>
-        </template>
-        <span><b>DATOS PERSONALES DEL AFILIADO</b></span>
-      </v-tooltip>
+        DATOS PERSONALES DEL AFILIADO
         </v-tab>
-         <v-tab
+        <v-tab
           :href="`#tab-3`"
         >
-        <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-icon
-          v-if="icons"
-          v-bind="attrs"
-          v-on="on"
-          >mdi-file-account
-          </v-icon>
-        </template>
-        <span><b>INFORMACION ADICIONAL</b></span>
-      </v-tooltip>
+        INFORMACION ADICIONAL
+        </v-tab>
+        <v-tab
+          :href="`#tab-4`"
+        >
+        INFORMACION CONYUGE
         </v-tab>
         <v-tab-item
         :value="'tab-1'"
-      >
-        <v-card flat tile >
-          <v-card-text>
-            <!-- <Dashboard :affiliate.sync="affiliate" :loading_affiliate="loading_affiliate" /> -->
-            <!-- <Dashboard :variable='variable' /> -->
-          </v-card-text>
-        </v-card>
-      </v-tab-item>
-
-      <v-tab-item
-          :value="'tab-2'"
         >
           <v-card flat tile >
             <v-card-text>
-              <!-- <Profile
-                :affiliate.sync="affiliate"
-                :editable.sync="editable"
-              /> -->
+              <Dashboard :affiliate.sync="affiliate" :loading_affiliate="loading_affiliate" />
             </v-card-text>
           </v-card>
         </v-tab-item>
-      <v-tab-item
-          :value="'tab-3'"
+        <v-tab-item
+          :value="'tab-2'"
+         >
+          <v-card flat tile >
+            <v-card-text>
+              <Profile
+                :affiliate.sync="affiliate"
+                :editable.sync="editable"
+              />
+            </v-card-text>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item
+           :value="'tab-3'"
         >
           <v-card flat tile >
             <v-card-text>
-              <!-- <Additioninalnformation
-
+              <Additioninalnformation
                 :affiliate.sync="affiliate"
                 :editable.sync="editable"
-
-              /> -->
+              />
+            </v-card-text>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item
+           :value="'tab-4'"
+        >
+          <v-card flat tile >
+            <v-card-text>
+              <Spouse
+                :affiliate.sync="affiliate"
+                :editable.sync="editable"
+               />
             </v-card-text>
           </v-card>
         </v-tab-item>
@@ -149,12 +147,14 @@
 import Additioninalnformation from '@/components/affiliate/AdditionInalnformation';
 import Dashboard from '@/components/affiliate/Dashboard';
 import Profile from '@/components/affiliate/Profile';
+import Spouse from './Spouse.vue';
 export default {
   components: {
     Additioninalnformation,
     Dashboard,
-    Profile
-  },
+    Profile,
+    Spouse
+},
   props: {
     affiliate_id :{
       type: String,
@@ -163,6 +163,7 @@ export default {
     }
   },
   data: () => ({
+    view: 'v-a',
     affiliate:{
       id: null,
       user_id: null,
