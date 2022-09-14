@@ -45,7 +45,7 @@
         :key="i"
       >
         <template v-if="item.state_validated_payroll">
-          <v-card-title :class="item.state_importation ? 'teal' : 'normal'">
+          <v-card-title :class="item.state_importation ? 'accent' : 'normal'">
             <v-row justify="center">
               <h3 class="white--text">{{ item.period_month_name }}</h3>
             </v-row>
@@ -62,7 +62,7 @@
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
                       <v-btn 
-                        class="ma-2 teal white--text btn-period" 
+                        class="ma-2 accent white--text btn-period" 
                         v-on="on"
                         @click="confirmImportContribution(item.period_month, true)"
                         :disabled="item.state_importation"

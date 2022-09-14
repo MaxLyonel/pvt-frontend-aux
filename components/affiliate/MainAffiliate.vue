@@ -118,7 +118,7 @@
         >
           <v-card flat tile >
             <v-card-text>
-              <Additioninalnformation
+              <AdditionalInformation
                 :affiliate.sync="affiliate"
                 :editable.sync="editable"
               />
@@ -144,13 +144,13 @@
 
 
 <script>
-import Additioninalnformation from '@/components/affiliate/AdditionInalnformation';
+import AdditionalInformation from '@/components/affiliate/AdditionalInformation';
 import Dashboard from '@/components/affiliate/Dashboard';
 import Profile from '@/components/affiliate/Profile';
 import Spouse from './Spouse.vue';
 export default {
   components: {
-    Additioninalnformation,
+    AdditionalInformation,
     Dashboard,
     Profile,
     Spouse

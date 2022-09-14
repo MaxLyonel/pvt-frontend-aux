@@ -26,7 +26,7 @@
       <v-card-text>
         <v-data-table
           dense
-          class="plomoAzul"
+          class="inputSearch"
           :headers="headers"
           :items="affiliates"
           :options.sync="options"
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import Add from '@/components/affiliate/AdditionInalnformation';
+import Add from '@/components/affiliate/AdditionalInformation';
 // import List from '@/components/affiliate/MainListAffiliate';
 
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
@@ -223,7 +223,6 @@ export default {
   padding: 5px;
   margin: 0px;
   font-size: 0.8em;
-  border-color: teal;
 }
 .filter-text{
   font-size: 12px;
@@ -232,14 +231,7 @@ export default {
   padding: 0;
   width: 100%;
 }
-.v-data-table tr:hover:not(.v-data-table__expanded__content) {
-  background: #bdedf8 !important;
-}
-</style>
-<style>
-.row-white {
-    background-color: #ffffff;
-  }
+
 </style>
 
 
