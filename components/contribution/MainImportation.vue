@@ -64,7 +64,7 @@
         :key="i"
       >
         <template v-if="item.state_importation">
-          <v-card-title class="teal">
+          <v-card-title class="accent">
             <v-row justify="center">
               <h3 class="white--text">{{ item.period_month_name }}</h3></v-row
             >
