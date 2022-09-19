@@ -26,6 +26,7 @@
             dense
             outlined
             class="select-year"
+            close-on-click
           ></v-select>
         </v-toolbar>
       </v-card-title>
