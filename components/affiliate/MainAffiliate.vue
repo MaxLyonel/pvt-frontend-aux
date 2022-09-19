@@ -144,10 +144,10 @@
 
 
 <script>
-import AdditionalInformation from '@/components/affiliate/AdditionalInformation';
-import Dashboard from '@/components/affiliate/Dashboard';
-import Profile from '@/components/affiliate/Profile';
-import Spouse from './Spouse.vue';
+import AdditionalInformation from '@/components/affiliate/AdditionalInformation'
+import Dashboard from '@/components/affiliate/Dashboard'
+import Profile from '@/components/affiliate/Profile'
+import Spouse from '@/components/affiliate/Spouse.vue'
 export default {
   components: {
     AdditionalInformation,

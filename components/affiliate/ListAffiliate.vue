@@ -31,7 +31,7 @@
           :items="affiliates"
           :options.sync="options"
           :item-class="hovertable"
-          :server-items-length="totalaffiliates"
+          :server-items-length="total_affiliates"
           :footer-props="{ itemsPerPageOptions: [8, 15, 50,100] }"
           :loading = loading_table
         >
@@ -57,7 +57,7 @@
          </template>
           <!--Fin de estilos de busqueda-->
             <template v-slot:[`item.actions`]="{ item }">
-              <v-tooltip bottom>
+              <v-tooltip bottom >
                 <template v-slot:activator="{ on }">
                    <nuxt-link :to="`PageAffiliate/${item.id_affiliate}`" class="button is-primary">
                     <v-btn
@@ -94,9 +94,8 @@
 </template>
 
 <script>
-import Add from '@/components/affiliate/AdditionalInformation';
-// import List from '@/components/affiliate/MainListAffiliate';
 
+import Add from '@/components/affiliate/AdditionalInformation';
 import GlobalBreadCrumb from "@/components/common/GlobalBreadCrumb.vue";
 import GlobalLoading from "@/components/common/GlobalLoading.vue";
 
@@ -106,7 +105,6 @@ export default {
     GlobalBreadCrumb,
     GlobalLoading,
     Add
-    // List
   },
   data: () => ({
     // Cabeceras de la tabla
@@ -130,20 +128,20 @@ export default {
     affiliates: [],
     options: {
       page: 1,
-      itemsPerPage: 8,
+      items_per_page: 8,
       sortDesc: [false],
     },
-    totalaffiliates: 0,
+    total_affiliates: 0,
     loading_table: false,
     show_filter:true,
-    refreshKardexTable: 0,
+    refresh_table: 0,
 
   }),
   watch: {
     options: function (newVal, oldVal) {
       if (
         newVal.page != oldVal.page ||
-        newVal.itemsPerPage != oldVal.itemsPerPage ||
+        newVal.items_per_page != oldVal.items_per_page ||
         newVal.sortDesc != oldVal.sortDesc
       ) {
         this.getListAffiliates()
@@ -175,17 +173,17 @@ export default {
             full_name_affiliate: this.searching.full_name_affiliate,
             name_affiliate_state: this.searching.name_affiliate_state,
             page: this.options.page,
-            per_page: this.options.itemsPerPage,
+            per_page: this.options.items_per_page,
             sortDesc: this.options.sortDesc,
           },
         });
         this.affiliates = res.payload.affiliates.data
         console.log(this.affiliates)
-        this.totalaffiliates = res.payload.affiliates.total
+        this.total_affiliates = res.payload.affiliates.total
         /*delete res.data["data"]*/
         this.options.page = res.payload.affiliates.current_page
 
-        this.options.itemsPerPage = parseInt(res.payload.affiliates.per_page)
+        this.options.items_per_page = parseInt(res.payload.affiliates.per_page)
         this.loading_table = false
       } catch (e) {
         console.log(e)
