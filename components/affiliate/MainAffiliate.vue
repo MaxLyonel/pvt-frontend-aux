@@ -1,14 +1,17 @@
 <template>
-  <v-card flat>
-    <v-card-title style="text-align:center ;">
-      <v-col>
-        <v-toolbar dense color="tertiary" style="z-index: 1;">
-          <v-col cols="8">
-            <v-toolbar-title color="background">
-              {{affiliate.full_name}}
-            </v-toolbar-title>
-          </v-col>
-          <v-col cols="4">
+  <v-container fluid>
+    <v-card flat>
+      <v-card-title>
+        <v-toolbar dense color="tertiary" class="caption">
+          <v-row>
+            <v-col cols="12" class="pa-0">
+              Listado de afiliados
+            </v-col>
+            <v-col cols="12" class="pa-0">
+              <v-icon>mdi-arrow-right-bold-box</v-icon>
+                Datos del afiliado
+            </v-col>
+          </v-row>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -39,65 +42,52 @@
             </template>
             <span>EDITAR</span>
             </v-tooltip>
-          </v-col>
         </v-toolbar>
-      </v-col>
-    </v-card-title>
-    <v-card-text class="black--text my-0 py-0">
+      </v-card-title>
+      <v-card-text>
+
       <v-tabs
-        background-color="secondary"
-        class="elevation-2"
-        dark
         :vertical="true"
       >
-        <v-card color="background" >
-          <div class="pa-3" >
-            <div style="text-align: center;">
-              <v-avatar
-                color="tertiary"
-                size="128"
-              >
-                <v-icon size="125" color="secondary">mdi-face-man</v-icon>
-              </v-avatar>
-            </div>
-          </div>
-          <v-divider class="mx-4"></v-divider>
-          <v-card-text class="black--text my-0 py-0">
+        <v-card color="backgroundCard" >
+          <v-card-text>
             <v-row>
-              <v-col cols="12" md="12" align="start" class="subtitle-1">
-                <h4 align="center">Datos del Afiliado</h4>
-                  <b>C.I.:  </b> {{affiliate.identity_card}}
+              <v-col cols="12" md="12" align="center">
+                <h4>DATOS DEL AFILIADO</h4> <br>
+                <b>C.I.:  </b> {{affiliate.identity_card}}
               </v-col>
             </v-row>
           </v-card-text>
         </v-card>
         <v-tabs-slider></v-tabs-slider>
-        <v-tab
+        <v-tab class="backgroundTab"
           :href="`#tab-1`"
         >
         DASHBOARD
         </v-tab>
-        <v-tab
+        <v-tab class="backgroundTab"
           :href="`#tab-2`"
         >
         DATOS PERSONALES DEL AFILIADO
         </v-tab>
-        <v-tab
+        <v-tab  class="backgroundTab"
           :href="`#tab-3`"
         >
         INFORMACION ADICIONAL
         </v-tab>
-        <v-tab
+        <v-tab  class="backgroundTab"
           :href="`#tab-4`"
         >
         INFORMACION CONYUGE
         </v-tab>
-        <v-tab-item
+        <v-tab-item  class="backgroundTab"
         :value="'tab-1'"
         >
           <v-card flat tile >
             <v-card-text>
-              <Dashboard :affiliate.sync="affiliate" :loading_affiliate="loading_affiliate" />
+              <Dashboard 
+                :affiliate.sync="affiliate"
+                :loading_affiliate="loading_affiliate" />
             </v-card-text>
           </v-card>
         </v-tab-item>
@@ -138,11 +128,10 @@
           </v-card>
         </v-tab-item>
       </v-tabs>
-    </v-card-text>
-  </v-card>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
-
-
 <script>
 import AdditionalInformation from '@/components/affiliate/AdditionalInformation'
 import Dashboard from '@/components/affiliate/Dashboard'

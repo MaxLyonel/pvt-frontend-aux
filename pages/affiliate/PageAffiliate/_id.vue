@@ -1,7 +1,5 @@
 <template>
-    <div>
-      <MainAffiliate :affiliate_id="$route.params.id"></MainAffiliate>
-      </div>
+  <MainAffiliate :affiliate_id="$route.params.id"/>
 </template>
 
 <script>
