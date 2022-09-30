@@ -27,6 +27,7 @@
             dense
             outlined
             class="select-year"
+            close-on-click
           ></v-select>
           <v-tooltip top>
             <template v-slot:activator="{ on }">

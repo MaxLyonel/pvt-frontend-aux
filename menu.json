@@ -45,19 +45,9 @@
     "icon": "mdi-send",
     "group":[
       {
-        "href": "/notification/PageSms",
-        "title": "Mensajes SMS",
-        "icon": "mdi-message-reply"
-      },
-      {
         "href": "/notification/PageNotification",
         "title": "Notificaciones App-movile",
         "icon": "mdi-cube-send"
-      },
-      {
-        "href": "/notification/PageWhatsapp",
-        "title": "Whatsapp",
-        "icon": "mdi-whatsapp"
       }
     ]
   }

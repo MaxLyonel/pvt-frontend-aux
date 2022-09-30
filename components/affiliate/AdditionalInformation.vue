@@ -15,7 +15,10 @@
               >
               <template v-slot:item="props">
                 <tr>
+                  <td>{{props.item.city.name}}</td>
                   <td>{{ props.item.description }}</td>
+                  <td></td>
+                  <td></td>
                 </tr>
               </template>
             </v-data-table>
@@ -35,6 +38,7 @@
                   :outlined="editable"
                   :disabled="!editable"
                   label="Celular1"
+                  v-mask="'(###)-#####'"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="4">
@@ -44,13 +48,15 @@
                     :disabled="!editable"
                     :outlined="editable"
                     label="Celular2"
+                    v-mask="'(###)-#####'"
                   ></v-text-field>
               </v-col>
               <v-col cols="12" md="4">
                  <v-text-field
-                    v-model="cel[0]"
+                    v-model="affiliate.phone_number"
                     dense
                     label="Telefono"
+                    v-mask="'(#) ###-###'"
                   ></v-text-field>
               </v-col>
             </v-row>
@@ -66,13 +72,14 @@
                   <v-card-text>
                     <h2 style="text-align: center">{{listen_h}}</h2>
                     <v-tooltip bottom v-if="state_credential">
-                      <template v-slot:activator="{ on, attrs }">
+                      <template v-slot:activator="{ on }">
                         <v-btn
                           fab
                           color="success"
                           small
                           right
                           absolute
+                          v-on="on"
                           @click="dialog_send_credential=true"
                         >
                           <v-icon>mdi-comment-processing-outline</v-icon>
@@ -122,7 +129,7 @@
 </template>
 
 <script>
-import { state } from '../../store';
+
 export default {
   props: {
     affiliate :{
@@ -143,7 +150,6 @@ export default {
       { text: "Activo", align: "left", value: "" },
       { text: "Acciones", align: "center" },
         ],
-    cel: [null, null],
     status_credential:'hola',
     state_credential:true,
     state_button_send:false,
